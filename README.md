@@ -33,6 +33,10 @@ This repository contains Nix configurations for managing my development environm
      ```sh
      make update
      ```
+3. **Apply dotfiles**
+     ```sh
+     make dotfiles
+     ```
 
 ## License
 
