@@ -36,15 +36,7 @@
         system = "aarch64-darwin";
         modules = [
           home-manager.darwinModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.nkl = import ./home/home.nix;
-          }
-          ./hosts/mac/configuration.nix
-          ./hosts/mac/homebrew.nix
-          ./hosts/mac/darwin-settings.nix
-          ./hosts/mac/shell.nix
+          ./hosts/darwin
           nix-homebrew.darwinModules.nix-homebrew
           {
             nix-homebrew = {
@@ -66,8 +58,7 @@
       homeConfigurations."linux" = home-manager.lib.homeManagerConfiguration {
         pkgs = pkgs;
         modules = [
-          ./home/home.nix
-          ./hosts/linux/configuration.nix
+          ./hosts/linux
         ];
       };
     };

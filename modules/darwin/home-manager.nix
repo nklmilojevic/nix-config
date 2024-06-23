@@ -1,0 +1,151 @@
+{ config, pkgs, lib, home-manager, ... }:
+
+let
+  user = "nkl";
+in
+{
+  imports = [
+    ./homebrew
+  ];
+
+  system.defaults = {
+    dock = {
+      minimize-to-application = true;
+      show-process-indicators = true;
+      show-recents = false;
+      static-only = false;
+      showhidden = false;
+      tilesize = 48;
+      wvous-bl-corner = 1;
+      wvous-br-corner = 1;
+      wvous-tl-corner = 1;
+      wvous-tr-corner = 1;
+      persistent-apps = [
+        "/Applications/Brave Browser.app/"
+        "/System/Applications/Mail.app/"
+        "/System/Applications/Messages.app/"
+        "/Applications/Slack.app/"
+        "/Applications/Telegram.app"
+        "/Applications/WezTerm.app/"
+        "/Applications/Fantastical.app/"
+        "/Applications/Discord.app/"
+        "/Applications/Anybox.app/"
+        "/Applications/Things3.app/"
+        "/Applications/NotePlan.app/"
+        "/Applications/Spotify.app/"
+        "/Applications/RapidAPI.app/"
+        "/Applications/TablePlus.app/"
+        "/Applications/Linear.app/"
+      ];
+    };
+
+    finder = {
+      ShowPathbar = true;
+      FXEnableExtensionChangeWarning = false;
+      ShowStatusBar = true;
+    };
+
+    NSGlobalDomain = {
+      AppleKeyboardUIMode = 3;
+      AppleMeasurementUnits = "Centimeters";
+      InitialKeyRepeat = 30;
+      KeyRepeat = 1;
+      "com.apple.keyboard.fnState" = true;
+      AppleShowScrollBars = "WhenScrolling";
+    };
+
+    loginwindow = {
+      GuestEnabled = false;
+    };
+
+    menuExtraClock = {
+      Show24Hour = true;
+    };
+
+    trackpad = {
+      Clicking = true;
+      Dragging = false;
+      TrackpadThreeFingerDrag = false;
+    };
+  };
+
+  system.defaults.CustomUserPreferences = {
+    # Avoid creating .DS_Store files on network or USB volumes
+    "com.apple.desktopservices" = {
+      DSDontWriteNetworkStores = true;
+      DSDontWriteUSBStores = true;
+    };
+
+  };
+
+  system.activationScripts.postUserActivation.text = ''
+    # Following line should allow us to avoid a logout/login cycle
+    # defaults write com.apple.dock persistent-others -array-add "<dict>
+    #             <key>tile-data</key>
+    #             <dict>
+    #                 <key>arrangement</key>
+    #                 <integer>2</integer>
+    #                 <key>displayas</key>
+    #                 <integer>1</integer>
+    #                 <key>file-data</key>
+    #                 <dict>
+    #                     <key>_CFURLString</key>
+    #                     <string>file:///Users/nkl/Downloads</string>
+    #                     <key>_CFURLStringType</key>
+    #                     <integer>15</integer>
+    #                 </dict>
+    #                 <key>file-type</key>
+    #                 <integer>2</integer>
+    #                 <key>showas</key>
+    #                 <integer>1</integer>
+    #             </dict>
+    #             <key>tile-type</key>
+    #             <string>directory-tile</string>
+    #         </dict>"
+    /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+    killall Dock
+  '';
+
+  security.pam.enableSudoTouchIdAuth = true;
+
+  environment.shells = with pkgs; [
+    bashInteractive
+    fish
+    zsh
+  ];
+
+  environment.variables.SHELL = "${pkgs.fish}/bin/fish";
+
+  users.users.nkl = {
+    home = "/Users/nkl";
+    shell = pkgs.fish;
+  };
+
+  programs.fish.enable = true;
+
+
+  home-manager = {
+    useGlobalPkgs = true;
+    users.${user} = { pkgs, config, lib, ... }: {
+      home = {
+        enableNixpkgsReleaseCheck = false;
+        packages = pkgs.callPackage ./packages.nix { };
+        stateVersion = "24.05";
+      };
+
+      imports = [
+        ../shared/home-manager.nix
+        ./dotfiles/hammerspoon.nix
+        ./dotfiles/wezterm.nix
+        ./dotfiles/karabiner.nix
+      ];
+
+
+      # Marked broken Oct 20, 2022 check later to remove this
+      # https://github.com/nix-community/home-manager/issues/3344
+      manual.manpages.enable = false;
+    };
+  };
+
+
+}
