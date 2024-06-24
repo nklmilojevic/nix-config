@@ -75,4 +75,8 @@ with pkgs; [
 
   bottom
   nixpkgs-fmt
+
+  ruby_3_3
+  rubyPackages_3_3.solargraph
+
 ]
