@@ -26,7 +26,7 @@ in
         "/System/Applications/Messages.app/"
         "/Applications/Slack.app/"
         "/Applications/Telegram.app"
-        "/Applications/WezTerm.app/"
+        "${pkgs.wezterm}/Applications/WezTerm.app/"
         "/Applications/Fantastical.app/"
         "/Applications/Discord.app/"
         "/Applications/Anybox.app/"
@@ -135,8 +135,8 @@ in
 
       imports = [
         ../shared/home-manager.nix
+        ./programs/wezterm.nix
         ./dotfiles/hammerspoon.nix
-        ./dotfiles/wezterm.nix
         ./dotfiles/karabiner.nix
       ];
 

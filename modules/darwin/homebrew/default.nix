@@ -38,7 +38,6 @@
       "viber"
       "visual-studio-code"
       "vlc"
-      "wezterm"
       "whatsapp"
       "yubico-yubikey-manager"
       "zed"
