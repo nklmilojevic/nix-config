@@ -9,13 +9,14 @@
       fish_add_path "$HOME/.nix-profile/bin"
       fish_add_path "$HOME/.local/bin"
       fish_add_path "$HOME/bin"
+      fish_add_path "$HOME/.npm-global/bin"
 
       set -gx SOPS_AGE_KEY_FILE /Users/nkl/.config/sops/age/keys.txt
       set -gx EDITOR vim
       set -gx LANG en_US.UTF-8
       set -gx LC_ALL en_US.UTF-8
       set -gx HOMEBREW_NO_ANALYTICS 1
-
+      set -gx NPM_CONFIG_PREFIX $HOME/.npm-global
       set -gx SSH_AUTH_SOCK $HOME/.1password/agent.sock
 
       nix-your-shell fish | source
