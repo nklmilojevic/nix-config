@@ -8,7 +8,6 @@ with pkgs; [
   docker
   fd
   ffmpeg_7
-  fish
   fzf
   gettext
   gh
@@ -51,6 +50,10 @@ with pkgs; [
 
   atuin
   direnv
+  fish
+  fishPlugins.puffer
+  fishPlugins.done
+  nix-your-shell
   zoxide
 
   lazygit
@@ -69,9 +72,7 @@ with pkgs; [
 
   steampipe
   esphome
-  nix-your-shell
+
   bottom
   nixpkgs-fmt
-  fishPlugins.puffer
-  fishPlugins.done
 ]
