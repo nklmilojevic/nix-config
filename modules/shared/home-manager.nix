@@ -3,6 +3,7 @@
 {
   imports = [
     ./programs/atuin.nix
+    ./programs/bat.nix
     ./programs/direnv.nix
     ./programs/doggo.nix
     ./programs/fish.nix

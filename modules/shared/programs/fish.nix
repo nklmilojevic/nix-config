@@ -71,7 +71,6 @@
       ll = "ls -lha";
       lg = "lazygit";
       grep = "rg";
-      cat = "bat --theme Dracula --paging=never --style plain $argv";
     };
 
     functions = {
