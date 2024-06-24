@@ -63,13 +63,14 @@
       };
 
       character = {
-        error_symbol = "[❯](dimmed green)";
+        error_symbol = "[✗](red)";
         success_symbol = "[❯](green)";
       };
 
       kubernetes = {
         disabled = false;
-        format = "[⎈ $context( \\($namespace\\))]($style) ";
+        # format = "[⎈ $context( \\($namespace\\))]($style) ";
+        format = "[󱃾 $context( \\($namespace\\))]($style) ";
         style = "dimmed blue";
       };
 
