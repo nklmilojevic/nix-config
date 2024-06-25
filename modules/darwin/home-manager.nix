@@ -130,7 +130,7 @@ in
       home = {
         enableNixpkgsReleaseCheck = false;
         packages = pkgs.callPackage ./packages.nix { };
-        stateVersion = "24.05";
+        stateVersion = "24.11";
       };
 
       imports = [
