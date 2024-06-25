@@ -53,6 +53,7 @@ with pkgs; [
   fish
   fishPlugins.puffer
   fishPlugins.done
+  fishPlugins.tide
   nix-your-shell
   zoxide
 

@@ -11,7 +11,6 @@
     ./programs/k9s.nix
     ./programs/krew.nix
     ./programs/neovim.nix
-    ./programs/starship.nix
     ./programs/zoxide.nix
   ];
 }
