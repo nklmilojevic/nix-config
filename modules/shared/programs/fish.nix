@@ -132,10 +132,6 @@
         description = "greps for processes";
         body = "ps aux | rg $process | rg -v rg";
       };
-      cd = {
-        description = "does ll after cd";
-        body = builtins.readFile ./functions/cd.fish;
-      };
     };
   };
 }
