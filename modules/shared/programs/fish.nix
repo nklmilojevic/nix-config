@@ -56,12 +56,19 @@
       set -gx tide_character_icon "❯"
       set -gx tide_left_prompt_items context pwd git character
       set -gx tide_right_prompt_items status cmd_duration jobs direnv nix_shell python ruby go gcloud kubectl terraform elixir time
-      set -gx tide_show_kubectl_on kubectl helm kubens k kubectx stern
-      set -gx tide_show_gcloud_on gcloud
       set -gx tide_kubectl_icon "󱃾 "
       set -gx tide_kubectl_color "blue"
       set -gx tide_git_icon " "
       set -gx tide_cmd_duration_icon ""
+
+
+      if test (uname) = "Darwin"
+          # Set Tide variables for kubectl and related tools
+          set -gx tide_show_kubectl_on kubectl helm kubens k kubectx stern
+
+          # Set Tide variable for gcloud
+          set -gx tide_show_gcloud_on gcloud
+      end
 
       nix-your-shell fish | source
     '';
