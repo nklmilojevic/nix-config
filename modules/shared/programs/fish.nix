@@ -42,7 +42,7 @@
       fish_add_path "$HOME/bin"
       fish_add_path "$HOME/.npm-global/bin"
 
-      set -gx SOPS_AGE_KEY_FILE /Users/nkl/.config/sops/age/keys.txt
+      set -gx SOPS_AGE_KEY_FILE $HOME/.config/sops/age/keys.txt
       set -gx EDITOR vim
       set -gx LANG en_US.UTF-8
       set -gx LC_ALL en_US.UTF-8
@@ -131,6 +131,10 @@
         argumentNames = [ "process" ];
         description = "greps for processes";
         body = "ps aux | rg $process | rg -v rg";
+      };
+      cd = {
+        description = "does ll after cd";
+        body = builtins.readFile ./functions/cd.fish;
       };
     };
   };
