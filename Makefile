@@ -65,8 +65,3 @@ universal-build: build switch ## Build and apply the new configuration based on 
 setup-nix: ## Install Nix package manager
 	@echo "Installing Nix package manager..."
 	@curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
-
-.PHONY: dotfiles
-dotfiles: ## Initialize and apply dotfiles using chezmoi
-	@echo "Initializing and applying dotfiles with chezmoi..."
-	@sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply nklmilojevic

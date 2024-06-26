@@ -3,7 +3,6 @@
 with pkgs; [
   _1password
   bat
-  bandwhich
   curl
   docker
   fd

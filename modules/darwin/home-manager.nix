@@ -163,6 +163,7 @@ in
         ./programs/wezterm.nix
         ./dotfiles/hammerspoon.nix
         ./dotfiles/karabiner.nix
+        ./dotfiles/1password-agent.nix
       ];
 
 
