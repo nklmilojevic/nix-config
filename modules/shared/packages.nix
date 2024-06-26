@@ -74,7 +74,7 @@ with pkgs; [
   steampipe
   esphome
 
-  bottom
+  btop
   nixpkgs-fmt
 
   ruby_3_3
