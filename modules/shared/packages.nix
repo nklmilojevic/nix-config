@@ -80,5 +80,7 @@ with pkgs; [
   ruby_3_3
   rubyPackages_3_3.solargraph
 
+  cargo
+
   lua54Packages.luarocks-nix
 ]
