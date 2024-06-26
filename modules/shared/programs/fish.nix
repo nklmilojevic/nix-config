@@ -25,53 +25,56 @@
           '';
       in
       ''
-        # Check if tide is configured by checking one of the variables
-        if not set -q tide_aws_bg_color
-          # Load the tide configuration from the generated file
-          echo "Loading tide configuration (only once)" >&2
-          for line in (cat ${tidecfg})
-            # tide only works with universal variables
-            eval "set -U $line"
+          # Check if tide is configured by checking one of the variables
+          if not set -q tide_aws_bg_color
+            # Load the tide configuration from the generated file
+            echo "Loading tide configuration (only once)" >&2
+            for line in (cat ${tidecfg})
+              # tide only works with universal variables
+              eval "set -U $line"
+            end
           end
+
+        # Load secrets
+        test -f ~/.config/fish/secrets.fish && source ~/.config/fish/secrets.fish
+
+        set -g fish_greeting
+
+        fish_add_path "$HOME/.nix-profile/bin"
+        fish_add_path "$HOME/.local/bin"
+        fish_add_path "$HOME/bin"
+        fish_add_path "$HOME/.npm-global/bin"
+
+        set -gx SOPS_AGE_KEY_FILE $HOME/.config/sops/age/keys.txt
+        set -gx EDITOR vim
+        set -gx LANG en_US.UTF-8
+        set -gx LC_ALL en_US.UTF-8
+        set -gx HOMEBREW_NO_ANALYTICS 1
+        set -gx NPM_CONFIG_PREFIX $HOME/.npm-global
+        set -gx SSH_AUTH_SOCK $HOME/.1password/agent.sock
+
+        # theme setup
+        set -gx tide_pwd_icon " "
+        set -gx tide_pwd_icon_home " "
+        set -gx tide_character_icon "❯"
+        set -gx tide_left_prompt_items context pwd git character
+        set -gx tide_right_prompt_items status cmd_duration jobs direnv nix_shell python ruby go gcloud kubectl terraform elixir time
+        set -gx tide_kubectl_icon "󱃾 "
+        set -gx tide_kubectl_color "blue"
+        set -gx tide_git_icon " "
+        set -gx tide_cmd_duration_icon ""
+
+
+        if test (uname) = "Darwin"
+            # Set Tide variables for kubectl and related tools
+            set -gx tide_show_kubectl_on kubectl helm kubens k kubectx stern
+
+            # Set Tide variable for gcloud
+            set -gx tide_show_gcloud_on gcloud
         end
 
-      set -g fish_greeting
-
-      fish_add_path "$HOME/.nix-profile/bin"
-      fish_add_path "$HOME/.local/bin"
-      fish_add_path "$HOME/bin"
-      fish_add_path "$HOME/.npm-global/bin"
-
-      set -gx SOPS_AGE_KEY_FILE $HOME/.config/sops/age/keys.txt
-      set -gx EDITOR vim
-      set -gx LANG en_US.UTF-8
-      set -gx LC_ALL en_US.UTF-8
-      set -gx HOMEBREW_NO_ANALYTICS 1
-      set -gx NPM_CONFIG_PREFIX $HOME/.npm-global
-      set -gx SSH_AUTH_SOCK $HOME/.1password/agent.sock
-
-      # theme setup
-      set -gx tide_pwd_icon " "
-      set -gx tide_pwd_icon_home " "
-      set -gx tide_character_icon "❯"
-      set -gx tide_left_prompt_items context pwd git character
-      set -gx tide_right_prompt_items status cmd_duration jobs direnv nix_shell python ruby go gcloud kubectl terraform elixir time
-      set -gx tide_kubectl_icon "󱃾 "
-      set -gx tide_kubectl_color "blue"
-      set -gx tide_git_icon " "
-      set -gx tide_cmd_duration_icon ""
-
-
-      if test (uname) = "Darwin"
-          # Set Tide variables for kubectl and related tools
-          set -gx tide_show_kubectl_on kubectl helm kubens k kubectx stern
-
-          # Set Tide variable for gcloud
-          set -gx tide_show_gcloud_on gcloud
-      end
-
-      nix-your-shell fish | source
-    '';
+        nix-your-shell fish | source
+      '';
 
     plugins = [
       { name = "puffer"; src = pkgs.fishPlugins.puffer.src; }
