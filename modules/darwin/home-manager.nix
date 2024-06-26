@@ -8,6 +8,7 @@ in
     ./homebrew
   ];
 
+ documentation.man.enable = false;
 
  environment.userLaunchAgents = {
     "com.1password.SSH_AUTH_SOCK.plist" = {
