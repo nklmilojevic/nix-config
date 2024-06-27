@@ -10,7 +10,22 @@ ATUIN_KEY_FILE := $(HOME)/.local/share/atuin/key
 # Default target: show help
 .DEFAULT_GOAL := help
 
-# ... (previous targets remain unchanged)
+.PHONY: help
+help: ## Show this help message
+	@echo "Usage: make [target]"
+	@echo ""
+	@echo "Targets:"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-20s %s\n", $$1, $$2}'
+
+.PHONY: build
+build: ## Build the configuration
+ifeq ($(OS), Darwin)
+	@echo "Building Nix-Darwin configuration..."
+	@nix build .#darwinConfigurations.${HOSTNAME}.system
+else
+	@echo "Building Nix Home Manager configuration for Linux..."
+	@nix build .#homeConfigurations.linux.activationPackage
+endif
 
 .PHONY: switch
 switch: ## Apply the new configuration and generate secrets
@@ -38,6 +53,39 @@ check-op-signin:
 	else \
 		echo "1Password is already signed in."; \
 	fi
+
+.PHONY: update
+update: ## Update the flake.lock file
+	@echo "Updating flake.lock..."
+	@nix flake update
+
+.PHONY: clean
+clean: ## Clean build artifacts
+	@echo "Cleaning build artifacts..."
+	@rm -rf result
+
+.PHONY: edit
+edit: ## Edit the configuration
+	@echo "Opening configuration files for editing..."
+	@$(EDITOR) flake.nix
+
+.PHONY: status
+status: ## Show the current status
+	@echo "Showing current Nix-Darwin and Home Manager status..."
+	@darwin-rebuild dry-run
+
+.PHONY: darwin-refresh
+darwin-refresh: ## Refresh Nix-Darwin configuration
+	@echo "Refreshing Nix-Darwin configuration..."
+	@darwin-rebuild switch --flake . --show-trace
+
+.PHONY: universal-build
+universal-build: build switch ## Build and apply the new configuration based on the OS
+
+.PHONY: setup-nix
+setup-nix: ## Install Nix package manager
+	@echo "Installing Nix package manager..."
+	@curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
 
 .PHONY: all-secrets generate-secrets generate-ssh-config generate-atuin-key
 
