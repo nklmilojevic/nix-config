@@ -2,7 +2,7 @@
 
 {
   home.file.".karabiner" = {
-    source = ../dots/karabiner;
+    source = ./karabiner;
     recursive = true;
   };
 }

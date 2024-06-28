@@ -2,16 +2,16 @@
 
 {
   imports = [
-    ./programs/atuin.nix
-    ./programs/bat.nix
-    ./programs/btop.nix
-    ./programs/direnv.nix
-    ./programs/doggo.nix
-    ./programs/fish.nix
-    ./programs/git.nix
-    ./programs/k9s.nix
-    ./programs/krew.nix
-    ./programs/neovim.nix
-    ./programs/zoxide.nix
+    ./programs/atuin
+    ./programs/bat
+    ./programs/btop
+    ./programs/direnv
+    ./programs/doggo
+    ./programs/fish
+    ./programs/git
+    ./programs/k9s
+    ./programs/krew
+    ./programs/neovim
+    ./programs/zoxide
   ];
 }

@@ -2,7 +2,7 @@
 
 {
   home.file.".hammerspoon" = {
-    source = ../dots/hammerspoon;
+    source = ./hammerspoon;
     recursive = true;
   };
 }

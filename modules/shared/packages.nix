@@ -62,7 +62,6 @@ with pkgs; [
   go
   hugo
 
-  neovim
   pre-commit
   python312
   ruff

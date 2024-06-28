@@ -160,10 +160,10 @@ in
 
       imports = [
         ../shared/home-manager.nix
-        ./programs/wezterm.nix
-        ./dotfiles/hammerspoon.nix
-        ./dotfiles/karabiner.nix
-        ./dotfiles/1password-agent.nix
+        ./programs/wezterm
+        ./programs/hammerspoon
+        ./programs/karabiner
+        ./programs/1password-agent
       ];
 
 
