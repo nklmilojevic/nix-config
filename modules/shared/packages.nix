@@ -12,6 +12,7 @@ with pkgs; [
   gh
   git
   htop
+  inetutils
   jq
   mc
   mtr

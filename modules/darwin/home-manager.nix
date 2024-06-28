@@ -100,7 +100,11 @@ in
       DSDontWriteNetworkStores = true;
       DSDontWriteUSBStores = true;
     };
-
+    "com.apple.frameworks.diskimages" = {
+      skip-verify = true;
+      skip-verify-locked = true;
+      skip-verify-remote = true;
+    };
   };
 
   system.activationScripts.postUserActivation.text = ''
