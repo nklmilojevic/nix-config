@@ -18,6 +18,7 @@ with pkgs; [
   mtr
   netcat
   nmap
+  openssh
   openssl
   pwgen
   restic
