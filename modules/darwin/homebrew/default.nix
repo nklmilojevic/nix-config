@@ -22,6 +22,7 @@
       "iina"
       "istat-menus"
       "karabiner-elements"
+      "lulu"
       "lunar"
       "maestral"
       "medis"
