@@ -129,7 +129,6 @@
 
     shellAliases = {
       k = "kubectl";
-      vim = "nvim";
       df = "df -h";
       mkdir = "mkdir -p -v";
       ll = "ls -lha";

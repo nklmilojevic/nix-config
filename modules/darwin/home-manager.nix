@@ -51,7 +51,7 @@ in
         "/System/Applications/Messages.app/"
         "/Applications/Slack.app/"
         "/Applications/Telegram.app"
-        "${pkgs.wezterm}/Applications/WezTerm.app/"
+        "/Applications/WezTerm.app/"
         "/Applications/Fantastical.app/"
         "/Applications/Discord.app/"
         "/Applications/Anybox.app/"
