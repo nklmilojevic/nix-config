@@ -1,2 +1,2 @@
-hs.loadSpoon('ReloadConfiguration')
+hs.loadSpoon("ReloadConfiguration")
 spoon.ReloadConfiguration:start()
