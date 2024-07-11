@@ -83,4 +83,6 @@ with pkgs; [
   cargo
 
   lua54Packages.luarocks-nix
+
+  speedtest-go
 ]
