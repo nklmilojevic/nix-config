@@ -20,6 +20,7 @@
       "forklift"
       "hammerspoon"
       "iina"
+      "jordanbaird-ice"
       "karabiner-elements"
       "lulu"
       "lunar"
