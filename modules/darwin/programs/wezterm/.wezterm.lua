@@ -3,10 +3,9 @@ local wezterm = require("wezterm")
 local act = wezterm.action
 
 local config = {
-	-- font = wezterm.font_with_fallback({"PragmataProMonoLiga Nerd Font"}),
-	font = wezterm.font_with_fallback({ "BerkeleyMono Nerd Font" }),
+	font = wezterm.font_with_fallback({ "PragmataProMonoLiga Nerd Font" }),
 	window_decorations = "RESIZE",
-	font_size = 15.0,
+	font_size = 16.0,
 	color_scheme = "Dracula",
 	enable_tab_bar = true,
 	tab_bar_at_bottom = true,
@@ -186,9 +185,12 @@ config.colors = {
 	},
 }
 
-config.unix_domains = { {
-	name = "unix",
-} }
+config.unix_domains = {
+	{
+		name = "unix",
+	},
+}
+
 config.default_gui_startup_args = { "connect", "unix" }
 
 config.mux_env_remove = { "SSH_CLIENT", "SSH_CONNECTION" }
