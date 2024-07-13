@@ -3,12 +3,21 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    darwin.url = "github:lnl7/nix-darwin";
-    darwin.inputs.nixpkgs.follows = "nixpkgs";
 
-    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    darwin = {
+      url = "github:lnl7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-homebrew = {
+      url = "github:zhaofengli/nix-homebrew";
+    };
+
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
       flake = false;
@@ -23,12 +32,15 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, darwin, nix-homebrew, homebrew-core, homebrew-cask, ... }:
+    outputs = { self, nixpkgs, home-manager, darwin, nix-homebrew, ... }@inputs:
     let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs {
+      systems = [ "x86_64-linux" "aarch64-darwin" ];
+      forAllSystems = nixpkgs.lib.genAttrs systems;
+
+      # Function to get pkgs for each system
+      pkgsFor = system: import nixpkgs {
         inherit system;
-        config = { allowUnfree = true; };
+        config.allowUnfree = true;
       };
     in
     {
@@ -41,25 +53,35 @@
           {
             nix-homebrew = {
               enable = true;
-
               user = "nkl";
-
               taps = {
-                "homebrew/homebrew-core" = homebrew-core;
-                "homebrew/homebrew-cask" = homebrew-cask;
+                "homebrew/homebrew-core" = inputs.homebrew-core;
+                "homebrew/homebrew-cask" = inputs.homebrew-cask;
               };
-
               mutableTaps = true;
             };
           }
         ];
       };
 
-      homeConfigurations."linux" = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgs;
-        modules = [
-          ./hosts/linux
-        ];
-      };
+      homeConfigurations = forAllSystems (system: {
+        "linux" = home-manager.lib.homeManagerConfiguration {
+          pkgs = pkgsFor system;
+          modules = [
+            ./hosts/linux
+          ];
+        };
+      });
+
+      # Corrected devShells definition
+      devShells = forAllSystems (system: {
+        default = (pkgsFor system).mkShell {
+          buildInputs = with pkgsFor system; [
+            nixpkgs-fmt
+            nil
+          ];
+        };
+      });
     };
 }
+
