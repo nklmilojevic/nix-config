@@ -3,7 +3,9 @@
 with pkgs; [
   _1password
   bat
+  cachix
   curl
+  curlie
   docker
   fd
   ffmpeg_7
@@ -65,7 +67,9 @@ with pkgs; [
   hugo
 
   pre-commit
-  python312
+  python311
+  python311Packages.pip
+  poetry
   ruff
 
   bun
@@ -85,4 +89,5 @@ with pkgs; [
   lua54Packages.luarocks-nix
 
   speedtest-go
+  neofetch
 ]
