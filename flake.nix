@@ -37,7 +37,6 @@
       systems = [ "x86_64-linux" "aarch64-darwin" ];
       forAllSystems = nixpkgs.lib.genAttrs systems;
 
-      # Function to get pkgs for each system
       pkgsFor = system: import nixpkgs {
         inherit system;
         config.allowUnfree = true;
@@ -73,7 +72,6 @@
         };
       });
 
-      # Corrected devShells definition
       devShells = forAllSystems (system: {
         default = (pkgsFor system).mkShell {
           buildInputs = with pkgsFor system; [
@@ -84,4 +82,3 @@
       });
     };
 }
-
