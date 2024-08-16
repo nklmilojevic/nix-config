@@ -64,7 +64,6 @@
         set -gx tide_git_icon " "
         set -gx tide_cmd_duration_icon ""
 
-
         if test (uname) = "Darwin"
             # Set Tide variables for kubectl and related tools
             set -gx tide_show_kubectl_on kubectl helm kubens k kubectx stern
