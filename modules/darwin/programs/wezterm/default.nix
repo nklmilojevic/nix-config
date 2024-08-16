@@ -1,7 +1,7 @@
-{ pkgs, ... }:
+{ pkgs, lib, config, ... }:
 
 {
-  home.file.".wezterm.lua" = {
-    source = ./.wezterm.lua;
-  };
+    home.activation.weztermConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        ${pkgs.rsync}/bin/rsync -avz --chmod=D2755,F744 ${./.wezterm.lua} $HOME/.wezterm.lua
+    '';
 }
