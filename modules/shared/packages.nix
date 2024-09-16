@@ -35,6 +35,7 @@ with pkgs; [
   php83Packages.php-cs-fixer
   php83Packages.deployer
 
+
   clickhouse
   postgresql_16
   redis
@@ -69,8 +70,11 @@ with pkgs; [
   pre-commit
   python311
   python311Packages.pip
+  python311Packages.yamllint
+  python311Packages.pyyaml
   poetry
   ruff
+  uv
 
   bun
   nodejs_22
@@ -90,4 +94,5 @@ with pkgs; [
 
   speedtest-go
   neofetch
+  zulu
 ]
