@@ -22,7 +22,7 @@
       "iina"
       "jordanbaird-ice"
       "karabiner-elements"
-      "lulu"
+      "little-snitch"
       "lunar"
       "maestral"
       "medis"
