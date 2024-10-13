@@ -13,7 +13,6 @@ return {
         "elixirls",
         "dockerls",
         "gopls",
-        "tsserver",
       })
     end,
   },

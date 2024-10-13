@@ -7,6 +7,8 @@ SECRETS_FILE := $(HOME)/.config/fish/secrets.fish
 OP := op
 SSH_CONFIG_FILE := $(HOME)/.ssh/config
 ATUIN_KEY_FILE := $(HOME)/.local/share/atuin/key
+AGE_KEY_FILE := $(HOME)/.config/sops/age/keys.txt
+
 # Default target: show help
 .DEFAULT_GOAL := help
 
@@ -87,9 +89,9 @@ setup-nix: ## Install Nix package manager
 	@echo "Installing Nix package manager..."
 	@curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
 
-.PHONY: all-secrets generate-secrets generate-ssh-config generate-atuin-key
+.PHONY: all-secrets generate-secrets generate-ssh-config generate-atuin-key generate-age-key
 
-all-secrets: generate-secrets generate-ssh-config generate-atuin-key
+all-secrets: generate-secrets generate-ssh-config generate-atuin-key generate-age-key
 
 generate-secrets:
 	@echo "Generating secrets..."
@@ -111,3 +113,9 @@ generate-atuin-key:
 	@mkdir -p $(dir $(ATUIN_KEY_FILE))
 	@$(OP) read 'op://Private/atuin key/password' > $(ATUIN_KEY_FILE)
 	@echo "Atuin key generated in $(ATUIN_KEY_FILE)"
+
+generate-age-key:
+	@echo "Generating Age key..."
+	@mkdir -p $(dir $(AGE_KEY_FILE))
+	@$(OP) read 'op://Private/age key/password' > $(AGE_KEY_FILE)
+	@echo "Age key generated in $(AGE_KEY_FILE)"
