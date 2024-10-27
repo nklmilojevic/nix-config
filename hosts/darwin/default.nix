@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ inputs, config, pkgs, ... }:
 
 {
   imports = [
@@ -13,4 +13,37 @@
   nix.settings.experimental-features = "nix-command flakes";
   nixpkgs.hostPlatform = "aarch64-darwin";
   system.stateVersion = 5;
+
+  home-manager.users.nkl = {
+    imports = [
+      inputs.krewfile.homeManagerModules.krewfile
+    ];
+
+    programs.krewfile = {
+      enable = true;
+      krewPackage = pkgs.krew;
+      indexes = {
+        default = "https://github.com/kubernetes-sigs/krew-index.git";
+        netshoot = "https://github.com/nilic/kubectl-netshoot.git";
+      };
+      plugins = [
+        "netshoot/netshoot"
+        "df-pv"
+        "ctx"
+        "ns"
+        "kluster-capacity"
+        "konfig"
+        "krew"
+        "node-shell"
+        "pv-migrate"
+        "view-secret"
+        "view-allocations"
+        "view-cert"
+        "view-secret"
+        "view-utilization"
+        "tree"
+      ];
+    };
+  };
+
 }

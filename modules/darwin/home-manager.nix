@@ -1,4 +1,4 @@
-{ config, pkgs, lib, home-manager, ... }:
+{ inputs, config, pkgs, lib, home-manager, ... }:
 
 let
   user = "nkl";
@@ -155,7 +155,7 @@ in
 
   home-manager = {
     useGlobalPkgs = true;
-    users.${user} = { pkgs, config, lib, ... }: {
+    users.${user} = { inputs, pkgs, config, lib, ... }: {
       home = {
         enableNixpkgsReleaseCheck = false;
         packages = pkgs.callPackage ./packages.nix { };

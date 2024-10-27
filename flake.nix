@@ -30,9 +30,14 @@
       url = "github:homebrew/homebrew-bundle";
       flake = false;
     };
+
+    krewfile = {
+      url = "github:brumhard/krewfile";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-    outputs = { self, nixpkgs, home-manager, darwin, nix-homebrew, ... }@inputs:
+    outputs = { self, nixpkgs, home-manager, darwin, nix-homebrew, krewfile, ... }@inputs:
     let
       systems = [ "x86_64-linux" "aarch64-darwin" ];
       forAllSystems = nixpkgs.lib.genAttrs systems;
@@ -61,6 +66,7 @@
             };
           }
         ];
+        specialArgs = { inherit inputs; };
       };
 
       homeConfigurations = forAllSystems (system: {

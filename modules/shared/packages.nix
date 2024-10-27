@@ -95,4 +95,5 @@ with pkgs; [
   speedtest-go
   neofetch
   zulu
+  go-task
 ]
