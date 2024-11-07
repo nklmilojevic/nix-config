@@ -128,6 +128,8 @@
 
     shellAliases = {
       k = "kubectl";
+      kns = "kubectl ns";
+      kctx = "kubectl ctx";
       df = "df -h";
       mkdir = "mkdir -p -v";
       ll = "ls -lha";
