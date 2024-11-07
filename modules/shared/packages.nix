@@ -1,7 +1,7 @@
 { pkgs }:
 
 with pkgs; [
-  _1password
+  _1password-cli
   bat
   cachix
   curl
@@ -44,7 +44,6 @@ with pkgs; [
   (google-cloud-sdk.withExtraComponents [ google-cloud-sdk.components.gke-gcloud-auth-plugin ])
   k9s
   kubectl
-  kubectx
   kubernetes-helm
   skaffold
   opentofu
@@ -96,4 +95,6 @@ with pkgs; [
   neofetch
   zulu
   go-task
+  tshark
+  nixd
 ]
