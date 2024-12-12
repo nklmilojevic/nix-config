@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -22,10 +23,12 @@
       url = "github:homebrew/homebrew-core";
       flake = false;
     };
+
     homebrew-cask = {
       url = "github:homebrew/homebrew-cask";
       flake = false;
     };
+
     homebrew-bundle = {
       url = "github:homebrew/homebrew-bundle";
       flake = false;
@@ -35,21 +38,53 @@
       url = "github:brumhard/krewfile";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    talhelper = {
+      url = "github:budimanjojo/talhelper";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
-    outputs = { self, nixpkgs, home-manager, darwin, nix-homebrew, krewfile, ... }@inputs:
+  outputs = { self, nixpkgs, flake-utils, home-manager, darwin, nix-homebrew, krewfile, talhelper, ... }@inputs:
     let
-      systems = [ "x86_64-linux" "aarch64-darwin" ];
-      forAllSystems = nixpkgs.lib.genAttrs systems;
-
-      pkgsFor = system: import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      };
+      overlays = [
+        (final: prev: {
+          talhelper = talhelper.packages.${prev.system}.default;
+        })
+      ];
     in
-    {
-      darwinConfigurations."daedalus" = darwin.lib.darwinSystem {
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs {
+          inherit system overlays;
+          config.allowUnfree = true;
+        };
+      in
+      {
+        homeConfigurations.linux = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [
+            ./hosts/linux
+          ];
+        };
+
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [
+            nixpkgs-fmt
+            nil
+            talhelper
+          ];
+        };
+      }
+    ) // {
+      darwinConfigurations.daedalus = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
+        pkgs = import nixpkgs {
+          system = "aarch64-darwin";
+          inherit overlays;
+          config.allowUnfree = true;
+        };
         modules = [
           home-manager.darwinModules.home-manager
           ./hosts/darwin
@@ -68,23 +103,5 @@
         ];
         specialArgs = { inherit inputs; };
       };
-
-      homeConfigurations = forAllSystems (system: {
-        "linux" = home-manager.lib.homeManagerConfiguration {
-          pkgs = pkgsFor system;
-          modules = [
-            ./hosts/linux
-          ];
-        };
-      });
-
-      devShells = forAllSystems (system: {
-        default = (pkgsFor system).mkShell {
-          buildInputs = with pkgsFor system; [
-            nixpkgs-fmt
-            nil
-          ];
-        };
-      });
     };
 }

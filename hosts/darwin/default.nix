@@ -1,4 +1,4 @@
-{ inputs, config, pkgs, ... }:
+{ inputs, lib, config, pkgs, ... }:
 
 {
   imports = [
@@ -19,6 +19,8 @@
       inputs.krewfile.homeManagerModules.krewfile
     ];
 
+    programs.man.generateCaches = false;
+
     programs.krewfile = {
       enable = true;
       krewPackage = pkgs.krew;
@@ -30,6 +32,7 @@
         "netshoot/netshoot"
         "df-pv"
         "ctx"
+        "exec-as"
         "ns"
         "kluster-capacity"
         "konfig"

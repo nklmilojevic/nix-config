@@ -73,6 +73,7 @@
         end
 
         nix-your-shell fish | source
+        task --completion fish | source
       '';
 
     plugins = [
@@ -127,6 +128,7 @@
     ];
 
     shellAliases = {
+      kubectl = "kubecolor";
       k = "kubectl";
       kns = "kubectl ns";
       kctx = "kubectl ctx";

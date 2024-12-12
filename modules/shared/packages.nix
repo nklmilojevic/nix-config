@@ -14,7 +14,7 @@ with pkgs; [
   gh
   git
   htop
-  inetutils
+  unixtools.ping
   jq
   mc
   mtr
@@ -33,7 +33,6 @@ with pkgs; [
   php83
   php83Packages.composer
   php83Packages.php-cs-fixer
-  php83Packages.deployer
 
 
   clickhouse
@@ -94,7 +93,22 @@ with pkgs; [
   speedtest-go
   neofetch
   zulu
-  go-task
+
   tshark
   nixd
+  llm
+  ollama
+
+  cloudflared
+  go-task
+  talosctl
+  yq
+  helmfile
+  kubeconform
+  kustomize
+  minijinja
+  moreutils
+  talhelper
+  stern
+  kubecolor
 ]

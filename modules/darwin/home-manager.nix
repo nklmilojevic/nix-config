@@ -8,7 +8,15 @@ in
     ./homebrew
   ];
 
- documentation.man.enable = false;
+documentation = {
+  enable = false;
+  doc.enable = false;
+  info.enable = false;
+};
+
+documentation.man = {
+  enable = false;
+};
 
  environment.userLaunchAgents = {
     "com.1password.SSH_AUTH_SOCK.plist" = {
@@ -159,7 +167,7 @@ in
       home = {
         enableNixpkgsReleaseCheck = false;
         packages = pkgs.callPackage ./packages.nix { };
-        stateVersion = "24.11";
+        stateVersion = "25.05";
       };
 
       imports = [

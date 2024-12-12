@@ -10,6 +10,7 @@
 
     casks = [
       "1password"
+      "balenaetcher"
       "brave-browser"
       "cleanshot"
       "cloudflare-warp"
