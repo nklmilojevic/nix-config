@@ -18,6 +18,7 @@
       "devutils"
       "discord"
       "elgato-stream-deck"
+      "eloston-chromium"
       "firefox@developer-edition"
       "forklift"
       "hammerspoon"

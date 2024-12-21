@@ -18,5 +18,6 @@ hs.spoons.use("AppLauncher", {
         d = "Discord",
         s = "Spotify",
         l = "Linear",
+        h = "Home Assistant",
     },
 })

@@ -38,6 +38,7 @@
         "konfig"
         "krew"
         "node-shell"
+        "rook-ceph"
         "pv-migrate"
         "view-secret"
         "view-allocations"
