@@ -11,6 +11,7 @@
     ./programs/git
     ./programs/k9s
     ./programs/krew
+    ./programs/lazygit
     ./programs/neovim
     ./programs/zoxide
   ];

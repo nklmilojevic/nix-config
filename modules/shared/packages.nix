@@ -59,7 +59,6 @@ with pkgs; [
   nix-your-shell
   zoxide
 
-  lazygit
   lazydocker
 
   go
@@ -111,4 +110,5 @@ with pkgs; [
   talhelper
   stern
   kubecolor
+  kubecm
 ]
