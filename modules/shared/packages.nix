@@ -111,4 +111,5 @@ with pkgs; [
   stern
   kubecolor
   kubecm
+  zellij
 ]

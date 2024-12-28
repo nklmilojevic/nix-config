@@ -59,7 +59,7 @@ documentation.man = {
         "/System/Applications/Messages.app/"
         "/Applications/Slack.app/"
         "/Applications/Telegram.app"
-        "/Applications/WezTerm.app/"
+        "/Applications/Ghostty.app/"
         "/Applications/Fantastical.app/"
         "/Applications/Discord.app/"
         "/Applications/Anybox.app/"
@@ -116,29 +116,6 @@ documentation.man = {
   };
 
   system.activationScripts.postUserActivation.text = ''
-    # Following line should allow us to avoid a logout/login cycle
-    # defaults write com.apple.dock persistent-others -array-add "<dict>
-    #             <key>tile-data</key>
-    #             <dict>
-    #                 <key>arrangement</key>
-    #                 <integer>2</integer>
-    #                 <key>displayas</key>
-    #                 <integer>1</integer>
-    #                 <key>file-data</key>
-    #                 <dict>
-    #                     <key>_CFURLString</key>
-    #                     <string>file:///Users/nkl/Downloads</string>
-    #                     <key>_CFURLStringType</key>
-    #                     <integer>15</integer>
-    #                 </dict>
-    #                 <key>file-type</key>
-    #                 <integer>2</integer>
-    #                 <key>showas</key>
-    #                 <integer>1</integer>
-    #             </dict>
-    #             <key>tile-type</key>
-    #             <string>directory-tile</string>
-    #         </dict>"
     /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
     killall Dock
   '';
@@ -172,7 +149,7 @@ documentation.man = {
 
       imports = [
         ../shared/home-manager.nix
-        ./programs/wezterm
+        ./programs/ghostty
         ./programs/hammerspoon
         ./programs/karabiner
         ./programs/1password-agent

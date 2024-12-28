@@ -4,6 +4,7 @@
   homebrew = {
     enable = true;
     onActivation.cleanup = "uninstall";
+    onActivation.upgrade = true;
 
     taps = builtins.attrNames config.nix-homebrew.taps;
     brews = [ ];
@@ -15,12 +16,14 @@
       "cleanshot"
       "cloudflare-warp"
       "cryptomator"
+      "daisydisk"
       "devutils"
       "discord"
       "elgato-stream-deck"
       "eloston-chromium"
       "firefox@developer-edition"
       "forklift"
+      "ghostty"
       "hammerspoon"
       "iina"
       "intellij-idea"
@@ -47,8 +50,6 @@
       "visual-studio-code"
       "vlc"
       "whatsapp"
-      "wezterm"
-      "winbox"
       "zed"
       "zoom"
     ];

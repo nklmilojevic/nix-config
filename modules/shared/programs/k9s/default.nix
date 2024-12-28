@@ -75,12 +75,12 @@
         k9s = {
           body = {
             fgColor = "#f8f8f2";
-            bgColor = "#22212c";
+            bgColor = "default";
             logoColor = "#bd93f9";
           };
           prompt = {
             fgColor = "#f8f8f2";
-            bgColor = "#22212c";
+            bgColor = "default";
             suggestColor = "#bd93f9";
           };
           info = {
@@ -89,7 +89,7 @@
           };
           dialog = {
             fgColor = "#f8f8f2";
-            bgColor = "#22212c";
+            bgColor = "default";
             buttonFgColor = "#f8f8f2";
             buttonBgColor = "#bd93f9";
             buttonFocusFgColor = "#f1fa8c";
@@ -135,16 +135,16 @@
             };
             table = {
               fgColor = "#f8f8f2";
-              bgColor = "#22212c";
+              bgColor = "default";
               header = {
                 fgColor = "#f8f8f2";
-                bgColor = "#22212c";
+                bgColor = "default";
                 sorterColor = "#8be9fd";
               };
             };
             xray = {
               fgColor = "#f8f8f2";
-              bgColor = "#22212c";
+              bgColor = "default";
               cursorColor = "#44475a";
               graphicColor = "#bd93f9";
               showIcons = false;
@@ -156,10 +156,10 @@
             };
             logs = {
               fgColor = "#f8f8f2";
-              bgColor = "#22212c";
+              bgColor = "default";
               indicator = {
                 fgColor = "#f8f8f2";
-                bgColor = "#bd93f9";
+                bgColor = "default";
                 toggleOnColor = "#50fa7b";
                 toggleOffColor = "#8be9fd";
               };

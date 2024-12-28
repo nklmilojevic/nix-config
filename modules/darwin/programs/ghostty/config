@@ -1,0 +1,40 @@
+# Theme config
+theme = Dracula
+background = #1e1f29
+foreground = #f8f8f2
+selection-background = #44475a
+selection-foreground = #ffffff
+cursor-color = #bbbbbb
+palette = 0=#000000
+palette = 1=#ff5555
+palette = 2=#50fa7b
+palette = 3=#f1fa8c
+palette = 4=#bd93f9
+palette = 5=#ff79c6
+palette = 6=#8be9fd
+palette = 7=#bbbbbb
+palette = 8=#555555
+palette = 9=#ff5555
+palette = 10=#50fa7b
+palette = 11=#f1fa8c
+palette = 12=#bd93f9
+palette = 13=#ff79c6
+palette = 14=#8be9fd
+palette = 15=#ffffff
+
+# Fonts
+font-family = "TX02 Nerd Font"
+font-size = 16
+font-thicken = true
+
+# macOS specific
+macos-titlebar-style = hidden
+macos-icon = custom-style
+macos-icon-frame = aluminum
+macos-icon-ghost-color = #44475a
+macos-icon-screen-color = #1e1f29
+
+# Keybindings
+keybind = ctrl+space>plus=new_split:right
+keybind = ctrl+space>minus=new_split:down
+macos-option-as-alt = right

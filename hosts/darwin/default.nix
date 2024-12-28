@@ -30,6 +30,7 @@
       };
       plugins = [
         "netshoot/netshoot"
+        "browse-pvc"
         "df-pv"
         "ctx"
         "exec-as"
