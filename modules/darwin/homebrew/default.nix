@@ -50,6 +50,7 @@
       "visual-studio-code"
       "vlc"
       "whatsapp"
+      "wezterm@nightly"
       "zed"
       "zoom"
     ];

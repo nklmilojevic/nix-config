@@ -59,7 +59,7 @@ documentation.man = {
         "/System/Applications/Messages.app/"
         "/Applications/Slack.app/"
         "/Applications/Telegram.app"
-        "/Applications/Ghostty.app/"
+        "/Applications/WezTerm.app/"
         "/Applications/Fantastical.app/"
         "/Applications/Discord.app/"
         "/Applications/Anybox.app/"
@@ -153,6 +153,7 @@ documentation.man = {
         ./programs/hammerspoon
         ./programs/karabiner
         ./programs/1password-agent
+        ./programs/wezterm
       ];
 
 

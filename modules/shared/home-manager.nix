@@ -13,7 +13,6 @@
     ./programs/krew
     ./programs/lazygit
     ./programs/neovim
-    ./programs/zellij
     ./programs/zoxide
   ];
 }

@@ -2,6 +2,7 @@ macbook = {
   { 'Firefox Developer Edition', nil, nil, hs.layout.maximized, nil, nil },
   { 'Safari', nil, nil, hs.layout.maximized, nil, nil },
   { 'Brave Browser', nil, nil, hs.layout.maximized, nil, nil },
+  { 'Ghostty', nil, nil, hs.layout.maximized, nil, nil },
   { 'WezTerm', nil, nil, hs.layout.maximized, nil, nil },
   { 'Slack', nil, nil, hs.layout.maximized, nil, nil },
   { 'Telegram', nil, nil, hs.layout.right50, nil, nil },
@@ -11,16 +12,16 @@ macbook = {
   { 'Things', nil, nil, nil, nil, hs.geometry.rect(354, 338, 935, 700) },
   { 'Spotify', nil, nil, hs.layout.maximized, nil, nil },
   { 'Discord', nil, nil, hs.layout.maximized, nil, nil },
-  { 'Bear', nil, nil, hs.layout.maximized, nil, nil },
   { 'Anybox', nil, nil, hs.layout.maximized, nil, nil },
-  { 'Beeper', nil, nil, hs.layout.right50, nil, nil },
   { 'Visual Studio Code', nil, nil, hs.layout.maximized, nil, nil },
+  { 'Zed', nil, nil, hs.layout.maximized, nil, nil },
 }
 
 dell = {
   { 'Firefox Developer Edition', nil, nil, hs.layout.left50, nil, nil },
   { 'Safari', nil, nil, hs.layout.left50, nil, nil },
   { 'Brave Browser', nil, nil, hs.layout.left50, nil, nil },
+  { 'Ghostty', nil, nil, hs.layout.right50, nil, nil },
   { 'WezTerm', nil, nil, hs.layout.right50, nil, nil },
   { 'Slack', nil, nil, hs.layout.left50, nil, nil },
   { 'Telegram', 'Telegram', nil, hs.layout.right30, nil, nil },
@@ -30,10 +31,9 @@ dell = {
   { 'Things', nil, nil, nil, nil, hs.geometry.rect(588, 555, 935, 700) },
   { 'Spotify', nil, nil, nil, nil, hs.geometry.rect(1518, 312, 1800, 986) },
   { 'Discord', nil, nil, hs.layout.right50, nil, nil },
-  { 'Bear', nil, nil, hs.layout.left30, nil, nil },
   { 'Anybox', nil, nil, nil, nil, hs.geometry.rect(965, 313, 1430, 1079) },
-  { 'Beeper', nil, nil, hs.layout.right30, nil, nil },
   { 'Visual Studio Code', nil, nil, hs.layout.left50, nil, nil },
+  { 'Zed', nil, nil, hs.layout.left50, nil, nil },
 }
 
 function screenDetect()

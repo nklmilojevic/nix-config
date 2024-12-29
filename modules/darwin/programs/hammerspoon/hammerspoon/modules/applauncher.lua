@@ -13,7 +13,7 @@ hs.spoons.use("AppLauncher", {
         z = "Messages",
         f = "Brave Browser",
         i = "IntelliJ IDEA",
-        r = "Ghostty",
+        r = "WezTerm",
         t = "Telegram",
         d = "Discord",
         s = "Spotify",
