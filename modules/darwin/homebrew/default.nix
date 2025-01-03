@@ -42,6 +42,7 @@
       "rapidapi"
       "raycast"
       "slack"
+      "syntax-highlight"
       "spotify"
       "stats"
       "tableplus"
