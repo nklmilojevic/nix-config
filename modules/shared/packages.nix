@@ -114,5 +114,6 @@ with pkgs; [
   stern
   kubecolor
   kubecm
+  
   timg
 ]
