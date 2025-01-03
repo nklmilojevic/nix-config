@@ -1,13 +1,11 @@
-{ config, pkgs, ... }:
-
-{
+{config, ...}: {
   homebrew = {
     enable = true;
     onActivation.cleanup = "uninstall";
     onActivation.upgrade = true;
 
     taps = builtins.attrNames config.nix-homebrew.taps;
-    brews = [ ];
+    brews = [];
 
     casks = [
       "1password"
@@ -36,6 +34,7 @@
       "middle"
       "notion"
       "orbstack"
+      "orion"
       "plex"
       "plexamp"
       "protonvpn"

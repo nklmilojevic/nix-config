@@ -1,5 +1,4 @@
-{ pkgs }:
-
+{pkgs}:
 with pkgs; [
   _1password-cli
   bat
@@ -13,7 +12,6 @@ with pkgs; [
   gettext
   gh
   git
-  htop
   unixtools.ping
   jq
   mc
@@ -30,17 +28,19 @@ with pkgs; [
   watch
   wget
 
+  nil
+  alejandra
+
   php83
   php83Packages.composer
   php83Packages.php-cs-fixer
-
 
   clickhouse
   postgresql_16
   redis
 
   fluxcd
-  (google-cloud-sdk.withExtraComponents [ google-cloud-sdk.components.gke-gcloud-auth-plugin ])
+  (google-cloud-sdk.withExtraComponents [google-cloud-sdk.components.gke-gcloud-auth-plugin])
   k9s
   kubectl
   kubernetes-helm
@@ -52,10 +52,13 @@ with pkgs; [
 
   atuin
   direnv
+
   fish
   fishPlugins.puffer
   fishPlugins.done
   fishPlugins.tide
+  fishPlugins.git-abbr
+
   nix-your-shell
   zoxide
 
@@ -111,5 +114,5 @@ with pkgs; [
   stern
   kubecolor
   kubecm
-  zellij
+  timg
 ]

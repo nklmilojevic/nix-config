@@ -43,25 +43,32 @@
       url = "github:budimanjojo/talhelper";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
   };
 
-  outputs = { self, nixpkgs, flake-utils, home-manager, darwin, nix-homebrew, krewfile, talhelper, ... }@inputs:
-    let
-      overlays = [
-        (final: prev: {
-          talhelper = talhelper.packages.${prev.system}.default;
-        })
-      ];
-    in
-    flake-utils.lib.eachDefaultSystem (system:
-      let
+  outputs = {
+    self,
+    nixpkgs,
+    flake-utils,
+    home-manager,
+    darwin,
+    nix-homebrew,
+    krewfile,
+    talhelper,
+    ...
+  } @ inputs: let
+    overlays = [
+      (final: prev: {
+        talhelper = talhelper.packages.${prev.system}.default;
+      })
+    ];
+  in
+    flake-utils.lib.eachDefaultSystem (
+      system: let
         pkgs = import nixpkgs {
           inherit system overlays;
           config.allowUnfree = true;
         };
-      in
-      {
+      in {
         homeConfigurations.linux = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [
@@ -77,7 +84,8 @@
           ];
         };
       }
-    ) // {
+    )
+    // {
       darwinConfigurations.daedalus = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         pkgs = import nixpkgs {
@@ -101,7 +109,7 @@
             };
           }
         ];
-        specialArgs = { inherit inputs; };
+        specialArgs = {inherit inputs;};
       };
     };
 }

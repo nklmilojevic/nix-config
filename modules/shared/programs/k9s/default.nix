@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{...}: {
   programs.k9s = {
     enable = true;
 
@@ -45,8 +43,8 @@
         imageScans = {
           enable = false;
           exclusions = {
-            namespaces = [ ];
-            labels = { };
+            namespaces = [];
+            labels = {};
           };
         };
         logger = {

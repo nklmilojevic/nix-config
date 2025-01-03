@@ -1,24 +1,21 @@
-{ inputs, config, pkgs, lib, home-manager, ... }:
-
-let
+{pkgs, ...}: let
   user = "nkl";
-in
-{
+in {
   imports = [
     ./homebrew
   ];
 
-documentation = {
-  enable = false;
-  doc.enable = false;
-  info.enable = false;
-};
+  documentation = {
+    enable = false;
+    doc.enable = false;
+    info.enable = false;
+  };
 
-documentation.man = {
-  enable = false;
-};
+  documentation.man = {
+    enable = false;
+  };
 
- environment.userLaunchAgents = {
+  environment.userLaunchAgents = {
     "com.1password.SSH_AUTH_SOCK.plist" = {
       source = pkgs.writeText "com.1password.SSH_AUTH_SOCK.plist" ''
         <?xml version="1.0" encoding="UTF-8"?>
@@ -59,7 +56,7 @@ documentation.man = {
         "/System/Applications/Messages.app/"
         "/Applications/Slack.app/"
         "/Applications/Telegram.app"
-        "/Applications/WezTerm.app/"
+        "/Applications/Ghostty.app/"
         "/Applications/Fantastical.app/"
         "/Applications/Discord.app/"
         "/Applications/Anybox.app/"
@@ -137,13 +134,12 @@ documentation.man = {
 
   programs.fish.enable = true;
 
-
   home-manager = {
     useGlobalPkgs = true;
-    users.${user} = { inputs, pkgs, config, lib, ... }: {
+    users.${user} = {pkgs, ...}: {
       home = {
         enableNixpkgsReleaseCheck = false;
-        packages = pkgs.callPackage ./packages.nix { };
+        packages = pkgs.callPackage ./packages.nix {};
         stateVersion = "25.05";
       };
 
@@ -156,12 +152,9 @@ documentation.man = {
         ./programs/wezterm
       ];
 
-
       # Marked broken Oct 20, 2022 check later to remove this
       # https://github.com/nix-community/home-manager/issues/3344
       manual.manpages.enable = false;
     };
   };
-
-
 }

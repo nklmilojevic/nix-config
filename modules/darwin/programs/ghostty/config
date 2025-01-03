@@ -2,17 +2,69 @@
 theme = Dracula
 
 # Fonts
-font-family = "TX02 Nerd Font"
+font-family = "TX-02 Retina ExtraCondensed"
 font-size = 16
 font-thicken = true
 
 # macOS specific
-macos-titlebar-style = tabs
+macos-titlebar-style = hidden
 macos-icon = custom-style
 macos-icon-frame = aluminum
 macos-icon-ghost-color = #44475a
-macos-icon-screen-color = #1e1f29
+macos-icon-screen-color = #1e1f29,#44475a
+
+window-padding-balance = true
 
 # Keybindings
+keybind = cmd+right=text:\x05
+keybind = cmd+left=text:\x01
+keybind = alt+left=esc:b
+keybind = alt+right=esc:f
+keybind = cmd+delete=text:\x0b
+keybind = cmd+backspace=text:\x15
+keybind = opt+delete=esc:d
 
-macos-option-as-alt = right
+# tmux keybindings
+keybind = super+one=text:\x001
+keybind = super+two=text:\x002
+keybind = super+three=text:\x003
+keybind = super+four=text:\x004
+keybind = super+five=text:\x005
+keybind = super+six=text:\x006
+keybind = super+seven=text:\x007
+keybind = super+eight=text:\x008
+keybind = super+nine=text:\x009
+
+# open new window
+keybind = super+t=text:\x00c
+
+# close window
+keybind = super+w=text:\x00x
+
+# open session view
+keybind = super+o=text:\x00s
+
+# open last session
+keybind = super+l=text:\x00L
+
+# horizontal split
+keybind = super+plus=text:\x00+
+keybind = super+d=text:\x00+
+
+# vertical split
+keybind = super+minus=text:\x00-
+keybind = super+shift+d=text:\x00-
+
+# fullscreen pane
+keybind = super+z=text:\x00z
+
+# switch panes with direction
+keybind = super+left=text:\x00\x1b[D
+keybind = super+right=text:\x00\x1b[C
+keybind = super+up=text:\x00\x1b[A
+keybind = super+down=text:\x00\x1b[B
+
+# cmd+K to clear doesn't work in tmux by default
+keybind = super+k=text:\x0c
+
+window-colorspace = display-p3
