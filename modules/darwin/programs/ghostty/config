@@ -66,5 +66,3 @@ keybind = super+down=text:\x00\x1b[B
 
 # cmd+K to clear doesn't work in tmux by default
 keybind = super+k=text:\x0c
-
-window-colorspace = display-p3
