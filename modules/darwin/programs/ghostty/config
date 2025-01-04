@@ -3,6 +3,7 @@ theme = Dracula
 
 # Fonts
 font-family = "TX-02 Retina ExtraCondensed"
+font-family-italic = "TX-02 Retina ExtraCondensed Oblique"
 font-size = 16
 font-thicken = true
 
@@ -14,6 +15,9 @@ macos-icon-ghost-color = #44475a
 macos-icon-screen-color = #1e1f29,#44475a
 
 window-padding-balance = true
+window-padding-x = 4
+window-padding-y = 1
+window-padding-color = "extend"
 
 # Keybindings
 keybind = cmd+right=text:\x05
