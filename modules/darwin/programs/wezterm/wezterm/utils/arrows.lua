@@ -12,8 +12,8 @@ function M:arrow(direction)
   if direction ~= 'left' and direction ~= 'right' then
     wt.log_error(
       'Invalid direction: '
-        .. tostring(direction)
-        .. ". Allowed values are 'left' or 'right'."
+      .. tostring(direction)
+      .. ". Allowed values are 'left' or 'right'."
     )
   end
 

@@ -21,12 +21,12 @@ function M.setup(config)
       action = act.SplitHorizontal { domain = 'CurrentPaneDomain' },
     },
     {
-      mods = "CMD",
+      mods = 'CMD',
       key = 'd',
       action = act.SplitVertical { domain = 'CurrentPaneDomain' },
     },
     {
-      mods = "CMD|SHIFT",
+      mods = 'CMD|SHIFT',
       key = 'd',
       action = act.SplitHorizontal { domain = 'CurrentPaneDomain' },
     },
@@ -37,7 +37,7 @@ function M.setup(config)
     },
 
     -- Close pane
-    { mods = M.leader, key = 'x', action = act.CloseCurrentPane { confirm = false } },
+    { mods = M.leader, key = 'x',          action = act.CloseCurrentPane { confirm = false } },
 
     -- Modes
     {
@@ -56,17 +56,21 @@ function M.setup(config)
         timeout_milliseconds = 1000,
       },
     },
-    { key = "c", mods = "LEADER", action = act.ActivateCopyMode },
+    { key = 'c',       mods = 'LEADER',    action = act.ActivateCopyMode },
     -- Tab navigation
-    { mods = M.leader, key = 'LeftArrow', action = act.ActivateTabRelative(-1) },
+    { mods = M.leader, key = 'LeftArrow',  action = act.ActivateTabRelative(-1) },
     { mods = M.leader, key = 'RightArrow', action = act.ActivateTabRelative(1) },
-    { mods = M.leader,  key = "l", action = act.EmitEvent('trigger-lazygit') },
+    { mods = M.leader, key = 'l',          action = act.EmitEvent 'trigger-lazygit' },
     -- Alt arrow navigation
-    { mods = 'OPT', key = 'LeftArrow', action = act.SendString('\x1bb') },
-    { mods = 'OPT', key = 'RightArrow', action = act.SendString('\x1bf') },
+    { mods = 'OPT',    key = 'LeftArrow',  action = act.SendString '\x1bb' },
+    { mods = 'OPT',    key = 'RightArrow', action = act.SendString '\x1bf' },
 
     -- Clear scrollback
-    { mods = M.cmd_mode, key = 'k', action = act.ClearScrollback 'ScrollbackAndViewport' },
+    {
+      mods = M.cmd_mode,
+      key = 'k',
+      action = act.ClearScrollback 'ScrollbackAndViewport',
+    },
     { mods = M.cmd_mode, key = 't', action = act.SpawnTab 'CurrentPaneDomain' },
   }
 end

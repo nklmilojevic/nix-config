@@ -16,13 +16,12 @@ function M.setup(config)
 
   config.font_rules = {
     {
-      intensity = "Bold",
-      font = wezterm.font({
-        family = "TX-02 Retina ExtraCondensed",
-      }),
+      intensity = 'Bold',
+      font = wezterm.font {
+        family = 'TX-02 Retina ExtraCondensed',
+      },
     },
   }
-
 end
 
 return M
