@@ -11,6 +11,7 @@
       "1password"
       "balenaetcher"
       "brave-browser"
+      "calibre"
       "cleanshot"
       "cloudflare-warp"
       "cryptomator"
