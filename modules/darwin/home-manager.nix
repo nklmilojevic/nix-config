@@ -15,6 +15,14 @@ in {
     enable = false;
   };
 
+  environment = {
+    etc."pam.d/sudo_local".text = ''
+      # Managed by Nix Darwin
+      auth       optional       ${pkgs.pam-reattach}/lib/pam/pam_reattach.so ignore_ssh
+      auth       sufficient     pam_tid.so
+    '';
+  };
+
   environment.userLaunchAgents = {
     "com.1password.SSH_AUTH_SOCK.plist" = {
       source = pkgs.writeText "com.1password.SSH_AUTH_SOCK.plist" ''
