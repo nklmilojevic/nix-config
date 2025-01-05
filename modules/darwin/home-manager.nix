@@ -1,9 +1,9 @@
 {pkgs, ...}: let
   user = "nkl";
+  homebrewImport = ./homebrew;
 in {
   imports = [
-    ./homebrew
-  ];
+    homebrewImport
 
   documentation = {
     enable = false;

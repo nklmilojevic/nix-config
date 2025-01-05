@@ -1,6 +1,7 @@
 {pkgs, ...}: let
   user = "nkl";
   xdg_configHome = "/home/${user}/.config";
+  sharedImports = ../shared/home-manager.nix;
 in {
   home = {
     enableNixpkgsReleaseCheck = false;
@@ -11,6 +12,6 @@ in {
   };
 
   imports = [
-    ../shared/home-manager.nix
+    sharedImports
   ];
 }
