@@ -1,6 +1,7 @@
 {pkgs, ...}: let
   user = "nkl";
   homebrewImport = ./homebrew;
+  packagesFile = ./packages.nix;
 in {
   imports = [
     homebrewImport
@@ -147,7 +148,7 @@ in {
     users.${user} = {pkgs, ...}: {
       home = {
         enableNixpkgsReleaseCheck = false;
-        packages = pkgs.callPackage ./packages.nix {};
+        packages = pkgs.callPackage packagesFile {};
         stateVersion = "25.05";
       };
 
