@@ -41,7 +41,7 @@
       fish_add_path "$HOME/.npm-global/bin"
 
       set -gx SOPS_AGE_KEY_FILE $HOME/.config/sops/age/keys.txt
-      set -gx EDITOR vim
+      set -gx EDITOR hx
       set -gx LANG en_US.UTF-8
       set -gx LC_ALL en_US.UTF-8
       set -gx HOMEBREW_NO_ANALYTICS 1
@@ -50,6 +50,7 @@
 
       # theme setup
       set -gx tide_pwd_icon " "
+      set -gx tide_pwd_icon_home ""
       set -gx tide_character_icon "❯"
       set -gx tide_left_prompt_items context pwd git character
       set -gx tide_right_prompt_items status cmd_duration jobs direnv nix_shell python ruby go gcloud kubectl terraform elixir time
@@ -144,6 +145,18 @@
         argumentNames = ["process"];
         description = "greps for processes";
         body = "ps aux | rg $process | rg -v rg";
+      };
+      y = {
+        argumentNames = ["argv"];
+        description = "opens yazi file manager and changes directory on exit";
+        body = ''
+          set tmp (mktemp -t "yazi-cwd.XXXXXX")
+          yazi $argv --cwd-file="$tmp"
+          if set cwd (command cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+            builtin cd -- "$cwd"
+          end
+          rm -f -- "$tmp"
+        '';
       };
     };
   };
