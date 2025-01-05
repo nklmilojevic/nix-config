@@ -114,6 +114,24 @@ with pkgs; [
   stern
   kubecolor
   kubecm
-  
+
   timg
+
+  helix
+  yazi
+
+  yaml-language-server
+  gopls
+  intelephense
+  nodePackages.vscode-json-languageserver
+  taplo
+  marksman
+  markdown-oxide
+  vscode-langservers-extracted
+  nodePackages.typescript-language-server
+  emmet-ls
+  zls
+  zig
+
+  aider-chat
 ]

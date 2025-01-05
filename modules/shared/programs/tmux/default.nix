@@ -81,8 +81,14 @@
       set-option -g renumber-windows on
       set-option -sa terminal-overrides ",xterm*:Tc"
       set-option -g default-command ${pkgs.fish}/bin/fish
-      unbind -T copy-mode-vi MouseDragEnd1Pane
 
+      set -g allow-passthrough on
+      set -ga update-environment TERM
+      set -ga update-environment TERM_PROGRAM
+
+      bind -r g popup -d '#{pane_current_path}' -E -w 80% -h 80% lazygit
+      bind -n C-e popup -Ed '#{pane_current_path}' -w85% -h85% yazi
+      unbind -T copy-mode-vi MouseDragEnd1Pane
       # Split bindings
       bind + split-window -h
       bind - split-window -v
