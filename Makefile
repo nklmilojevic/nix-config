@@ -98,24 +98,26 @@ generate-secrets:
 	@mkdir -p $(dir $(SECRETS_FILE))
 	@echo "# Generated secrets - Do not edit manually" > $(SECRETS_FILE)
 	@echo "" >> $(SECRETS_FILE)
-	@echo "set -gx GITHUB_TOKEN \"$(shell $(OP) read 'op://Private/Github Personal Access Token/token')\"" >> $(SECRETS_FILE)
-	@echo "set -gx OPENAI_API_KEY \"$(shell $(OP) read 'op://Private/OpenAI key/apikey')\"" >> $(SECRETS_FILE)
+	@echo "set -gx GITHUB_TOKEN \"$(shell $(OP) read 'op://legemi4nfmddm5osivm3cmejem/gf7hmnugrwm5rtdbmipz66daum/token')\"" >> $(SECRETS_FILE)
+	@echo "set -gx OPENAI_API_KEY \"$(shell $(OP) read 'op://legemi4nfmddm5osivm3cmejem/k5spka7d2l4moyxfe5mlo2v4na/apikey')\"" >> $(SECRETS_FILE)
+	@echo "set -gx AWS_ACCESS_KEY_ID \"$(shell $(OP) read 'op://awxerreoeg3k4w6tsh2kc6rr7i/2kjsroafpbafkfxd5sfzsreqpm/AWS_ACCESS_KEY_ID')\"" >> $(SECRETS_FILE)
+	@echo "set -gx AWS_SECRET_ACCESS_KEY \"$(shell $(OP) read 'op://awxerreoeg3k4w6tsh2kc6rr7i/2kjsroafpbafkfxd5sfzsreqpm/AWS_SECRET_ACCESS_KEY')\"" >> $(SECRETS_FILE)
 	@echo "Secrets generated in $(SECRETS_FILE)"
 
 generate-ssh-config:
 	@echo "Generating SSH config..."
 	@mkdir -p $(dir $(SSH_CONFIG_FILE))
-	@$(OP) read 'op://Private/SSH Config/notesPlain' > $(SSH_CONFIG_FILE)
+	@$(OP) read 'op://legemi4nfmddm5osivm3cmejem/eallxdl2umzqln63sb46m3w32a/notesPlain' > $(SSH_CONFIG_FILE)
 	@echo "SSH config generated in $(SSH_CONFIG_FILE)"
 
 generate-atuin-key:
 	@echo "Generating Atuin key..."
 	@mkdir -p $(dir $(ATUIN_KEY_FILE))
-	@$(OP) read 'op://Private/atuin key/password' > $(ATUIN_KEY_FILE)
+	@$(OP) read 'op://legemi4nfmddm5osivm3cmejem/7sov5yg4zpikuz25m2itz6ndhi/password' > $(ATUIN_KEY_FILE)
 	@echo "Atuin key generated in $(ATUIN_KEY_FILE)"
 
 generate-age-key:
 	@echo "Generating Age key..."
 	@mkdir -p $(dir $(AGE_KEY_FILE))
-	@$(OP) read 'op://Private/age key/password' > $(AGE_KEY_FILE)
+	@$(OP) read 'op://legemi4nfmddm5osivm3cmejem/rsguk7qmlg2pufvtc7xyd2h6gi/password' > $(AGE_KEY_FILE)
 	@echo "Age key generated in $(AGE_KEY_FILE)"
