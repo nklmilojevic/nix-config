@@ -68,10 +68,11 @@ with pkgs; [
   hugo
 
   pre-commit
-  python311
-  python311Packages.pip
-  python311Packages.yamllint
-  python311Packages.pyyaml
+  python312
+  python312Packages.pip
+  python312Packages.yamllint
+  python312Packages.pyyaml
+  python312Packages.python-lsp-server
   poetry
   ruff
   uv
