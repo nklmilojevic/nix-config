@@ -1,36 +1,7 @@
 {pkgs, ...}: {
   programs.fish = {
     enable = true;
-    interactiveShellInit = let
-      # generate tide config into a file containing key-value pairs
-      # example output:
-      # tide_aws_bg_color normal
-      # tide_aws_color yellow
-      # ...
-      tidecfg = let
-        script = pkgs.writeText "tide-configure-fish.fish" ''
-          set fish_function_path ${pkgs.fishPlugins.tide}/share/fish/vendor_functions.d $fish_function_path
-
-          tide configure --auto --style='Lean' --prompt_colors='True color' --show_time='24-hour format' --prompt_spacing='Compact' --icons='Many icons' --transient='Yes' --lean_prompt_height='One line'
-        '';
-      in
-        pkgs.runCommandNoCC "tidecfg" {} ''
-          HOME=$(mktemp -d)
-          ${pkgs.fish}/bin/fish ${script}
-          ${pkgs.fish}/bin/fish -c "set -U --long" > $out
-        '';
-    in ''
-        # Check if tide is configured by checking one of the variables
-        if not set -q tide_aws_bg_color
-          # Load the tide configuration from the generated file
-          echo "Loading tide configuration (only once)" >&2
-          for line in (cat ${tidecfg})
-            # tide only works with universal variables
-            eval "set -U $line"
-          end
-        end
-
-      # Load secrets
+    interactiveShellInit = ''
       test -f ~/.config/fish/secrets.fish && source ~/.config/fish/secrets.fish
 
       set -g fish_greeting
@@ -48,33 +19,13 @@
       set -gx NPM_CONFIG_PREFIX $HOME/.npm-global
       set -gx SSH_AUTH_SOCK $HOME/.1password/agent.sock
 
-      # theme setup
-      set -gx tide_pwd_icon " "
-      set -gx tide_pwd_icon_home ""
-      set -gx tide_character_icon "❯"
-      set -gx tide_left_prompt_items context pwd git character
-      set -gx tide_right_prompt_items status cmd_duration jobs direnv nix_shell python ruby go gcloud kubectl terraform elixir time
-      set -gx tide_kubectl_icon "󱃾 "
-      set -gx tide_kubectl_color "blue"
-      set -gx tide_git_icon " "
-      set -gx tide_cmd_duration_icon ""
-
       set -U __done_allow_nongraphical 1
       set -U --append __done_exclude '^htop'
       set -U --append __done_exclude '^btop'
       set -U --append __done_exclude '^vim'
       set -U --append __done_exclude '^nvim'
 
-      if test (uname) = "Darwin"
-          # Set Tide variables for kubectl and related tools
-          set -gx tide_show_kubectl_on kubectl helm kubens k kubectx stern kubecm
-
-          # Set Tide variable for gcloud
-          set -gx tide_show_gcloud_on gcloud
-      end
-
       nix-your-shell fish | source
-      task --completion fish | source
     '';
 
     plugins = [
@@ -85,10 +36,6 @@
       {
         name = "done";
         src = pkgs.fishPlugins.done.src;
-      }
-      {
-        name = "tide";
-        src = pkgs.fishPlugins.tide.src;
       }
       {
         name = "fisher-plugin-macos";
