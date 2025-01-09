@@ -125,4 +125,3 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ## Acknowledgments
 
 This configuration is inspired by various Nix community members and configurations.
-```
