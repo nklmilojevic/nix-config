@@ -14,10 +14,9 @@ macos-icon-frame = aluminum
 macos-icon-ghost-color = #44475a
 macos-icon-screen-color = #1e1f29,#44475a
 
-window-padding-balance = true
-window-padding-x = 4
-window-padding-y = 1
-window-padding-color = "extend"
+window-padding-balance = false
+window-padding-x = 10
+window-padding-y = 10,2
 
 # Keybindings
 keybind = cmd+right=text:\x05
