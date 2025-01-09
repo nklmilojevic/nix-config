@@ -22,7 +22,7 @@
 
       add_newline = false;
 
-      format = "$username$hostname$directory$git_branch$git_commit$git_state$git_status$git_metrics$character";
+      format = "$username$hostname$directory$git_branch$git_commit$git_state$git_metrics$character";
 
       right_format = "$nix_shell$kubernetes$python$cmd_duration$time";
 
@@ -33,10 +33,7 @@
 
       git_branch = {
         format = "[$symbol$branch(:$remote_branch)]($style) ";
-        # style = "#00D900";
-        # style = "bold #50fa7b";
         style = "bold #ff79c6";
-        symbol = " ";
       };
 
       git_status = {
@@ -51,7 +48,6 @@
       };
 
       time = {
-        format = "[  $time]($style)";
         style = "#437675";
         disabled = false;
       };
@@ -65,7 +61,6 @@
       username = {
         format = "[$user@]($style)";
         show_always = false;
-        # style_user = "#D69B6F";
         style_user = "bold #bd93f9";
       };
 
@@ -73,8 +68,6 @@
         before_repo_root_style = "#0078A2";
         style = "#0078A2";
         disabled = false;
-        home_symbol = "~";
-        read_only = "🔒";
         repo_root_style = "bold #1D98E8";
         truncate_to_repo = false;
         truncation_length = 8;
@@ -93,49 +86,14 @@
 
       python = {
         disabled = false;
+        format = "[$symbol\$pyenv_prefix\(\$version\ )(\($virtualenv\) )]($style)";
         style = "dimmed yellow";
-        symbol = " ";
-      };
-
-      docker_context = {
-        symbol = " ";
-      };
-
-      elixir = {
-        symbol = " ";
-      };
-
-      golang = {
-        symbol = " ";
-      };
-
-      lua = {
-        symbol = " ";
       };
 
       nix_shell = {
-        symbol = " ";
+        format = "[$symbol(\($name\))]($style) ";
         style = "dimmed green";
-      };
-
-      nodejs = {
-        symbol = " ";
-      };
-
-      package = {
-        symbol = "󰏗 ";
-      };
-
-      php = {
-        symbol = " ";
-      };
-
-      ruby = {
-        symbol = " ";
-      };
-
-      rust = {
-        symbol = " ";
+        symbol = "❄️ ";
       };
     };
   };

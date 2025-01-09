@@ -89,8 +89,6 @@ with pkgs; [
   ruby_3_3
   rubyPackages_3_3.solargraph
 
-  cargo
-
   lua54Packages.luarocks-nix
 
   speedtest-go
@@ -124,6 +122,7 @@ with pkgs; [
   gopls
   intelephense
   nodePackages.vscode-json-languageserver
+  nodePackages.dockerfile-language-server-nodejs
   taplo
   marksman
   markdown-oxide
@@ -132,5 +131,6 @@ with pkgs; [
   emmet-ls
   zls
   zig
-  aider-chat
+
+  rustup
 ]
