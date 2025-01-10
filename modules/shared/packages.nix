@@ -133,4 +133,5 @@ with pkgs; [
   zig
 
   rustup
+  lsd
 ]

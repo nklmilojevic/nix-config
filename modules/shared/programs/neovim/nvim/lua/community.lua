@@ -2,7 +2,8 @@
 return {
   "AstroNvim/astrocommunity",
   { import = "astrocommunity.pack.lua" },
-  { import = "astrocommunity.colorscheme.dracula-nvim" },
+  { import = "astrocommunity.colorscheme.catppuccin" },
+  -- { import = "astrocommunity.colorscheme.dracula-nvim" },
   { import = "astrocommunity.project.project-nvim" },
   { import = "astrocommunity.search.nvim-spectre" },
   { import = "astrocommunity.editing-support.chatgpt-nvim" },

@@ -19,6 +19,7 @@
   home-manager.users.nkl = {
     imports = [
       inputs.krewfile.homeManagerModules.krewfile
+      inputs.catppuccin.homeManagerModules.catppuccin
     ];
 
     programs.man.generateCaches = false;
