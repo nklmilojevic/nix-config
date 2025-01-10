@@ -3,13 +3,14 @@
     ./programs/atuin
     ./programs/bat
     ./programs/btop
+    ./programs/bottom
     ./programs/direnv
     ./programs/doggo
-    ./programs/eza
     ./programs/fish
     ./programs/git
     ./programs/k9s
     ./programs/krew
+    ./programs/lsd
     ./programs/lazygit
     ./programs/neovim
     ./programs/starship

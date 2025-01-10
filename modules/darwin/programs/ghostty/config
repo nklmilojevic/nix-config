@@ -1,9 +1,10 @@
 # Theme config
-theme = Dracula
+theme = catppuccin-mocha
 
 # Fonts
 font-family = "TX-02 Retina ExtraCondensed"
 font-family-italic = "TX-02 Retina ExtraCondensed Oblique"
+font-family-bold = "TX-02 SemiBold ExtraCondensed"
 font-size = 16
 font-thicken = true
 

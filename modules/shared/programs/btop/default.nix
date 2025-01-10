@@ -1,9 +1,14 @@
 {...}: {
   config = {
+    catppuccin = {
+      btop = {
+        enable = true;
+      };
+    };
     programs.btop = {
       enable = true;
       settings = {
-        color_theme = "Dracula";
+        # color_theme = "Dracula";
         theme_background = false;
       };
     };

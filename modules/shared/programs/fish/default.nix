@@ -1,4 +1,10 @@
 {pkgs, ...}: {
+  catppuccin = {
+    fish = {
+      enable = true;
+    };
+  };
+
   programs.fish = {
     enable = true;
     interactiveShellInit = ''
@@ -47,15 +53,6 @@
         };
       }
       {
-        name = "dracula";
-        src = pkgs.fetchFromGitHub {
-          owner = "dracula";
-          repo = "fish";
-          rev = "269cd7d76d5104fdc2721db7b8848f6224bdf554";
-          sha256 = "sha256-Hyq4EfSmWmxwCYhp3O8agr7VWFAflcUe8BUKh50fNfY=";
-        };
-      }
-      {
         name = "fzf-fish";
         src = pkgs.fetchFromGitHub {
           owner = "PatrickF1";
@@ -82,7 +79,6 @@
       kctx = "kubectl ctx";
       df = "df -h";
       mkdir = "mkdir -p -v";
-      ll = "ls -lha";
       lg = "lazygit";
       grep = "rg";
     };
