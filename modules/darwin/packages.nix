@@ -5,4 +5,5 @@ in
   shared-packages
   ++ [
     duti
+    stress
   ]

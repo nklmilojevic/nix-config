@@ -61,15 +61,6 @@
           sha256 = "sha256-T8KYLA/r/gOKvAivKRoeqIwE2pINlxFQtZJHpOy9GMM=";
         };
       }
-      {
-        name = "tide-show-on-cmd";
-        src = pkgs.fetchFromGitHub {
-          owner = "nklmilojevic";
-          repo = "tide-show-on-cmd";
-          rev = "fb36b09e1d8d934d82ea90d99384d24d4b67db25";
-          sha256 = "sha256-p+y4MBe/13JpK/b6HCVT3VRQ05H6RCz5CW4wG9NN2HY=";
-        };
-      }
     ];
 
     shellAliases = {

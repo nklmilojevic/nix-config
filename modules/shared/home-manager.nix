@@ -3,7 +3,6 @@
     ./programs/atuin
     ./programs/bat
     ./programs/btop
-    ./programs/bottom
     ./programs/direnv
     ./programs/doggo
     ./programs/fish

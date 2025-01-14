@@ -4,7 +4,8 @@
     enableAliases = false;
     settings = {
       icons = {
-        separator = "  ";
+        when = "never";
+        separator = " ";
       };
     };
     colors = {

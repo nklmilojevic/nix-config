@@ -63,30 +63,33 @@
         talhelper = talhelper.packages.${prev.system}.default;
       })
     ];
+    supportedSystems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin"];
   in
-    flake-utils.lib.eachDefaultSystem (
-      system: let
-        pkgs = import nixpkgs {
-          inherit system overlays;
-          config.allowUnfree = true;
-        };
-      in {
-        homeConfigurations.linux = home-manager.lib.homeManagerConfiguration {
+    flake-utils.lib.eachSystem supportedSystems (system: let
+      pkgs = import nixpkgs {
+        inherit system overlays;
+        config.allowUnfree = true;
+      };
+    in {
+      devShells.default = pkgs.mkShell {
+        packages = with pkgs; [
+          nixpkgs-fmt
+          nil
+          talhelper
+        ];
+      };
+
+      homeConfigurations = {
+        linux = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [
             ./hosts/linux
+            catppuccin.homeManagerModules.catppuccin
           ];
+          extraSpecialArgs = {inherit inputs;};
         };
-
-        devShells.default = pkgs.mkShell {
-          packages = with pkgs; [
-            nixpkgs-fmt
-            nil
-            talhelper
-          ];
-        };
-      }
-    )
+      };
+    })
     // {
       darwinConfigurations.daedalus = darwin.lib.darwinSystem {
         system = "aarch64-darwin";

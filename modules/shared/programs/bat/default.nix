@@ -8,9 +8,6 @@
 
     programs.bat = {
       enable = true;
-      # config = {
-      #   theme = "Dracula";
-      # };
     };
 
     programs.fish = {

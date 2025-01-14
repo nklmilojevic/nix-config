@@ -16,41 +16,46 @@
   nixpkgs.hostPlatform = "aarch64-darwin";
   system.stateVersion = 5;
 
-  home-manager.users.nkl = {
-    imports = [
-      inputs.krewfile.homeManagerModules.krewfile
-      inputs.catppuccin.homeManagerModules.catppuccin
-    ];
-
-    programs.man.generateCaches = false;
-
-    programs.krewfile = {
-      enable = true;
-      krewPackage = pkgs.krew;
-      indexes = {
-        default = "https://github.com/kubernetes-sigs/krew-index.git";
-        netshoot = "https://github.com/nilic/kubectl-netshoot.git";
-      };
-      plugins = [
-        "netshoot/netshoot"
-        "browse-pvc"
-        "df-pv"
-        "ctx"
-        "exec-as"
-        "ns"
-        "kluster-capacity"
-        "konfig"
-        "krew"
-        "node-shell"
-        "rook-ceph"
-        "pv-migrate"
-        "view-secret"
-        "view-allocations"
-        "view-cert"
-        "view-secret"
-        "view-utilization"
-        "tree"
+  home-manager = {
+    backupFileExtension = "backup";
+    users.nkl = {
+      imports = [
+        inputs.krewfile.homeManagerModules.krewfile
+        inputs.catppuccin.homeManagerModules.catppuccin
       ];
+
+      programs.man.generateCaches = false;
+
+      programs.krewfile = {
+        enable = true;
+        krewPackage = pkgs.krew;
+        indexes = {
+          default = "https://github.com/kubernetes-sigs/krew-index.git";
+          netshoot = "https://github.com/nilic/kubectl-netshoot.git";
+        };
+        plugins = [
+          "netshoot/netshoot"
+          "browse-pvc"
+          "df-pv"
+          "ctx"
+          "exec-as"
+          "ns"
+          "klock"
+          "kluster-capacity"
+          "konfig"
+          "krew"
+          "neat"
+          "node-shell"
+          "rook-ceph"
+          "pv-migrate"
+          "view-secret"
+          "view-allocations"
+          "view-cert"
+          "view-secret"
+          "view-utilization"
+          "tree"
+        ];
+      };
     };
   };
 }

@@ -56,7 +56,6 @@ with pkgs; [
   fish
   fishPlugins.puffer
   fishPlugins.done
-  fishPlugins.tide
   fishPlugins.git-abbr
 
   nix-your-shell
@@ -68,14 +67,15 @@ with pkgs; [
   hugo
 
   pre-commit
-  python312
-  python312Packages.pip
-  python312Packages.yamllint
-  python312Packages.pyyaml
-  python312Packages.python-lsp-server
   poetry
   ruff
   uv
+
+  (python312.withPackages (ps: [
+    ps.llm
+    ps.pyyaml
+    ps.llm-cmd
+  ]))
 
   bun
   nodejs_22
@@ -97,7 +97,7 @@ with pkgs; [
 
   tshark
   nixd
-  llm
+
   ollama
 
   cloudflared
