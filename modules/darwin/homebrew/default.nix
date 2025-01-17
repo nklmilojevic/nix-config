@@ -28,6 +28,7 @@
       "intellij-idea"
       "jordanbaird-ice"
       "karabiner-elements"
+      "keycastr"
       "little-snitch"
       "lunar"
       "maestral"

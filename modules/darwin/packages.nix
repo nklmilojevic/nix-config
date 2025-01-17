@@ -6,4 +6,6 @@ in
   ++ [
     duti
     stress
+    lsp-ai
+    bundler
   ]

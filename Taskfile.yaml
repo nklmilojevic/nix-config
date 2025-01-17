@@ -122,6 +122,7 @@ tasks:
 
         set -gx GITHUB_TOKEN "$({{.OP}} read 'op://legemi4nfmddm5osivm3cmejem/gf7hmnugrwm5rtdbmipz66daum/token')"
         set -gx OPENAI_API_KEY "$({{.OP}} read 'op://legemi4nfmddm5osivm3cmejem/k5spka7d2l4moyxfe5mlo2v4na/apikey')"
+        set -gx COPILOT_API_KEY "$({{.OP}} read 'op://legemi4nfmddm5osivm3cmejem/gz3mhtpcg3xq5cbhf5wgnnnhe4/credential')"
         set -gx AWS_ACCESS_KEY_ID "$({{.OP}} read 'op://awxerreoeg3k4w6tsh2kc6rr7i/2kjsroafpbafkfxd5sfzsreqpm/AWS_ACCESS_KEY_ID')"
         set -gx AWS_SECRET_ACCESS_KEY "$({{.OP}} read 'op://awxerreoeg3k4w6tsh2kc6rr7i/2kjsroafpbafkfxd5sfzsreqpm/AWS_SECRET_ACCESS_KEY')"
         EOF
@@ -154,21 +155,21 @@ tasks:
       - |
         TEMP_DIR=$(mktemp -d)
         FONTS_DIR="{{.HOME_DIR}}/Library/Fonts"
-        
+
         # Create fonts directory if it doesn't exist
         mkdir -p "$FONTS_DIR"
-        
+
         # Fetch zip from 1Password and save to temp directory
         {{.OP}} read "op://legemi4nfmddm5osivm3cmejem/lcqj53otepp3bmxpswcr2wajyu/fonts.zip" --out-file="$TEMP_DIR/fonts.zip"
-        
+
         # Unzip fonts
         unzip -q "$TEMP_DIR/fonts.zip" -d "$TEMP_DIR/fonts"
-        
+
         # Copy all font files to user fonts directory
         cp "$TEMP_DIR"/fonts/*.{ttf,otf,TTF,OTF} "$FONTS_DIR/" 2>/dev/null || true
-        
+
         # Cleanup
         rm -rf "$TEMP_DIR"
-        
+
         echo "Fonts installed in $FONTS_DIR"
     desc: Install private fonts from 1Password

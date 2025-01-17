@@ -86,9 +86,6 @@ with pkgs; [
   btop
   nixpkgs-fmt
 
-  ruby_3_3
-  rubyPackages_3_3.solargraph
-
   lua54Packages.luarocks-nix
 
   speedtest-go
@@ -116,22 +113,11 @@ with pkgs; [
 
   timg
 
-  helix
   yazi
-  yaml-language-server
-  gopls
-  intelephense
-  nodePackages.vscode-json-languageserver
-  nodePackages.dockerfile-language-server-nodejs
-  taplo
-  marksman
-  markdown-oxide
-  vscode-langservers-extracted
-  nodePackages.typescript-language-server
-  emmet-ls
-  zls
-  zig
 
   rustup
   lsd
+
+  trippy
+  hadolint
 ]

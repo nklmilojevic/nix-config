@@ -63,10 +63,10 @@ in {
           set -g @catppuccin_window_text " #W"
           set -g @catppuccin_window_text_color "#{@thm_surface_0}"
           set -g @catppuccin_status_left_separator "█"
-          set -g @catppuccin_directory_icon "  "
-          set -g @catppuccin_date_time_icon  "󰃰  "
-          set -g @catppuccin_kube_icon "󱃾  "
-          set -g @catppuccin_kube_text "#(${kubePlugin}/share/tmux-plugins/kube/kube.tmux 250 #{@catppuccin_kube_context_color} #{@catppuccin_kube_namespace_color})"
+          set -g @catppuccin_directory_icon "⌹ "
+          set -g @catppuccin_date_time_icon  "⏲ "
+          set -g @catppuccin_kube_icon "⎈ "
+          set -g @catppuccin_kube_text " #(${kubePlugin}/share/tmux-plugins/kube/kube.tmux 250 #{@catppuccin_kube_context_color} #{@catppuccin_kube_namespace_color})"
         '';
       }
       {
