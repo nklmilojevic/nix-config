@@ -68,13 +68,13 @@ with pkgs; [
 
   pre-commit
   poetry
-  ruff
   uv
 
   (python312.withPackages (ps: [
     ps.llm
     ps.pyyaml
     ps.llm-cmd
+    ps.ruff
   ]))
 
   bun
