@@ -123,6 +123,7 @@ tasks:
         set -gx GITHUB_TOKEN "$({{.OP}} read 'op://legemi4nfmddm5osivm3cmejem/gf7hmnugrwm5rtdbmipz66daum/token')"
         set -gx OPENAI_API_KEY "$({{.OP}} read 'op://legemi4nfmddm5osivm3cmejem/k5spka7d2l4moyxfe5mlo2v4na/apikey')"
         set -gx COPILOT_API_KEY "$({{.OP}} read 'op://legemi4nfmddm5osivm3cmejem/gz3mhtpcg3xq5cbhf5wgnnnhe4/credential')"
+        set -gx LLM_OPENROUTER_KEY "$({{.OP}} read 'op://legemi4nfmddm5osivm3cmejem/4i54jnese3xijduebelr3ct6yq/credential')"
         set -gx AWS_ACCESS_KEY_ID "$({{.OP}} read 'op://awxerreoeg3k4w6tsh2kc6rr7i/2kjsroafpbafkfxd5sfzsreqpm/AWS_ACCESS_KEY_ID')"
         set -gx AWS_SECRET_ACCESS_KEY "$({{.OP}} read 'op://awxerreoeg3k4w6tsh2kc6rr7i/2kjsroafpbafkfxd5sfzsreqpm/AWS_SECRET_ACCESS_KEY')"
         EOF

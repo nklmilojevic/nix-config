@@ -1,123 +1,127 @@
-{pkgs}:
-with pkgs; [
-  _1password-cli
-  bat
-  cachix
-  curl
-  curlie
-  docker
-  fd
-  ffmpeg_7
-  fzf
-  gettext
-  gh
-  git
-  unixtools.ping
-  jq
-  mc
-  mtr
-  netcat
-  nmap
-  openssh
-  openssl
-  pwgen
-  restic
-  ripgrep
-  tree
-  tree-sitter
-  watch
-  wget
+{pkgs}: let
+  customPackages = import ./packages {inherit pkgs;};
+in
+  with pkgs; [
+    _1password-cli
+    bat
+    cachix
+    curl
+    curlie
+    docker
+    fd
+    ffmpeg_7
+    fzf
+    gettext
+    gh
+    git
+    unixtools.ping
+    jq
+    mc
+    mtr
+    netcat
+    nmap
+    openssh
+    openssl
+    pwgen
+    restic
+    ripgrep
+    tree
+    tree-sitter
+    watch
+    wget
 
-  nil
-  alejandra
+    nil
+    alejandra
 
-  php83
-  php83Packages.composer
-  php83Packages.php-cs-fixer
+    php83
+    php83Packages.composer
+    php83Packages.php-cs-fixer
 
-  clickhouse
-  postgresql_16
-  redis
+    clickhouse
+    postgresql_16
+    redis
 
-  fluxcd
-  (google-cloud-sdk.withExtraComponents [google-cloud-sdk.components.gke-gcloud-auth-plugin])
-  k9s
-  kubectl
-  kubernetes-helm
-  skaffold
-  opentofu
+    fluxcd
+    (google-cloud-sdk.withExtraComponents [google-cloud-sdk.components.gke-gcloud-auth-plugin])
+    k9s
+    kubectl
+    kubernetes-helm
+    skaffold
+    opentofu
 
-  age
-  sops
+    age
+    sops
 
-  atuin
-  direnv
+    atuin
+    direnv
 
-  fish
-  fishPlugins.puffer
-  fishPlugins.done
-  fishPlugins.git-abbr
+    fish
+    fishPlugins.puffer
+    fishPlugins.done
+    fishPlugins.git-abbr
 
-  nix-your-shell
-  zoxide
+    nix-your-shell
+    zoxide
 
-  lazydocker
+    lazydocker
 
-  go
-  hugo
+    go
+    hugo
 
-  pre-commit
-  poetry
-  uv
+    pre-commit
+    poetry
+    uv
 
-  (python312.withPackages (ps: [
-    ps.llm
-    ps.pyyaml
-    ps.llm-cmd
-    ps.ruff
-  ]))
+    (python312.withPackages (ps: [
+      ps.llm
+      ps.pyyaml
+      ps.llm-cmd
+      ps.ruff
+      ps.pillow
+      customPackages.llm-openrouter
+    ]))
 
-  bun
-  nodejs_22
+    bun
+    nodejs_22
 
-  steampipe
-  esphome
+    steampipe
+    esphome
 
-  btop
-  nixpkgs-fmt
+    btop
+    nixpkgs-fmt
 
-  lua54Packages.luarocks-nix
+    lua54Packages.luarocks-nix
 
-  speedtest-go
-  neofetch
-  zulu
+    speedtest-go
+    neofetch
+    zulu
 
-  tshark
-  nixd
+    tshark
+    nixd
 
-  ollama
+    ollama
 
-  cloudflared
-  go-task
-  talosctl
-  yq
-  helmfile
-  kubeconform
-  kustomize
-  minijinja
-  moreutils
-  talhelper
-  stern
-  kubecolor
-  kubecm
+    cloudflared
+    go-task
+    talosctl
+    yq
+    helmfile
+    kubeconform
+    kustomize
+    minijinja
+    moreutils
+    talhelper
+    stern
+    kubecolor
+    kubecm
 
-  timg
+    timg
 
-  yazi
+    yazi
 
-  rustup
-  lsd
+    rustup
+    lsd
 
-  trippy
-  hadolint
-]
+    trippy
+    hadolint
+  ]
