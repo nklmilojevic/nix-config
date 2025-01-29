@@ -79,15 +79,13 @@
         ];
       };
 
-      homeConfigurations = {
-        linux = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [
-            ./hosts/linux
-            catppuccin.homeManagerModules.catppuccin
-          ];
-          extraSpecialArgs = {inherit inputs;};
-        };
+      packages.homeConfigurations.linux = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [
+          ./hosts/linux
+          catppuccin.homeManagerModules.catppuccin
+        ];
+        extraSpecialArgs = {inherit inputs;};
       };
     })
     // {
