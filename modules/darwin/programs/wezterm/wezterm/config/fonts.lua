@@ -18,9 +18,30 @@ function M.setup(config)
     {
       intensity = 'Bold',
       font = wezterm.font {
-        family = 'TX-02 Retina ExtraCondensed',
+        family = 'TX-02',
+        stretch = "Condensed",
+        weight = "DemiBold",
       },
     },
+    {
+      intensity = 'Half',
+      font = wezterm.font {
+        family = 'TX-02',
+        stretch = "Condensed",
+        weight = "DemiBold",
+      },
+    },
+    {
+      intensity = 'Normal',
+      italic = true,
+      font = wezterm.font_with_fallback {
+        family = 'TX-02',
+        style = "Oblique",
+        stretch = "Condensed",
+        italic = true,
+      },
+    },
+
   }
 end
 
