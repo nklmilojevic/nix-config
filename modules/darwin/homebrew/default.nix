@@ -9,7 +9,6 @@
 
     casks = [
       "1password"
-      "alfred"
       "balenaetcher"
       "brave-browser"
       "calibre"
@@ -24,7 +23,6 @@
       "firefox@developer-edition"
       "forklift"
       "ghostty"
-      "gitify"
       "hammerspoon"
       "iina"
       "intellij-idea"
@@ -39,13 +37,13 @@
       "middle"
       "notion"
       "orbstack"
-      "orion"
       "plex"
       "plexamp"
       "protonvpn"
       "proxyman"
       "rapidapi"
       "raycast"
+      "slack"
       "syntax-highlight"
       "spotify"
       "stats"
@@ -83,7 +81,6 @@
       "Parcel" = 639968404;
       "Pixelmator Pro" = 1289583905;
       "Sink It for Reddit" = 6449873635;
-      "Slack" = 803453959;
       "Soulver 3" = 1508732804;
       "SponsorBlock" = 1573461917;
       "StopTheMadness Pro" = 6471380298;
