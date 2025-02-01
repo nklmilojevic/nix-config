@@ -69,8 +69,12 @@ in
     hugo
 
     pre-commit
-    poetry
     uv
+
+    (poetry.withPlugins
+      (ps: [
+        pkgs.poetryPlugins.poetry-plugin-shell
+      ]))
 
     (python312.withPackages (ps: [
       ps.llm
