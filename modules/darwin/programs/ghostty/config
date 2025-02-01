@@ -18,6 +18,7 @@ macos-icon-screen-color = #1e1f29,#44475a
 window-padding-balance = false
 window-padding-x = 10
 window-padding-y = 10,2
+alpha-blending = linear-corrected
 
 # Keybindings
 keybind = cmd+right=text:\x05
