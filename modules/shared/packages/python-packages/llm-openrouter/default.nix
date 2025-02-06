@@ -8,7 +8,7 @@ pkgs.python312Packages.buildPythonPackage rec {
     owner = "simonw";
     repo = "llm-openrouter";
     rev = version;
-    sha256 = "sha256-mf+kZz1vyTjkNB3qjJkf6DAFjqESQxIhINLJ7BBAdkk="; # Your actual hash
+    sha256 = "sha256-mf+kZz1vyTjkNB3qjJkf6DAFjqESQxIhINLJ7BBAdkk=";
   };
 
   propagatedBuildInputs = with pkgs.python312Packages; [llm];
