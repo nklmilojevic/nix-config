@@ -116,8 +116,8 @@ in {
       bind -n C-e popup -Ed '#{pane_current_path}' -w85% -h85% yazi
       unbind -T copy-mode-vi MouseDragEnd1Pane
       # Split bindings
-      bind + split-window -c "#{pane_current_path}"
-      bind - split-window -h -c "#{pane_current_path}"
+      bind - split-window -c "#{pane_current_path}"
+      bind + split-window -h -c "#{pane_current_path}"
       bind c new-window -c "#{pane_current_path}"
 
       run-shell ${pkgs.tmuxPlugins.battery}/share/tmux-plugins/battery/battery.tmux

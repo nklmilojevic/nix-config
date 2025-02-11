@@ -11,10 +11,12 @@
       "1password"
       "balenaetcher"
       "brave-browser"
+      "busycal"
       "calibre"
       "cleanshot"
       "cloudflare-warp"
       "cryptomator"
+      "cursor"
       "daisydisk"
       "devutils"
       "discord"
@@ -64,7 +66,6 @@
       "Anybox" = 1593408455;
       "CARROT Weather" = 993487541;
       "Developer" = 640199958;
-      "Fantastical" = 975937182;
       "Home Assistant" = 1099568401;
       "Hover for Safari" = 1540705431;
       "iMovie" = 408981434;
