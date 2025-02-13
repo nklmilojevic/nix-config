@@ -33,7 +33,6 @@
       "keycastr"
       "little-snitch"
       "lunar"
-      "maccy"
       "maestral"
       "medis"
       "middle"
@@ -54,7 +53,6 @@
       "visual-studio-code"
       "vlc"
       "whatsapp"
-      "wezterm@nightly"
       "zed"
       "zoom"
     ];

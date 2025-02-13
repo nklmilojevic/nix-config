@@ -157,7 +157,6 @@ in {
         ./programs/hammerspoon
         ./programs/karabiner
         ./programs/1password-agent
-        ./programs/wezterm
       ];
 
       # Marked broken Oct 20, 2022 check later to remove this
