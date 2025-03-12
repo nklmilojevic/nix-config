@@ -35,7 +35,6 @@ in
 
     php83
     php83Packages.composer
-    php83Packages.php-cs-fixer
 
     clickhouse
     postgresql_16
