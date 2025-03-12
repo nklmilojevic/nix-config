@@ -4,7 +4,6 @@
     defaultEditor = true;
     extraPackages = [
       bash-language-server
-      biome
       clang-tools
       docker-compose-language-service
       dockerfile-language-server-nodejs
