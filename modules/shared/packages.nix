@@ -23,6 +23,7 @@ in
     openssh
     openssl
     pwgen
+    rdap
     restic
     ripgrep
     tree
