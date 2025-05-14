@@ -65,7 +65,7 @@ in {
         "/Applications/Slack.app/"
         "/Applications/Telegram.app"
         "/Applications/Ghostty.app/"
-        "/Applications/BusyCal.app/"
+        "/Applications/Fantastical.app/"
         "/Applications/Discord.app/"
         "/Applications/Anybox.app/"
         "/Applications/Things3.app/"

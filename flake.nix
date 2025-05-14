@@ -2,7 +2,7 @@
   description = "Nikola's flake for system configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     catppuccin.url = "github:catppuccin/nix";
 
@@ -62,6 +62,7 @@
       (final: prev: {
         talhelper = talhelper.packages.${prev.system}.default;
       })
+      (import ./modules/shared/overlays/k9s.nix)
     ];
     supportedSystems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin"];
   in
@@ -71,6 +72,10 @@
         config.allowUnfree = true;
       };
     in {
+      packages = {
+        inherit (pkgs) k9s;
+      };
+
       devShells.default = pkgs.mkShell {
         packages = with pkgs; [
           nixpkgs-fmt
@@ -83,7 +88,7 @@
         inherit pkgs;
         modules = [
           ./hosts/linux
-          catppuccin.homeManagerModules.catppuccin
+          catppuccin.homeModules.catppuccin
         ];
         extraSpecialArgs = {inherit inputs;};
       };

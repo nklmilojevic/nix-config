@@ -7,7 +7,7 @@ spoon.AppLauncher.modifiers = hyper
 hs.spoons.use("AppLauncher", {
     hotkeys = {
         c = "Slack",
-        v = "Visual Studio Code",
+        v = "Cursor",
         n = "NotePlan",
         m = "Mail",
         z = "Messages",

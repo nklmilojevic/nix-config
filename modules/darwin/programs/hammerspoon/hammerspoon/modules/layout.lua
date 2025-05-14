@@ -8,12 +8,13 @@ macbook = {
 	{ "Telegram", nil, nil, hs.layout.right50, nil, nil },
 	{ "Messages", nil, nil, hs.layout.right50, nil, nil },
 	{ "TablePlus", nil, nil, nil, nil, hs.geometry.rect(200, 44, 1400, 986) },
-	{ "BusyCal", nil, nil, hs.layout.maximized, nil, nil },
+	{ "Fantastical", nil, nil, hs.layout.maximized, nil, nil },
 	{ "Things", nil, nil, nil, nil, hs.geometry.rect(354, 338, 935, 700) },
 	{ "Spotify", nil, nil, hs.layout.maximized, nil, nil },
 	{ "Discord", nil, nil, hs.layout.maximized, nil, nil },
 	{ "Anybox", nil, nil, hs.layout.maximized, nil, nil },
 	{ "Visual Studio Code", nil, nil, hs.layout.maximized, nil, nil },
+	{ "Cursor", nil, nil, hs.layout.maximized, nil, nil },
 	{ "Zed", nil, nil, hs.layout.maximized, nil, nil },
 }
 
@@ -27,12 +28,13 @@ dell = {
 	{ "Telegram", "Telegram", nil, hs.layout.right30, nil, nil },
 	{ "Messages", nil, nil, hs.layout.right30, nil, nil },
 	{ "TablePlus", nil, nil, nil, nil, hs.geometry.rect(200, 44, 1400, 986) },
-	{ "BusyCal", nil, nil, nil, nil, hs.geometry.rect(1090, 129, 1608, 1102) },
+	{ "Fantastical", nil, nil, nil, nil, hs.geometry.rect(1090, 129, 1608, 1102) },
 	{ "Things", nil, nil, nil, nil, hs.geometry.rect(588, 555, 935, 700) },
 	{ "Spotify", nil, nil, nil, nil, hs.geometry.rect(1518, 312, 1800, 986) },
 	{ "Discord", nil, nil, hs.layout.right50, nil, nil },
 	{ "Anybox", nil, nil, nil, nil, hs.geometry.rect(965, 313, 1430, 1079) },
 	{ "Visual Studio Code", nil, nil, hs.layout.left50, nil, nil },
+	{ "Cursor", nil, nil, hs.layout.left50, nil, nil },
 	{ "Zed", nil, nil, hs.layout.left50, nil, nil },
 }
 

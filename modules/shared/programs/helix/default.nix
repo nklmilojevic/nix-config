@@ -13,7 +13,6 @@
       gotools
       lua-language-server
       marksman
-      nil
       nixd
       nixpkgs-fmt
       nodePackages.prettier

@@ -20,7 +20,7 @@
     users.nkl = {
       imports = [
         inputs.krewfile.homeManagerModules.krewfile
-        inputs.catppuccin.homeManagerModules.catppuccin
+        inputs.catppuccin.homeModules.catppuccin
       ];
 
       programs.man.generateCaches = false;

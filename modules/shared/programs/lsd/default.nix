@@ -1,7 +1,7 @@
 {...}: {
   programs.lsd = {
     enable = true;
-    enableAliases = false;
+    enableFishIntegration = false;
     settings = {
       icons = {
         when = "never";

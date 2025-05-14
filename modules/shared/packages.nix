@@ -4,7 +4,6 @@ in
   with pkgs; [
     _1password-cli
     bat
-    cachix
     curl
     curlie
     docker
@@ -15,6 +14,8 @@ in
     gh
     git
     unixtools.ping
+    inetutils
+    imagemagick
     jq
     mc
     mtr
@@ -22,6 +23,7 @@ in
     nmap
     openssh
     openssl
+    qrencode
     pwgen
     rdap
     restic
@@ -37,7 +39,7 @@ in
     php83
     php83Packages.composer
 
-    clickhouse
+    # clickhouse
     postgresql_16
     redis
 
@@ -76,7 +78,7 @@ in
         pkgs.poetryPlugins.poetry-plugin-shell
       ]))
 
-    (python312.withPackages (ps: [
+    (python313.withPackages (ps: [
       ps.llm
       ps.pyyaml
       ps.llm-cmd
@@ -89,7 +91,6 @@ in
     nodejs_22
 
     steampipe
-    esphome
 
     btop
     nixpkgs-fmt
@@ -120,8 +121,6 @@ in
     kubecm
 
     timg
-
-    yazi
 
     rustup
     lsd
