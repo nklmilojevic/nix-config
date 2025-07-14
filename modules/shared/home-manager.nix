@@ -7,14 +7,12 @@
     ./programs/doggo
     ./programs/fish
     ./programs/git
-    ./programs/helix
     ./programs/k9s
     ./programs/krew
     ./programs/lsd
     ./programs/lazygit
     ./programs/neovim
     ./programs/starship
-    ./programs/tmux
     ./programs/zoxide
   ];
 }

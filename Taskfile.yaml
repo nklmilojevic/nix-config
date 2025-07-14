@@ -90,7 +90,7 @@ tasks:
   darwin-refresh:
     cmds:
       - echo "Refreshing Nix-Darwin configuration..."
-      - darwin-rebuild switch --flake . --show-trace
+      - sudo darwin-rebuild switch --flake . --show-trace
     desc: Refresh Nix-Darwin configuration
 
   universal-build:

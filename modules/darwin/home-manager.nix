@@ -45,6 +45,7 @@ in {
       '';
     };
   };
+  system.primaryUser = "nkl";
 
   system.defaults = {
     dock = {
@@ -120,10 +121,10 @@ in {
     };
   };
 
-  system.activationScripts.postUserActivation.text = ''
-    /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
-    killall Dock
-  '';
+  # system.activationScripts.postUserActivation.text = ''
+  #   /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+  #   killall Dock
+  # '';
 
   security.pam.services.sudo_local.touchIdAuth = true;
 

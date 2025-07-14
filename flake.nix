@@ -2,7 +2,7 @@
   description = "Nikola's flake for system configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     catppuccin.url = "github:catppuccin/nix";
 

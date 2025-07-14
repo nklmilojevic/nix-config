@@ -22,7 +22,7 @@
       };
     };
 
-    plugin.plugins = {
+    plugins = {
       krr = {
         shortCut = "Shift-K";
         description = "Get krr";

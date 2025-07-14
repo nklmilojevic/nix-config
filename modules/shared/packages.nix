@@ -127,4 +127,10 @@ in
 
     trippy
     hadolint
+
+    nextdns
+    xcodegen
+    
+    claude-code
+    gemini-cli
   ]
