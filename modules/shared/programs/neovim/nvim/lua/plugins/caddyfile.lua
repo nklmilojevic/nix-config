@@ -1,3 +1,0 @@
-return {
-  "isobit/vim-caddyfile",
-}

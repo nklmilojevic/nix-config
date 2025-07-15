@@ -70,6 +70,8 @@ in
     go
     hugo
 
+    ruby
+
     pre-commit
     uv
 
@@ -130,7 +132,7 @@ in
 
     nextdns
     xcodegen
-    
+
     claude-code
     gemini-cli
   ]
