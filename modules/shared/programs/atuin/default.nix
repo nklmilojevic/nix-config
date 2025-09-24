@@ -1,4 +1,9 @@
-{...}: {
+{pkgs, ...}: {
+  catppuccin = {
+    fish = {
+      enable = true;
+    };
+  };
   programs.atuin = {
     enable = true;
     flags = [

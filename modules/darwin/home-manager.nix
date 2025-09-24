@@ -60,7 +60,8 @@ in {
       wvous-tl-corner = 1;
       wvous-tr-corner = 1;
       persistent-apps = [
-        "/Applications/Brave Browser.app/"
+        # "/System/Cryptexes/App/System/Applications/Safari.app"
+        "/Applications/Brave Browser.app"
         "/System/Applications/Mail.app/"
         "/System/Applications/Messages.app/"
         "/Applications/Slack.app/"
@@ -70,7 +71,7 @@ in {
         "/Applications/Discord.app/"
         "/Applications/Anybox.app/"
         "/Applications/Things3.app/"
-        "/Applications/NotePlan.app/"
+        "/Applications/FSNotes.app/"
         "/Applications/Spotify.app/"
         "/Applications/RapidAPI.app/"
         "/Applications/TablePlus.app/"

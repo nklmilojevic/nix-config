@@ -14,7 +14,6 @@ in
     gh
     git
     unixtools.ping
-    inetutils
     imagemagick
     jq
     mc
@@ -100,7 +99,6 @@ in
     lua54Packages.luarocks-nix
 
     speedtest-go
-    neofetch
     zulu
 
     tshark
@@ -135,4 +133,7 @@ in
 
     claude-code
     gemini-cli
+    codex
+    rustscan
+
   ]

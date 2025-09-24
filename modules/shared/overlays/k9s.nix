@@ -1,3 +1,3 @@
 final: prev: {
-  k9s = prev.callPackage ../packages/k9s {};
+  # k9s = prev.callPackage ../packages/k9s {};
 }
