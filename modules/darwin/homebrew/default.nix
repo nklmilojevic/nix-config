@@ -20,7 +20,6 @@
       "devutils"
       "discord"
       "elgato-stream-deck"
-      "eloston-chromium"
       "fantastical"
       "firefox@developer-edition"
       "forklift"
@@ -33,6 +32,7 @@
       "karabiner-elements"
       "keycastr"
       "little-snitch"
+      "logi-options+"
       "lunar"
       "maestral"
       "medis"
@@ -45,11 +45,13 @@
       "proxyman"
       "rapidapi"
       "raycast"
+      "screen-studio"
       "slack"
       "syntax-highlight"
       "spotify"
       "stats"
       "tableplus"
+      "ungoogled-chromium"
       "viber"
       "visual-studio-code"
       "vlc"
@@ -78,7 +80,6 @@
       "Numbers" = 409203825;
       "NZBVortex 3" = 914250185;
       "Pages" = 409201541;
-      "Parcel 2" = 375589283;
       "PDFgear" = 6469021132;
       "Pixelmator Pro" = 1289583905;
       "Presentify" = 1507246666;

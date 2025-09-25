@@ -19,3 +19,5 @@ window-padding-balance = false
 window-padding-x = 10
 window-padding-y = 10,2
 alpha-blending = linear-corrected
+
+keybind = shift+enter=text:\x1b\r
