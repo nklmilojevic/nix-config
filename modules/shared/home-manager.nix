@@ -5,7 +5,9 @@
     ./programs/btop
     ./programs/direnv
     ./programs/doggo
+    ./programs/codex
     ./programs/fish
+    ./programs/helix
     ./programs/git
     ./programs/k9s
     ./programs/krew

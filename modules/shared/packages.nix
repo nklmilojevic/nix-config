@@ -71,13 +71,12 @@ in
 
     ruby
 
-    pre-commit
+    # pre-commit
     uv
 
-    (poetry.withPlugins
-      (ps: [
-        pkgs.poetryPlugins.poetry-plugin-shell
-      ]))
+    (poetry.withPlugins (ps: [
+      pkgs.poetryPlugins.poetry-plugin-shell
+    ]))
 
     (python313.withPackages (ps: [
       ps.llm
@@ -89,22 +88,20 @@ in
     ]))
 
     bun
-    nodejs_22
+    nodejs_24
 
     steampipe
 
     btop
     nixpkgs-fmt
 
-    lua54Packages.luarocks-nix
+    lua51Packages.luarocks-nix
 
     speedtest-go
-    zulu
 
     tshark
     nixd
 
-    ollama
 
     cloudflared
     go-task
@@ -115,7 +112,6 @@ in
     kustomize
     minijinja
     moreutils
-    talhelper
     stern
     kubecolor
     kubecm
@@ -135,5 +131,8 @@ in
     gemini-cli
     codex
     rustscan
-
+    caddy
+    sd
+    lefthook
+    pnpm
   ]

@@ -12,6 +12,8 @@
       "balenaetcher"
       "brave-browser"
       "calibre"
+      "chatgpt"
+      "claude"
       "cleanshot"
       "cloudflare-warp"
       "cryptomator"
@@ -51,7 +53,6 @@
       "spotify"
       "stats"
       "tableplus"
-      "ungoogled-chromium"
       "viber"
       "visual-studio-code"
       "vlc"
@@ -80,7 +81,7 @@
       "Numbers" = 409203825;
       "NZBVortex 3" = 914250185;
       "Pages" = 409201541;
-      "PDFgear" = 6469021132;
+      # "PDFgear" = 6469021132;
       "Pixelmator Pro" = 1289583905;
       "Presentify" = 1507246666;
       "Sink It" = 6449873635;

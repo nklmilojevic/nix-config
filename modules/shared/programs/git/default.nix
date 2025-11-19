@@ -1,11 +1,11 @@
 {config, ...}: {
   programs.git = {
     enable = true;
-    userName = "Nikola Milojević";
-    userEmail = "nikola@milojevic.me";
     signing.key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrYywYsK/kocVOa48LjaOR2X10g7lwsB1PtkyBJX800";
 
-    extraConfig = {
+    settings = {
+      user.name = "Nikola Milojević";
+      user.email = "nikola@milojevic.me";
       pull.rebase = false;
       init.defaultBranch = "main";
       core.excludesFile = "${config.home.homeDirectory}/.gitignore";
