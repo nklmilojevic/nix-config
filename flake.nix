@@ -39,11 +39,6 @@
       url = "github:brumhard/krewfile";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    talhelper = {
-      url = "github:budimanjojo/talhelper";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs = {
@@ -54,16 +49,10 @@
     darwin,
     nix-homebrew,
     krewfile,
-    talhelper,
     catppuccin,
     ...
   } @ inputs: let
-    overlays = [
-      (final: prev: {
-        talhelper = talhelper.packages.${prev.system}.default;
-      })
-      (import ./modules/shared/overlays/k9s.nix)
-    ];
+    overlays = [];
     supportedSystems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin"];
   in
     flake-utils.lib.eachSystem supportedSystems (system: let
@@ -80,7 +69,6 @@
         packages = with pkgs; [
           nixpkgs-fmt
           nil
-          talhelper
         ];
       };
 
@@ -115,6 +103,19 @@
               };
               mutableTaps = true;
             };
+
+            # TODO: Remove below anonymous/lambda function block after https://github.com/NixOS/nixpkgs/pull/461779 is resolved upstream.
+            nixpkgs.overlays = [
+              (_self: super: {
+                fish = super.fish.overrideAttrs (oldAttrs: {
+                  doCheck = false;
+                  checkPhase = "";
+                  cmakeFlags = (oldAttrs.cmakeFlags or [ ]) ++ [
+                    "-DBUILD_TESTING=OFF"
+                  ];
+                });
+              })
+            ];
           }
         ];
         specialArgs = {inherit inputs;};
