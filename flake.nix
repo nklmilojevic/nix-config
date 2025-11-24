@@ -105,17 +105,17 @@
             };
 
             # TODO: Remove below anonymous/lambda function block after https://github.com/NixOS/nixpkgs/pull/461779 is resolved upstream.
-            nixpkgs.overlays = [
-              (_self: super: {
-                fish = super.fish.overrideAttrs (oldAttrs: {
-                  doCheck = false;
-                  checkPhase = "";
-                  cmakeFlags = (oldAttrs.cmakeFlags or [ ]) ++ [
-                    "-DBUILD_TESTING=OFF"
-                  ];
-                });
-              })
-            ];
+            # nixpkgs.overlays = [
+            #   (_self: super: {
+            #     fish = super.fish.overrideAttrs (oldAttrs: {
+            #       doCheck = false;
+            #       checkPhase = "";
+            #       cmakeFlags = (oldAttrs.cmakeFlags or [ ]) ++ [
+            #         "-DBUILD_TESTING=OFF"
+            #       ];
+            #     });
+            #   })
+            # ];
           }
         ];
         specialArgs = {inherit inputs;};

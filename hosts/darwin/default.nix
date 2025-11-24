@@ -10,14 +10,10 @@
     ../../modules/darwin/homebrew
   ];
 
-  nix.enable = false;
   nixpkgs.config.allowUnfree = true;
   nix.settings = {
     experimental-features = "nix-command flakes";
   };
-  nix.extraOptions = ''
-    access-tokens = github.com=$GITHUB_TOKEN
-  '';
   nixpkgs.hostPlatform = "aarch64-darwin";
   system.stateVersion = 5;
 

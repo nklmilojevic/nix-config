@@ -100,7 +100,7 @@ tasks:
   setup-nix:
     cmds:
       - echo "Installing Nix package manager..."
-      - curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
+      - curl -sSf -L https://install.lix.systems/lix | sh -s -- install
     desc: Install Nix package manager
 
   all-secrets:
