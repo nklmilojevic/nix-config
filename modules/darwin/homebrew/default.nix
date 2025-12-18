@@ -10,6 +10,7 @@
     casks = [
       "1password"
       "balenaetcher"
+      "bambu-studio"
       "brave-browser"
       "calibre"
       "chatgpt"
@@ -36,6 +37,7 @@
       "little-snitch"
       "logi-options+"
       "lunar"
+      "maccy"
       "maestral"
       "medis"
       "middle"
@@ -58,6 +60,7 @@
       "vlc"
       "whatsapp"
       "zed"
+      "zen"
       "zoom"
     ];
 
