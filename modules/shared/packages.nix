@@ -135,4 +135,5 @@ in
     sd
     lefthook
     pnpm
+    viddy
   ]
