@@ -8,8 +8,6 @@
   programs.fish = {
     enable = true;
     interactiveShellInit = ''
-      test -f ~/.config/fish/secrets.fish && source ~/.config/fish/secrets.fish
-
       set -g fish_greeting
 
       fish_add_path "$HOME/.nix-profile/bin"
@@ -72,6 +70,12 @@
       mkdir = "mkdir -p -v";
       lg = "lazygit";
       grep = "rg";
+
+      # 1Password plugin wrappers
+      restic = "op plugin run -- restic";
+      gh = "op plugin run -- gh";
+      openai = "op plugin run -- openai";
+      llm = "op plugin run -- llm";
     };
 
     functions = {
@@ -90,6 +94,18 @@
             builtin cd -- "$cwd"
           end
           rm -f -- "$tmp"
+        '';
+      };
+      watch = {
+        description = "watch with fish alias support";
+        body = ''
+          if test (count $argv) -gt 0
+            if type -q viddy
+              command viddy --disable_auto_save --differences --interval 2 --shell fish $argv[1..-1]
+            else
+              command watch -x fish -c "$argv"
+            end
+          end
         '';
       };
     };
