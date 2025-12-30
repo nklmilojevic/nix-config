@@ -136,4 +136,6 @@ in
     lefthook
     pnpm
     viddy
+    fastfetch
+    skopeo
   ]

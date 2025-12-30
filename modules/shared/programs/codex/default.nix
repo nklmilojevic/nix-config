@@ -22,7 +22,7 @@
   codexConfigAttrs = {
     model_reasoning_effort = "high";
     model_reasoning_summary = "auto";
-    model = "gpt-5.2";
+    model = "gpt-5.2-codex";
     file_opener = "none";
     show_raw_agent_reasoning = true;
     features = {
