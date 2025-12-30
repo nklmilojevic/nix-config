@@ -47,6 +47,10 @@
     codex-cli-nix = {
       url = "github:nklmilojevic/codex-cli-nix";
     };
+
+    talosctl = {
+      url = "github:nklmilojevic/talosctl-flake";
+    };
   };
 
   outputs = {
@@ -60,10 +64,12 @@
     catppuccin,
     claude-code-overlay,
     codex-cli-nix,
+    talosctl,
     ...
   } @ inputs: let
     overlays = [
       claude-code-overlay.overlays.default
+      talosctl.overlays.default
       (final: prev: {
         codex = codex-cli-nix.packages.${final.system}.default;
       })
