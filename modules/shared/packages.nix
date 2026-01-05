@@ -79,12 +79,12 @@ in
     ]))
 
     (python313.withPackages (ps: [
-      ps.llm
+      # ps.llm
       ps.pyyaml
-      ps.llm-cmd
+      # ps.llm-cmd
       ps.ruff
       ps.pillow
-      customPackages.llm-openrouter
+      # customPackages.llm-openrouter
     ]))
 
     bun
@@ -101,7 +101,6 @@ in
 
     tshark
     nixd
-
 
     cloudflared
     go-task
