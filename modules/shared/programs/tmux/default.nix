@@ -6,7 +6,7 @@
       owner = "jonmosco";
       repo = "kube-tmux";
       rev = "master";
-      sha256 = "sha256-PnPj2942Y+K4PF+GH6A6SJC0fkWU8/VjZdLuPlEYY7A=";
+      sha256 = "sha256-Z71zsEj4nGptaosDPRVFEp8QwSsawPh1qFMSoRnF2nE=";
     };
   };
 
@@ -28,7 +28,7 @@
       owner = "omerxx";
       repo = "tmux-floax";
       rev = "main";
-      sha256 = "sha256-DOwn7XEg/L95YieUAyZU0FJ49vm2xKGUclm8WCKDizU=";
+      sha256 = "sha256-TCY3W0/4c4KIsY55uClrlzu90XcK/mgbD58WWu6sPrU=";
     };
   };
 in {

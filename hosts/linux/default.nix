@@ -8,6 +8,6 @@
   programs.home-manager.enable = true;
 
   nix = {
-    package = pkgs.nixStable;
+    package = pkgs.nixVersions.stable;
   };
 }

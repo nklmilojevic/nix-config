@@ -1,7 +1,8 @@
-{pkgs}:
-with pkgs; let
-  shared-packages = import ../shared/packages.nix {inherit pkgs;};
+{pkgs}: let
+  lib = import ../../lib {lib = pkgs.lib;};
 in
-  shared-packages
-  ++ [
-  ]
+  lib.mkPackageList {
+    inherit pkgs;
+    shared = ../shared/packages;
+    extra = [];
+  }
