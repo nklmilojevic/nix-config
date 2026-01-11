@@ -7,6 +7,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+env:
+  ATTIC_SERVER: "https://attic.nikola.wtf/"
+  ATTIC_CACHE: "nix-config"
+
 jobs:
   build-x86_64:
     runs-on: ubuntu-latest
@@ -16,21 +20,24 @@ jobs:
       - uses: cachix/install-nix-action@v30
         with:
           nix_path: nixpkgs=channel:nixos-unstable
-          extra_nix_config: |
-            extra-substituters = https://attic.cachix.org
-            extra-trusted-public-keys = attic.cachix.org-1:U7q+fUM4T1gROQQY0dJRgLje+cCkuAJBRPFxsnQMPGs=
+
+      - uses: DeterminateSystems/magic-nix-cache-action@main
 
       - name: Install Attic
-        run: nix profile install github:zhaofengli/attic#attic-client
+        run: nix profile install nixpkgs#attic-client
 
       - name: Configure Attic
-        run: attic login nix-config https://attic.nikola.wtf ${{ secrets.ATTIC_TOKEN }}
+        run: |
+          attic login --set-default nix-config "$ATTIC_SERVER" "$ATTIC_TOKEN"
+          attic use "$ATTIC_CACHE"
+        env:
+          ATTIC_TOKEN: ${{ secrets.ATTIC_TOKEN }}
 
       - name: Build server profile (x86_64-linux)
         run: nix build .#homeConfigurations.server.activationPackage
 
       - name: Push to Attic
-        run: attic push nix-config ./result
+        run: attic push "$ATTIC_CACHE" ./result
 
   build-aarch64:
     runs-on: ubuntu-24.04-arm
@@ -40,18 +47,21 @@ jobs:
       - uses: cachix/install-nix-action@v30
         with:
           nix_path: nixpkgs=channel:nixos-unstable
-          extra_nix_config: |
-            extra-substituters = https://attic.cachix.org
-            extra-trusted-public-keys = attic.cachix.org-1:U7q+fUM4T1gROQQY0dJRgLje+cCkuAJBRPFxsnQMPGs=
+
+      - uses: DeterminateSystems/magic-nix-cache-action@main
 
       - name: Install Attic
-        run: nix profile install github:zhaofengli/attic#attic-client
+        run: nix profile install nixpkgs#attic-client
 
       - name: Configure Attic
-        run: attic login nix-config https://attic.nikola.wtf ${{ secrets.ATTIC_TOKEN }}
+        run: |
+          attic login --set-default nix-config "$ATTIC_SERVER" "$ATTIC_TOKEN"
+          attic use "$ATTIC_CACHE"
+        env:
+          ATTIC_TOKEN: ${{ secrets.ATTIC_TOKEN }}
 
       - name: Build server profile (aarch64-linux)
         run: nix build .#homeConfigurations.server-aarch64.activationPackage
 
       - name: Push to Attic
-        run: attic push nix-config ./result
+        run: attic push "$ATTIC_CACHE" ./result
