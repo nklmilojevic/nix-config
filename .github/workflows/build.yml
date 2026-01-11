@@ -58,7 +58,7 @@ jobs:
         run: cachix push $CACHIX_CACHE ./result
 
   build-aarch64-darwin:
-    runs-on: macos-14
+    runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
 
