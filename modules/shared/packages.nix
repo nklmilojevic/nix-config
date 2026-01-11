@@ -35,8 +35,8 @@ in
     nil
     alejandra
 
-    php83
-    php83Packages.composer
+    php84
+    php84Packages.composer
 
     # clickhouse
     postgresql_16

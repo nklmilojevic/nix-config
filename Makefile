@@ -3,7 +3,6 @@ USERNAME := $(shell whoami)
 HOME_DIR := /Users/$(USERNAME)
 HOSTNAME := $(shell scutil --get ComputerName 2>/dev/null || uname -n)
 OS := $(shell uname -s)
-SECRETS_FILE := $(HOME)/.config/fish/secrets.fish
 OP := op
 SSH_CONFIG_FILE := $(HOME)/.ssh/config
 ATUIN_KEY_FILE := $(HOME)/.local/share/atuin/key
@@ -17,9 +16,7 @@ default: list
 list:
 	@echo "Available targets:"
 	@echo "  build              - Build the configuration"
-	@echo "  switch             - Apply the new configuration and generate secrets"
-	@echo "  post-switch        - Run post-switch tasks (generate secrets)"
-	@echo "  check-op-signin    - Check if 1Password is signed in"
+	@echo "  switch             - Apply the new configuration"
 	@echo "  update             - Update the flake.lock file"
 	@echo "  clean              - Clean build artifacts"
 	@echo "  edit               - Edit the configuration"
@@ -27,8 +24,6 @@ list:
 	@echo "  darwin-refresh     - Refresh Nix-Darwin configuration"
 	@echo "  universal-build    - Build and apply the new configuration based on the OS"
 	@echo "  setup-nix          - Install Nix package manager"
-	@echo "  all-secrets        - Generate all secrets"
-	@echo "  generate-secrets   - Generate secrets"
 	@echo "  generate-ssh-config - Generate SSH config"
 	@echo "  generate-atuin-key - Generate Atuin key"
 	@echo "  generate-age-key   - Generate Age key"
@@ -49,26 +44,9 @@ switch:
 	@if [ "$(OS)" = "Darwin" ]; then \
 		echo "Switching to the new Nix-Darwin configuration..."; \
 		./result/sw/bin/darwin-rebuild switch --flake .#$(HOSTNAME); \
-		$(MAKE) post-switch; \
-		echo "Secrets rewritten."; \
 	else \
 		echo "Activating the new Home Manager configuration for Linux..."; \
 		./result/activate; \
-	fi
-
-.PHONY: post-switch
-post-switch:
-	@echo "Running post-switch tasks..."
-	@$(MAKE) check-op-signin
-	@$(MAKE) all-secrets
-
-.PHONY: check-op-signin
-check-op-signin:
-	@if ! $(OP) account get --format=json >/dev/null 2>&1; then \
-		echo "1Password is not signed in. Please sign in:"; \
-		eval $$($(OP) signin); \
-	else \
-		echo "1Password is already signed in."; \
 	fi
 
 .PHONY: update
@@ -102,25 +80,7 @@ universal-build: build switch
 .PHONY: setup-nix
 setup-nix:
 	@echo "Installing Nix package manager..."
-	@curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install --no-confirm
-
-.PHONY: all-secrets
-all-secrets: generate-secrets generate-ssh-config generate-atuin-key generate-age-key
-
-.PHONY: generate-secrets
-generate-secrets:
-	@echo "Generating secrets..."
-	@mkdir -p $$(dirname $(SECRETS_FILE))
-	@cat > $(SECRETS_FILE) << 'EOF' ;\
-	# Generated secrets - Do not edit manually\
-	\
-	set -gx GITHUB_TOKEN "$$($(OP) read 'op://legemi4nfmddm5osivm3cmejem/gf7hmnugrwm5rtdbmipz66daum/token')"\
-	set -gx OPENAI_API_KEY "$$($(OP) read 'op://legemi4nfmddm5osivm3cmejem/k5spka7d2l4moyxfe5mlo2v4na/apikey')"\
-	set -gx COPILOT_API_KEY "$$($(OP) read 'op://legemi4nfmddm5osivm3cmejem/gz3mhtpcg3xq5cbhf5wgnnnhe4/credential')"\
-	set -gx OPENROUTER_KEY "$$($(OP) read 'op://legemi4nfmddm5osivm3cmejem/4i54jnese3xijduebelr3ct6yq/credential')"\
-	set -gx AWS_ACCESS_KEY_ID "$$($(OP) read 'op://awxerreoeg3k4w6tsh2kc6rr7i/2kjsroafpbafkfxd5sfzsreqpm/AWS_ACCESS_KEY_ID')"\
-	set -gx AWS_SECRET_ACCESS_KEY "$$($(OP) read 'op://awxerreoeg3k4w6tsh2kc6rr7i/2kjsroafpbafkfxd5sfzsreqpm/AWS_SECRET_ACCESS_KEY')"
-	@echo "Secrets generated in $(SECRETS_FILE)"
+	@curl -sSf -L https://install.lix.systems/lix | sh -s -- install
 
 .PHONY: generate-ssh-config
 generate-ssh-config:

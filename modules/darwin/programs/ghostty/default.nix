@@ -12,6 +12,8 @@
           key: value:
             if lib.isList value
             then map (v: "${key} = ${toString v}") value
+            else if lib.isBool value
+            then "${key} = ${lib.boolToString value}"
             else "${key} = ${toString value}"
         )
         attrs
