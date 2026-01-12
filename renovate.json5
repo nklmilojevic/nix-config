@@ -1,0 +1,35 @@
+{
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'config:recommended',
+    'github>nklmilojevic/renovate-config',
+    'github>nklmilojevic/renovate-config:automerge-github-actions',
+  ],
+  // Nix flake.lock updates
+  nix: {
+    enabled: true,
+  },
+  // Auto-merge configuration for flake.lock updates
+  packageRules: [
+    {
+      // Auto-merge all nix flake updates when CI passes
+      matchManagers: ['nix'],
+      automerge: true,
+      automergeType: 'pr',
+      // Require all status checks to pass before auto-merging
+      platformAutomerge: true,
+      // Add labels for tracking
+      addLabels: ['nix', 'dependencies'],
+    },
+    {
+      // Group all flake inputs into a single PR (optional - can be removed if you want separate PRs)
+      matchManagers: ['nix'],
+      groupName: 'nix flake inputs',
+      groupSlug: 'nix-flake-inputs',
+    },
+  ],
+  // Schedule updates (once daily to avoid too many PRs)
+  schedule: ['before 6am on monday'],
+  // Timezone for schedule
+  timezone: 'Europe/Belgrade',
+}
