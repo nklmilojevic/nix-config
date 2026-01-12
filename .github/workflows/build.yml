@@ -23,7 +23,7 @@ jobs:
             extra-substituters = https://nkl-nix-config.cachix.org
             extra-trusted-public-keys = nkl-nix-config.cachix.org-1:BFC4/yovGI+0E8ZZE0K3H6Mu2uBaqSU/kTnSvFQs5uE=
 
-      - uses: cachix/cachix-action@v15
+      - uses: cachix/cachix-action@v16
         with:
           name: ${{ env.CACHIX_CACHE }}
           authToken: ${{ secrets.CACHIX_TOKEN }}
@@ -46,7 +46,7 @@ jobs:
             extra-substituters = https://nkl-nix-config.cachix.org
             extra-trusted-public-keys = nkl-nix-config.cachix.org-1:BFC4/yovGI+0E8ZZE0K3H6Mu2uBaqSU/kTnSvFQs5uE=
 
-      - uses: cachix/cachix-action@v15
+      - uses: cachix/cachix-action@v16
         with:
           name: ${{ env.CACHIX_CACHE }}
           authToken: ${{ secrets.CACHIX_TOKEN }}
@@ -69,7 +69,7 @@ jobs:
             extra-substituters = https://nkl-nix-config.cachix.org
             extra-trusted-public-keys = nkl-nix-config.cachix.org-1:BFC4/yovGI+0E8ZZE0K3H6Mu2uBaqSU/kTnSvFQs5uE=
 
-      - uses: cachix/cachix-action@v15
+      - uses: cachix/cachix-action@v16
         with:
           name: ${{ env.CACHIX_CACHE }}
           authToken: ${{ secrets.CACHIX_TOKEN }}
