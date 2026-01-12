@@ -28,8 +28,4 @@
       groupSlug: 'nix-flake-inputs',
     },
   ],
-  // Schedule updates (once daily to avoid too many PRs)
-  schedule: ['before 6am on monday'],
-  // Timezone for schedule
-  timezone: 'Europe/Belgrade',
 }
