@@ -18,7 +18,7 @@ on:
         default: latest
         required: false
   schedule:
-    - cron: "0 5 * * 1" # Every Monday at 5am UTC
+    - cron: "0 * * * *" # Every hour
   push:
     branches: ["main"]
     paths:
