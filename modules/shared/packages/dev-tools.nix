@@ -1,8 +1,6 @@
 # Development tools and utilities
 {pkgs}:
 with pkgs; [
-  # Nix binary cache
-  attic-client
   # Media
   ffmpeg_7
   imagemagick
