@@ -8,7 +8,6 @@ vars:
     sh: scutil --get ComputerName 2>/dev/null || uname -n
   OS:
     sh: uname -s
-  SECRETS_FILE: "{{.HOME}}/.config/fish/secrets.fish"
   OP: op
   SSH_CONFIG_FILE: "{{.HOME}}/.ssh/config"
   ATUIN_KEY_FILE: "{{.HOME}}/.local/share/atuin/key"
@@ -38,30 +37,11 @@ tasks:
         if [ "{{.OS}}" = "Darwin" ]; then
           echo "Switching to the new Nix-Darwin configuration..."
           sudo ./result/sw/bin/darwin-rebuild switch --flake .#{{.HOSTNAME}}
-          task post-switch
-          echo "Secrets rewritten."
         else
           echo "Activating the new Home Manager configuration for Linux..."
           ./result/activate
         fi
-    desc: Apply the new configuration and generate secrets
-
-  post-switch:
-    cmds:
-      - echo "Running post-switch tasks..."
-      - task check-op-signin
-      - task all-secrets
-    desc: Run post-switch tasks (generate secrets)
-
-  check-op-signin:
-    cmds:
-      - |
-        if ! {{.OP}} account get --format=json >/dev/null 2>&1; then
-          echo "1Password is not signed in. Please sign in:"
-          eval $({{.OP}} signin)
-        else
-          echo "1Password is already signed in."
-        fi
+    desc: Apply the new configuration
 
   update:
     cmds:
@@ -102,26 +82,6 @@ tasks:
       - echo "Installing Nix package manager..."
       - curl -sSf -L https://install.lix.systems/lix | sh -s -- install
     desc: Install Nix package manager
-
-  all-secrets:
-    deps: [generate-secrets, generate-ssh-config, generate-age-key]
-
-  generate-secrets:
-    cmds:
-      - echo "Generating secrets..."
-      - mkdir -p $(dirname {{.SECRETS_FILE}})
-      - |
-        cat > {{.SECRETS_FILE}} << EOF
-        # Generated secrets - Do not edit manually
-
-        set -gx GITHUB_TOKEN "$({{.OP}} read 'op://legemi4nfmddm5osivm3cmejem/gf7hmnugrwm5rtdbmipz66daum/token')"
-        set -gx OPENAI_API_KEY "$({{.OP}} read 'op://legemi4nfmddm5osivm3cmejem/k5spka7d2l4moyxfe5mlo2v4na/apikey')"
-        set -gx COPILOT_API_KEY "$({{.OP}} read 'op://legemi4nfmddm5osivm3cmejem/gz3mhtpcg3xq5cbhf5wgnnnhe4/credential')"
-        set -gx OPENROUTER_KEY "$({{.OP}} read 'op://legemi4nfmddm5osivm3cmejem/4i54jnese3xijduebelr3ct6yq/credential')"
-        set -gx AWS_ACCESS_KEY_ID "$({{.OP}} read 'op://awxerreoeg3k4w6tsh2kc6rr7i/2kjsroafpbafkfxd5sfzsreqpm/AWS_ACCESS_KEY_ID')"
-        set -gx AWS_SECRET_ACCESS_KEY "$({{.OP}} read 'op://awxerreoeg3k4w6tsh2kc6rr7i/2kjsroafpbafkfxd5sfzsreqpm/AWS_SECRET_ACCESS_KEY')"
-        EOF
-      - echo "Secrets generated in {{.SECRETS_FILE}}"
 
   generate-ssh-config:
     cmds:

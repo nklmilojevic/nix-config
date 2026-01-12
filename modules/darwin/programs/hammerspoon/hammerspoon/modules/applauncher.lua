@@ -19,5 +19,7 @@ hs.spoons.use("AppLauncher", {
 		s = "Spotify",
 		l = "Linear",
 		h = "Home Assistant",
+		b = "BoltAI 2",
+		q = "Qobuz",
 	},
 })

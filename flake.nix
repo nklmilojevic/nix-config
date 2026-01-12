@@ -75,6 +75,9 @@
       })
     ];
     supportedSystems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin"];
+
+    # Import custom library functions
+    lib = import ./lib {lib = nixpkgs.lib;};
   in
     flake-utils.lib.eachSystem supportedSystems (system: let
       pkgs = import nixpkgs {
@@ -93,16 +96,11 @@
         ];
       };
 
-      packages.homeConfigurations.linux = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        modules = [
-          ./hosts/linux
-          catppuccin.homeModules.catppuccin
-        ];
-        extraSpecialArgs = {inherit inputs;};
-      };
     })
     // {
+      # Expose library functions for external use
+      lib = lib;
+
       darwinConfigurations.daedalus = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         pkgs = import nixpkgs {
@@ -127,6 +125,27 @@
           }
         ];
         specialArgs = {inherit inputs;};
+      };
+
+      homeConfigurations = let
+        mkLinuxHome = system: home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs {
+            inherit system overlays;
+            config.allowUnfree = true;
+          };
+          modules = [
+            ./hosts/linux
+            catppuccin.homeModules.catppuccin
+          ];
+          extraSpecialArgs = {inherit inputs;};
+        };
+      in {
+        # x86_64 Linux
+        linux = mkLinuxHome "x86_64-linux";
+        server = mkLinuxHome "x86_64-linux";
+        # aarch64 Linux
+        "linux-aarch64" = mkLinuxHome "aarch64-linux";
+        "server-aarch64" = mkLinuxHome "aarch64-linux";
       };
     };
 }
