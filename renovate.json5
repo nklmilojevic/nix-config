@@ -5,27 +5,16 @@
     'github>nklmilojevic/renovate-config',
     'github>nklmilojevic/renovate-config:automerge-github-actions',
   ],
-  // Nix flake.lock updates
+  // Enable nix manager (required for lockFileMaintenance to work with flake.lock)
   nix: {
     enabled: true,
   },
-  // Auto-merge configuration for flake.lock updates
-  packageRules: [
-    {
-      // Auto-merge all nix flake updates when CI passes
-      matchManagers: ['nix'],
-      automerge: true,
-      automergeType: 'pr',
-      // Require all status checks to pass before auto-merging
-      platformAutomerge: true,
-      // Add labels for tracking
-      addLabels: ['nix', 'dependencies'],
-    },
-    {
-      // Group all flake inputs into a single PR (optional - can be removed if you want separate PRs)
-      matchManagers: ['nix'],
-      groupName: 'nix flake inputs',
-      groupSlug: 'nix-flake-inputs',
-    },
-  ],
+  // Use lockFileMaintenance to refresh flake.lock (runs nix flake update)
+  lockFileMaintenance: {
+    enabled: true,
+    automerge: true,
+    automergeType: 'pr',
+    platformAutomerge: true,
+    addLabels: ['nix', 'dependencies'],
+  },
 }
