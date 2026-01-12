@@ -12,6 +12,7 @@
   // Use lockFileMaintenance to refresh flake.lock (runs nix flake update)
   lockFileMaintenance: {
     enabled: true,
+    schedule: ['at any time'],
     automerge: true,
     automergeType: 'pr',
     platformAutomerge: true,
