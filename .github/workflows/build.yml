@@ -3,8 +3,20 @@ name: Build and Cache
 on:
   push:
     branches: [main, test-attic]
+    paths:
+      - '**.nix'
+      - 'flake.lock'
+      - 'modules/**'
+      - 'hosts/**'
+      - 'lib/**'
   pull_request:
     branches: [main]
+    paths:
+      - '**.nix'
+      - 'flake.lock'
+      - 'modules/**'
+      - 'hosts/**'
+      - 'lib/**'
   workflow_dispatch:
 
 env:
