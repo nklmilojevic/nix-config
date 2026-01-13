@@ -5,17 +5,20 @@
     'github>nklmilojevic/renovate-config',
     'github>nklmilojevic/renovate-config:automerge-github-actions',
   ],
-  // Enable nix manager (required for lockFileMaintenance to work with flake.lock)
   nix: {
     enabled: true,
   },
-  // Use lockFileMaintenance to refresh flake.lock (runs nix flake update)
   lockFileMaintenance: {
     enabled: true,
-    schedule: ['after 2am and before 3am every day'],
+    schedule: [
+      'after 2am and before 3am',
+    ],
     automerge: true,
     automergeType: 'pr',
     platformAutomerge: true,
-    addLabels: ['nix', 'dependencies'],
+    addLabels: [
+      'nix',
+      'dependencies',
+    ],
   },
 }
