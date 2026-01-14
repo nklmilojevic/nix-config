@@ -15,7 +15,7 @@
     ],
     automerge: true,
     automergeType: 'pr',
-    platformAutomerge: true,
+    platformAutomerge: false,
     addLabels: [
       'nix',
       'dependencies',
