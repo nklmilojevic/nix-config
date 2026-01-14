@@ -2,8 +2,6 @@
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: [
     'config:recommended',
-    'github>nklmilojevic/renovate-config',
-    'github>nklmilojevic/renovate-config:automerge-github-actions',
   ],
   nix: {
     enabled: true,
@@ -15,10 +13,19 @@
     ],
     automerge: true,
     automergeType: 'pr',
-    platformAutomerge: false,
+    platformAutomerge: true,
     addLabels: [
       'nix',
       'dependencies',
     ],
   },
+  packageRules: [
+    {
+      matchManagers: ['github-actions'],
+      automerge: true,
+      automergeType: 'pr',
+      platformAutomerge: true,
+      matchUpdateTypes: ['minor', 'patch', 'digest'],
+    },
+  ],
 }
