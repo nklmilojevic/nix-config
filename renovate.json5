@@ -10,9 +10,6 @@
   },
   lockFileMaintenance: {
     enabled: true,
-    schedule: [
-      'after 2am and before 3am',
-    ],
     automerge: true,
     automergeType: 'pr',
     platformAutomerge: true,
