@@ -40,8 +40,8 @@
 
     # Window
     window-padding-balance = false;
-    window-padding-x = 10;
-    window-padding-y = "10,2";
+    window-padding-x = "10,3";
+    window-padding-y = "10";
     alpha-blending = "linear-corrected";
 
     # Keybindings

@@ -17,9 +17,9 @@ with pkgs; [
 
   # Python
   uv
-  (poetry.withPlugins (ps: [
-    pkgs.poetryPlugins.poetry-plugin-shell
-  ]))
+  # (poetry.withPlugins (ps: [
+  #   pkgs.poetryPlugins.poetry-plugin-shell
+  # ]))
   (python313.withPackages (ps: [
     ps.pyyaml
     ps.ruff
