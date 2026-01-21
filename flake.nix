@@ -48,6 +48,10 @@
       url = "github:nklmilojevic/codex-cli-nix";
     };
 
+    opencode-nix = {
+      url = "github:nklmilojevic/opencode-nix";
+    };
+
     talosctl = {
       url = "github:nklmilojevic/talosctl-flake";
     };
@@ -64,6 +68,7 @@
     catppuccin,
     claude-code-overlay,
     codex-cli-nix,
+    opencode-nix,
     talosctl,
     ...
   } @ inputs: let
@@ -72,6 +77,7 @@
       talosctl.overlays.default
       (final: prev: {
         codex = codex-cli-nix.packages.${final.system}.default;
+        opencode = opencode-nix.packages.${final.system}.default;
       })
     ];
     supportedSystems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin"];

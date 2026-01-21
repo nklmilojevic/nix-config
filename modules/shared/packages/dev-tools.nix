@@ -27,6 +27,7 @@ with pkgs; [
   claude-code
   gemini-cli
   codex
+  opencode
 
   # Misc utilities
   mc

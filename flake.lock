@@ -183,6 +183,24 @@
         "type": "github"
       }
     },
+    "flake-utils_4": {
+      "inputs": {
+        "systems": "systems_4"
+      },
+      "locked": {
+        "lastModified": 1731533236,
+        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -190,11 +208,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1768942641,
-        "narHash": "sha256-i25tkhqjsfo0YKz8To/+gzazW1v4f8qUGqJQ8OLrkqE=",
+        "lastModified": 1768984719,
+        "narHash": "sha256-O6nXCW9FN39qw204e5Nl3qgaxKFcSvdpx0bULqfwyTA=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "9997de2f62d1875644f02ddf96cf485a4baecb6f",
+        "rev": "d6e3935ec6e43c8f54cd0132276c82d951e1453e",
         "type": "github"
       },
       "original": {
@@ -222,11 +240,11 @@
     "homebrew-cask": {
       "flake": false,
       "locked": {
-        "lastModified": 1768961294,
-        "narHash": "sha256-FTwbfF7uTmHFfOTvwkqwHM1sNSB0I/GDlOAZCeWbhRc=",
+        "lastModified": 1768982208,
+        "narHash": "sha256-0RBVz9iJPe6rhkt6+47L0yZfUu5tjgBwE+u33B9Cx14=",
         "owner": "homebrew",
         "repo": "homebrew-cask",
-        "rev": "869aac00dda871bfae9df853b7f2adb589bc7a2c",
+        "rev": "b6ae83b7bd4de75832dfa0217dc39dc7c8d1a525",
         "type": "github"
       },
       "original": {
@@ -238,11 +256,11 @@
     "homebrew-core": {
       "flake": false,
       "locked": {
-        "lastModified": 1768959024,
-        "narHash": "sha256-OCGdLYjavERMwMwddqzUHSkfIf9ctxvsu8CerTQLt4c=",
+        "lastModified": 1768980289,
+        "narHash": "sha256-a13RqYJClV8OjUqW4gWaUfWvAr18PQ3SN0xWRYWasUM=",
         "owner": "homebrew",
         "repo": "homebrew-core",
-        "rev": "06227900dfd27f6472211e89887a4e162c698c2f",
+        "rev": "afb221b879f3ef4ddc9c861052b0cef019b0b83a",
         "type": "github"
       },
       "original": {
@@ -386,6 +404,22 @@
     },
     "nixpkgs_5": {
       "locked": {
+        "lastModified": 1768875095,
+        "narHash": "sha256-dYP3DjiL7oIiiq3H65tGIXXIT1Waiadmv93JS0sS+8A=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "ed142ab1b3a092c4d149245d0c4126a5d7ea00b0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_6": {
+      "locked": {
         "lastModified": 1766309749,
         "narHash": "sha256-3xY8CZ4rSnQ0NqGhMKAy5vgC+2IVK0NoVEzDoOh4DA4=",
         "owner": "NixOS",
@@ -397,6 +431,25 @@
         "owner": "NixOS",
         "ref": "nixos-unstable",
         "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "opencode-nix": {
+      "inputs": {
+        "flake-utils": "flake-utils_4",
+        "nixpkgs": "nixpkgs_5"
+      },
+      "locked": {
+        "lastModified": 1768986843,
+        "narHash": "sha256-/N/QyyChICfhY785Klb1bNRWrFy75If5rcIWpi8m+0M=",
+        "owner": "nklmilojevic",
+        "repo": "opencode-nix",
+        "rev": "ddd6e1c80f7a2eaf68800ca6ad336f78d79472c0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nklmilojevic",
+        "repo": "opencode-nix",
         "type": "github"
       }
     },
@@ -414,6 +467,7 @@
         "krewfile": "krewfile",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs_4",
+        "opencode-nix": "opencode-nix",
         "talosctl": "talosctl"
       }
     },
@@ -462,10 +516,25 @@
         "type": "github"
       }
     },
+    "systems_4": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
     "talosctl": {
       "inputs": {
         "flake-parts": "flake-parts_2",
-        "nixpkgs": "nixpkgs_5"
+        "nixpkgs": "nixpkgs_6"
       },
       "locked": {
         "lastModified": 1767619905,
