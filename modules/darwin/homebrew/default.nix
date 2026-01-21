@@ -82,6 +82,7 @@
       "Numbers" = 409203825;
       "NZBVortex 3" = 914250185;
       "Pages" = 409201541;
+      "Parcel" = 375589283;
       "Pixelmator Pro" = 1289583905;
       "Presentify" = 1507246666;
       "Sink It" = 6449873635;
