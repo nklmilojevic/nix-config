@@ -49,6 +49,7 @@
       "raycast"
       "screen-studio"
       "slack"
+      "swiftbar"
       "syntax-highlight"
       "spotify"
       "stats"
