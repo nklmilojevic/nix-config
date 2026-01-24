@@ -13,7 +13,6 @@
       gopls
       gotools
       lua-language-server
-      marksman
       nil
       nixd
       nixpkgs-fmt
@@ -376,7 +375,7 @@
         }
         {
           name = "markdown";
-          language-servers = ["marksman" "lsp-ai"];
+          language-servers = ["lsp-ai"];
           formatter = {
             command = "prettier";
             args = ["--stdin-filepath" "file.md"];
