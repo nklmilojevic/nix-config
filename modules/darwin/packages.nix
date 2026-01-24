@@ -7,6 +7,5 @@ in
     extra = with pkgs; [
       duti
       stress
-      xcodegen
     ];
   }
