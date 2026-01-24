@@ -105,14 +105,12 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            nix-config build: ${{ needs.build-x86_64-linux.result == 'success' && needs.build-aarch64-linux.result == 'success' && needs.build-aarch64-darwin.result == 'success' && 'PASSED' || 'FAILED' }}
+            nix-config build: ${{ needs.build-aarch64-darwin.result == 'success' && 'PASSED' || 'FAILED' }}
 
             Repository: ${{ github.repository }}
             Branch: ${{ github.ref_name }}
             Commit: ${{ github.sha }}
 
-            x86_64-linux: ${{ needs.build-x86_64-linux.result }}
-            aarch64-linux: ${{ needs.build-aarch64-linux.result }}
             aarch64-darwin: ${{ needs.build-aarch64-darwin.result }}
 
             ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
