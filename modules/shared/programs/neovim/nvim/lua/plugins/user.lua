@@ -1,4 +1,3 @@
--- stylua: ignore
 return {
   { import = "lazyvim.plugins.extras.coding.mini-surround" },
   { import = "lazyvim.plugins.extras.coding.yanky" },
@@ -24,7 +23,6 @@ return {
   { import = "lazyvim.plugins.extras.ui.treesitter-context" },
   { import = "lazyvim.plugins.extras.util.gh" },
   { import = "lazyvim.plugins.extras.util.mini-hipatterns" },
-
 
   {
     "LazyVim/LazyVim",
