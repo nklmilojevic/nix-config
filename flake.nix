@@ -55,6 +55,10 @@
     talosctl = {
       url = "github:nklmilojevic/talosctl-flake";
     };
+
+    mailersend-cli = {
+      url = "github:mailersend/mailersend-cli";
+    };
   };
 
   outputs = {
@@ -70,6 +74,7 @@
     codex-cli-nix,
     opencode-nix,
     talosctl,
+    mailersend-cli,
     ...
   } @ inputs: let
     overlays = [
@@ -78,6 +83,7 @@
       (final: prev: {
         codex = codex-cli-nix.packages.${final.system}.default;
         opencode = opencode-nix.packages.${final.system}.default;
+        mailersend = mailersend-cli.packages.${final.system}.default;
       })
     ];
     supportedSystems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin"];
