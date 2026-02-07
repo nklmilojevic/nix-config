@@ -22,12 +22,10 @@
   codexConfigAttrs = {
     model_reasoning_effort = "high";
     model_reasoning_summary = "auto";
-    model = "gpt-5.2-codex";
+    model = "gpt-5.3-codex";
     file_opener = "none";
     show_raw_agent_reasoning = true;
-    features = {
-      web_search_request = true;
-    };
+    web_search = "live";
     sandbox_mode = "workspace-write";
     approval_policy = "on-request";
     sandbox_workspace_write = {
