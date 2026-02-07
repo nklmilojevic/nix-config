@@ -22,6 +22,7 @@ with pkgs; [
   go-task
   lefthook
   minijinja
+  mailersend
 
   # AI coding assistants
   claude-code
