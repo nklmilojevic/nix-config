@@ -5,7 +5,6 @@
     onActivation.upgrade = true;
 
     taps = builtins.attrNames config.nix-homebrew.taps;
-    brews = [];
 
     casks = [
       "1password"
@@ -36,7 +35,6 @@
       "keycastr"
       "little-snitch"
       "lunar"
-      "maccy"
       "maestral"
       "medis"
       "middle"
