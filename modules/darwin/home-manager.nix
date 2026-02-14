@@ -156,6 +156,7 @@ in {
         ./programs/ghostty
         ./programs/hammerspoon
         ./programs/karabiner
+        ./programs/swiftbar
         ./programs/1password-agent
       ];
 
