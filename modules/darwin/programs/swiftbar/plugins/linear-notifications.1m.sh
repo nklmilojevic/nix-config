@@ -45,11 +45,19 @@ fi
 
 # Handle mark all as read
 if [ "$1" = "--mark-all" ]; then
-    curl -s -X POST \
+    READ_AT=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
+    IDS=$(curl -s -X POST \
         -H "Content-Type: application/json" \
         -H "Authorization: $LINEAR_API_KEY" \
-        -d '{"query": "mutation { notificationArchiveAll { success } }"}' \
-        "https://api.linear.app/graphql" >/dev/null 2>&1
+        -d '{"query": "{ notifications(first: 50) { nodes { id readAt } } }"}' \
+        "https://api.linear.app/graphql" | jq -r '.data.notifications.nodes[] | select(.readAt == null) | .id')
+    for NOTIF_ID in $IDS; do
+        curl -s -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: $LINEAR_API_KEY" \
+            -d "{\"query\": \"mutation { notificationUpdate(id: \\\"$NOTIF_ID\\\", input: { readAt: \\\"$READ_AT\\\" }) { success } }\"}" \
+            "https://api.linear.app/graphql" >/dev/null 2>&1
+    done
     exit 0
 fi
 
@@ -58,10 +66,11 @@ if [ "$1" = "--open" ]; then
     NOTIF_ID="$2"
     ISSUE_URL="$3"
     if [ -n "$NOTIF_ID" ]; then
+        READ_AT=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
         curl -s -X POST \
             -H "Content-Type: application/json" \
             -H "Authorization: $LINEAR_API_KEY" \
-            -d "{\"query\": \"mutation { notificationArchive(id: \\\"$NOTIF_ID\\\") { success } }\"}" \
+            -d "{\"query\": \"mutation { notificationUpdate(id: \\\"$NOTIF_ID\\\", input: { readAt: \\\"$READ_AT\\\" }) { success } }\"}" \
             "https://api.linear.app/graphql" >/dev/null 2>&1
     fi
     if [ -n "$ISSUE_URL" ]; then
