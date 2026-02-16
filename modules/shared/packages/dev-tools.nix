@@ -23,6 +23,7 @@ with pkgs; [
   lefthook
   minijinja
   mailersend
+  mailerlite
 
   # AI coding assistants
   claude-code

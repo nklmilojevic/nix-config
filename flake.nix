@@ -59,6 +59,10 @@
     mailersend-cli = {
       url = "github:mailersend/mailersend-cli";
     };
+
+    mailerlite-cli = {
+      url = "github:mailerlite/mailerlite-cli";
+    };
   };
 
   outputs = {
@@ -75,6 +79,7 @@
     opencode-nix,
     talosctl,
     mailersend-cli,
+    mailerlite-cli,
     ...
   } @ inputs: let
     overlays = [
@@ -84,6 +89,7 @@
         codex = codex-cli-nix.packages.${final.system}.default;
         opencode = opencode-nix.packages.${final.system}.default;
         mailersend = mailersend-cli.packages.${final.system}.default;
+        mailerlite = mailerlite-cli.packages.${final.system}.default;
       })
     ];
     supportedSystems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin"];
