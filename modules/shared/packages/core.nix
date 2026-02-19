@@ -19,4 +19,5 @@ with pkgs; [
   sd
   gettext
   unixtools.ping
+  zellij
 ]
