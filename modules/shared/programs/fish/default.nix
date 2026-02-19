@@ -69,6 +69,7 @@
       kctx = "kubectl ctx";
       df = "df -h";
       mkdir = "mkdir -p -v";
+      cc = "claude";
       lg = "lazygit";
       grep = "rg";
 
