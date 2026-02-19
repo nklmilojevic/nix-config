@@ -4,6 +4,12 @@
       enable = true;
       settings = {
         gui = {
+          nerdFontsVersion = "3";
+          showFileTree = true;
+          showCommandLog = false;
+          showRandomTip = false;
+          expandFocusedSidePanel = true;
+          border = "rounded";
           theme = {
             activeBorderColor = ["#cba6f7" "bold"];
             inactiveBorderColor = ["#a6adc8"];
