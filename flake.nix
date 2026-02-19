@@ -52,6 +52,10 @@
       url = "github:nklmilojevic/opencode-nix";
     };
 
+    gemini-cli-nix = {
+      url = "github:nklmilojevic/gemini-cli-nix";
+    };
+
     talosctl = {
       url = "github:nklmilojevic/talosctl-flake";
     };
@@ -77,6 +81,7 @@
     claude-code-overlay,
     codex-cli-nix,
     opencode-nix,
+    gemini-cli-nix,
     talosctl,
     mailersend-cli,
     mailerlite-cli,
@@ -88,6 +93,7 @@
       (final: prev: {
         codex = codex-cli-nix.packages.${final.system}.default;
         opencode = opencode-nix.packages.${final.system}.default;
+        gemini-cli = gemini-cli-nix.packages.${final.system}.default;
         mailersend = mailersend-cli.packages.${final.system}.default;
         mailerlite = mailerlite-cli.packages.${final.system}.default;
       })
