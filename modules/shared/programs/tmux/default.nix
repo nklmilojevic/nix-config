@@ -5,19 +5,19 @@
     src = pkgs.fetchFromGitHub {
       owner = "jonmosco";
       repo = "kube-tmux";
-      rev = "master";
+      rev = "da04ab6b38e5dcb80e0edfc2c6895f8b0f52498e";
       sha256 = "sha256-Z71zsEj4nGptaosDPRVFEp8QwSsawPh1qFMSoRnF2nE=";
     };
   };
 
   catppuccinPlugin = pkgs.tmuxPlugins.mkTmuxPlugin {
     pluginName = "catppuccin";
-    version = "2.1.2";
+    version = "2.1.3";
     src = pkgs.fetchFromGitHub {
       owner = "catppuccin";
       repo = "tmux";
-      rev = "v2.1.2";
-      sha256 = "sha256-vBYBvZrMGLpMU059a+Z4SEekWdQD0GrDqBQyqfkEHPg=";
+      rev = "v2.1.3";
+      sha256 = "sha256-Is0CQ1ZJMXIwpDjrI5MDNHJtq+R3jlNcd9NXQESUe2w=";
     };
   };
 
@@ -27,8 +27,8 @@
     src = pkgs.fetchFromGitHub {
       owner = "omerxx";
       repo = "tmux-floax";
-      rev = "main";
-      sha256 = "sha256-TCY3W0/4c4KIsY55uClrlzu90XcK/mgbD58WWu6sPrU=";
+      rev = "133f526793d90d2caa323c47687dd5544a2c704b";
+      sha256 = "sha256-9Hb9dn2qHF6KcIhtogvycX3Z0MoQrLPLCzZXtjGlPHw=";
     };
   };
 in {
@@ -43,12 +43,9 @@ in {
     plugins = with pkgs.tmuxPlugins; [
       sensible
       yank
-      copycat
+
       battery
-      {
-        plugin = kubePlugin;
-        extraConfig = "";
-      }
+      kubePlugin
       {
         plugin = catppuccinPlugin;
         extraConfig = ''
@@ -84,15 +81,30 @@ in {
           set -g @floax-height '60%'
         '';
       }
+      extrakto
+      {
+        plugin = resurrect;
+        extraConfig = ''
+          set -g @resurrect-capture-pane-contents 'on'
+          set -g @resurrect-strategy-nvim 'session'
+        '';
+      }
+      {
+        plugin = continuum;
+        extraConfig = ''
+          set -g @continuum-restore 'on'
+          set -g @continuum-save-interval '10'
+        '';
+      }
+      vim-tmux-navigator
     ];
     extraConfig = ''
       setw -g pane-base-index 1
       set-option -g renumber-windows on
-      set-option -sa terminal-overrides ",xterm*:Tc"
+      set-option -sa terminal-overrides ",xterm-ghostty:Tc"
       set-option -g default-command ${pkgs.fish}/bin/fish
 
       set-environment -g KUBE_TMUX_SYMBOL_ENABLE "false"
-
       set -g status-right-length 200
       set -g status-left-length 100
       set -g status-left ""
@@ -104,17 +116,15 @@ in {
       set -ga update-environment TERM
       set -ga update-environment TERM_PROGRAM
       bind -n C-g popup -d '#{pane_current_path}' -E -w 80% -h 80% lazygit
-      bind -n C-e popup -Ed '#{pane_current_path}' -w85% -h85% yazi
+      bind g popup -d '#{pane_current_path}' -E -w 80% -h 80% lazygit
 
+      bind v copy-mode
       unbind -T copy-mode-vi MouseDragEnd1Pane
 
-      set -g allow-passthrough on
-      set -ga update-environment TERM
-      set -ga update-environment TERM_PROGRAM
+      # tms - tmux sessionizer
+      bind O display-popup -E "tms"
+      bind S display-popup -E "tms switch"
 
-      bind -r g popup -d '#{pane_current_path}' -E -w 80% -h 80% lazygit
-      bind -n C-e popup -Ed '#{pane_current_path}' -w85% -h85% yazi
-      unbind -T copy-mode-vi MouseDragEnd1Pane
       # Split bindings
       bind - split-window -c "#{pane_current_path}"
       bind + split-window -h -c "#{pane_current_path}"

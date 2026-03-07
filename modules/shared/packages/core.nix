@@ -19,5 +19,6 @@ with pkgs; [
   sd
   gettext
   unixtools.ping
-  zellij
+  tmux-sessionizer
+  yazi
 ]

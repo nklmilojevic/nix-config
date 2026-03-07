@@ -22,6 +22,62 @@ window-padding-y = 10
 alpha-blending = linear-corrected
 
 keybind = shift+enter=text:\x1b\r
-shell-integration-features = ssh-terminfo,ssh-env
+shell-integration-features = ssh-terminfo,ssh-env,sudo
 
 auto-update-channel = tip
+
+# # Keybindings
+# keybind = cmd+right=text:\x05
+# keybind = cmd+left=text:\x01
+# keybind = alt+left=esc:b
+# keybind = alt+right=esc:f
+# keybind = cmd+delete=text:\x0b
+# keybind = cmd+backspace=text:\x15
+# keybind = opt+delete=esc:d
+#
+# # tmux keybindings
+# keybind = super+digit_1=text:\x001
+# keybind = super+digit_2=text:\x002
+# keybind = super+digit_3=text:\x003
+# keybind = super+digit_4=text:\x004
+# keybind = super+digit_5=text:\x005
+# keybind = super+digit_6=text:\x006
+# keybind = super+digit_7=text:\x007
+# keybind = super+digit_8=text:\x008
+# keybind = super+digit_9=text:\x009
+#
+# # open new window
+# keybind = super+t=text:\x00\x63
+#
+# # close window
+# keybind = super+w=text:\x00x
+#
+# # open session view
+# keybind = super+o=text:\x00s
+#
+# # open last session
+# keybind = super+l=text:\x00L
+#
+# # horizontal split
+# keybind = super+plus=text:\x00+
+# keybind = super+d=text:\x00+
+#
+# # vertical split
+# keybind = super+minus=text:\x00-
+# keybind = super+shift+d=text:\x00-
+#
+# # fullscreen pane
+# keybind = super+z=text:\x00z
+#
+# # switch panes with direction
+# keybind = super+shift+left=text:\x00\x1b[D
+# keybind = super+shift+right=text:\x00\x1b[C
+# keybind = shift+super+up=text:\x00\x1b[A
+# keybind = super+shift+down=text:\x00\x1b[B
+#
+# # tms - tmux sessionizer
+# keybind = shift+super+o=text:\x00O
+# keybind = shift+super+s=text:\x00S
+#
+# # cmd+K to clear doesn't work in tmux by default
+# keybind = super+k=text:\x0c

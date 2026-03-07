@@ -17,8 +17,8 @@ KEYCHAIN_SERVICE="swiftbar-github"
 KEYCHAIN_ACCOUNT="token"
 
 sanitize_menu_text() {
-  # Avoid breaking SwiftBar parsing when API text contains pipes/newlines.
-  echo "$1" | tr '\r\n' '  ' | sed 's/|/¦/g'
+  # Avoid breaking SwiftBar parsing when API text contains pipes/newlines/non-ASCII.
+  echo "$1" | tr '\r\n' '  ' | sed 's/|/¦/g' | LC_ALL=C tr -cd '[:print:]'
 }
 
 # Try to get token from Keychain
@@ -83,7 +83,7 @@ if [ "$1" = "--open" ]; then
 fi
 
 # Fetch notifications from GitHub API
-RESPONSE=$(curl -s \
+RESPONSE=$(curl -s --connect-timeout 5 --max-time 10 \
   -H "Accept: application/vnd.github+json" \
   -H "Authorization: Bearer $GITHUB_TOKEN" \
   "https://api.github.com/notifications?per_page=25" 2>/dev/null)
