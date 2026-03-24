@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.05";
     flake-utils.url = "github:numtide/flake-utils";
     catppuccin.url = "github:catppuccin/nix";
 
@@ -67,6 +68,10 @@
     mailerlite-cli = {
       url = "github:mailerlite/mailerlite-cli";
     };
+
+    atuin-nix = {
+      url = "github:nklmilojevic/atuin-nix";
+    };
   };
 
   outputs = {
@@ -85,6 +90,8 @@
     talosctl,
     mailersend-cli,
     mailerlite-cli,
+    atuin-nix,
+    nixpkgs-stable,
     ...
   } @ inputs: let
     overlays = [
@@ -96,6 +103,8 @@
         gemini-cli = gemini-cli-nix.packages.${final.system}.default;
         mailersend = mailersend-cli.packages.${final.system}.default;
         mailerlite = mailerlite-cli.packages.${final.system}.default;
+        atuin = atuin-nix.packages.${final.system}.default;
+        direnv = (import nixpkgs-stable {system = final.system;}).direnv;
       })
     ];
     supportedSystems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin"];

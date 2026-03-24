@@ -6,6 +6,7 @@
   };
   programs.atuin = {
     enable = true;
+    enableFishIntegration = false;
     flags = [
       "--disable-up-arrow"
     ];
@@ -16,9 +17,13 @@
       sync_address = "https://atuin.nikola.wtf";
       auto_sync = true;
       sync_frequency = "1m";
-      search_mode = "fuzzy";
+      search_mode = "daemon-fuzzy";
       sync = {
         records = true;
+      };
+      daemon = {
+        enabled = true;
+        autostart = true;
       };
     };
   };

@@ -4,6 +4,7 @@ with pkgs; [
   # Media
   ffmpeg_7
   imagemagick
+  sane-backends
   timg
   qrencode
 

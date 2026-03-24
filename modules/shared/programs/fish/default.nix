@@ -31,6 +31,29 @@
       set -U --append __done_exclude '^nvim'
 
       nix-your-shell fish | source
+      # Atuin hex wrapper (PTY terminal emulator) + regular init with --disable-up-arrow
+      if status is-interactive; and test -t 0; and test -t 1
+        set -l _atuin_hex_tmux_current ""
+        if set -q TMUX
+          set _atuin_hex_tmux_current "$TMUX"
+        end
+
+        set -l _atuin_hex_tmux_previous ""
+        if set -q ATUIN_HEX_TMUX
+          set _atuin_hex_tmux_previous "$ATUIN_HEX_TMUX"
+        end
+
+        if not set -q ATUIN_HEX_ACTIVE
+          set -gx ATUIN_HEX_ACTIVE 1
+          set -gx ATUIN_HEX_TMUX "$_atuin_hex_tmux_current"
+          exec atuin hex
+        else if test "$_atuin_hex_tmux_current" != "$_atuin_hex_tmux_previous"
+          set -gx ATUIN_HEX_ACTIVE 1
+          set -gx ATUIN_HEX_TMUX "$_atuin_hex_tmux_current"
+          exec atuin hex
+        end
+      end
+      atuin init fish --disable-up-arrow | source
     '';
 
     plugins = [

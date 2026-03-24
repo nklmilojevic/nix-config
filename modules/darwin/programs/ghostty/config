@@ -24,7 +24,7 @@ alpha-blending = linear-corrected
 keybind = shift+enter=text:\x1b\r
 shell-integration-features = ssh-terminfo,ssh-env,sudo
 
-auto-update-channel = tip
+#auto-update-channel = tip
 
 # # Keybindings
 # keybind = cmd+right=text:\x05
