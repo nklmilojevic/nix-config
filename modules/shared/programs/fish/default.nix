@@ -133,6 +133,64 @@
           end
         '';
       };
+      ghr = {
+        description = "bump and create a GitHub release";
+        body = ''
+          set -l bump_type ""
+          set -l extra_args
+
+          for arg in $argv
+            switch $arg
+              case --major
+                set bump_type major
+              case --minor
+                set bump_type minor
+              case --patch
+                set bump_type patch
+              case '*'
+                set -a extra_args $arg
+            end
+          end
+
+          if test -z "$bump_type"
+            echo "Usage: ghr --major|--minor|--patch [extra gh release args]"
+            return 1
+          end
+
+          set -l latest (gh release view --json tagName -q '.tagName' 2>/dev/null)
+          if test $status -ne 0; or test -z "$latest"
+            echo "No existing release found, starting from v0.0.0"
+            set latest "v0.0.0"
+          end
+
+          set -l ver (string replace -r '^v' "" $latest)
+          set -l parts (string split '.' $ver)
+          if test (count $parts) -ne 3
+            echo "Error: cannot parse version '$latest'"
+            return 1
+          end
+
+          set -l major $parts[1]
+          set -l minor $parts[2]
+          set -l patch $parts[3]
+
+          switch $bump_type
+            case major
+              set major (math $major + 1)
+              set minor 0
+              set patch 0
+            case minor
+              set minor (math $minor + 1)
+              set patch 0
+            case patch
+              set patch (math $patch + 1)
+          end
+
+          set -l new_tag "v$major.$minor.$patch"
+          echo "$latest → $new_tag"
+          gh release create $new_tag --generate-notes $extra_args
+        '';
+      };
     };
   };
 }
