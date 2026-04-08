@@ -10,7 +10,7 @@ in {
     username = "${user}";
     homeDirectory = "/home/${user}";
     packages = pkgs.callPackage ./packages.nix {};
-    stateVersion = "25.05";
+    stateVersion = "26.05";
   };
 
   imports = [

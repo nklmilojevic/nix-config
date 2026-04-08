@@ -97,14 +97,16 @@
     overlays = [
       claude-code-overlay.overlays.default
       talosctl.overlays.default
-      (final: prev: {
-        codex = codex-cli-nix.packages.${final.system}.default;
-        opencode = opencode-nix.packages.${final.system}.default;
-        gemini-cli = gemini-cli-nix.packages.${final.system}.default;
-        mailersend = mailersend-cli.packages.${final.system}.default;
-        mailerlite = mailerlite-cli.packages.${final.system}.default;
-        atuin = atuin-nix.packages.${final.system}.default;
-        direnv = (import nixpkgs-stable {system = final.system;}).direnv;
+      (final: prev: let
+        system = final.stdenv.hostPlatform.system;
+      in {
+        codex = codex-cli-nix.packages.${system}.default;
+        opencode = opencode-nix.packages.${system}.default;
+        gemini-cli = gemini-cli-nix.packages.${system}.default;
+        mailersend = mailersend-cli.packages.${system}.default;
+        mailerlite = mailerlite-cli.packages.${system}.default;
+        atuin = atuin-nix.packages.${system}.default;
+        direnv = (import nixpkgs-stable {inherit system;}).direnv;
       })
     ];
     supportedSystems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin"];
@@ -135,13 +137,8 @@
       lib = lib;
 
       darwinConfigurations.daedalus = darwin.lib.darwinSystem {
-        system = "aarch64-darwin";
-        pkgs = import nixpkgs {
-          system = "aarch64-darwin";
-          inherit overlays;
-          config.allowUnfree = true;
-        };
         modules = [
+          {nixpkgs.overlays = overlays;}
           home-manager.darwinModules.home-manager
           ./hosts/darwin
           nix-homebrew.darwinModules.nix-homebrew

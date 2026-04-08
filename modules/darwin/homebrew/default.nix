@@ -52,6 +52,7 @@
       "spotify"
       "stats"
       "tableplus"
+      "telegram"
       "viber"
       "visual-studio-code"
       "vlc"
@@ -89,7 +90,6 @@
       "SponsorBlock" = 1573461917;
       "StopTheMadness Pro" = 6471380298;
       "Tailscale" = 1475387142;
-      "Telegram" = 747648890;
       "Things" = 904280696;
       "uBlock Origin Lite" = 6745342698;
       "UnTrap" = 1637438059;
