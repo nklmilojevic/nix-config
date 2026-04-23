@@ -1,6 +1,11 @@
-{pkgs, ...}: let
+{ inputs
+, pkgs
+, ...
+}:
+let
   user = "nkl";
-in {
+in
+{
   imports = [
     ./homebrew
   ];
@@ -144,14 +149,15 @@ in {
 
   home-manager = {
     useGlobalPkgs = true;
-    users.${user} = {pkgs, ...}: {
+    users.${user} = { pkgs, ... }: {
       home = {
         enableNixpkgsReleaseCheck = false;
-        packages = pkgs.callPackage ./packages.nix {};
+        packages = pkgs.callPackage ./packages.nix { };
         stateVersion = "26.05";
       };
 
       imports = [
+        inputs.nixvim.homeModules.nixvim
         ../shared/home-manager.nix
         ./programs/ghostty
         ./programs/hammerspoon

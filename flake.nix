@@ -6,6 +6,10 @@
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.05";
     flake-utils.url = "github:numtide/flake-utils";
     catppuccin.url = "github:catppuccin/nix";
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -74,71 +78,78 @@
     };
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    flake-utils,
-    home-manager,
-    darwin,
-    nix-homebrew,
-    krewfile,
-    catppuccin,
-    claude-code-overlay,
-    codex-cli-nix,
-    opencode-nix,
-    gemini-cli-nix,
-    talosctl,
-    mailersend-cli,
-    mailerlite-cli,
-    atuin-nix,
-    nixpkgs-stable,
-    ...
-  } @ inputs: let
-    overlays = [
-      claude-code-overlay.overlays.default
-      talosctl.overlays.default
-      (final: prev: let
-        system = final.stdenv.hostPlatform.system;
-      in {
-        codex = codex-cli-nix.packages.${system}.default;
-        opencode = opencode-nix.packages.${system}.default;
-        gemini-cli = gemini-cli-nix.packages.${system}.default;
-        mailersend = mailersend-cli.packages.${system}.default;
-        mailerlite = mailerlite-cli.packages.${system}.default;
-        atuin = atuin-nix.packages.${system}.default;
-        direnv = (import nixpkgs-stable {inherit system;}).direnv;
+  outputs =
+    { self
+    , nixpkgs
+    , flake-utils
+    , home-manager
+    , darwin
+    , nix-homebrew
+    , nixvim
+    , krewfile
+    , catppuccin
+    , claude-code-overlay
+    , codex-cli-nix
+    , opencode-nix
+    , gemini-cli-nix
+    , talosctl
+    , mailersend-cli
+    , mailerlite-cli
+    , atuin-nix
+    , nixpkgs-stable
+    , ...
+    } @ inputs:
+    let
+      overlays = [
+        claude-code-overlay.overlays.default
+        talosctl.overlays.default
+        (final: prev:
+          let
+            system = final.stdenv.hostPlatform.system;
+          in
+          {
+            codex = codex-cli-nix.packages.${system}.default;
+            opencode = opencode-nix.packages.${system}.default;
+            gemini-cli = gemini-cli-nix.packages.${system}.default;
+            mailersend = mailersend-cli.packages.${system}.default;
+            mailerlite = mailerlite-cli.packages.${system}.default;
+            atuin = atuin-nix.packages.${system}.default;
+            direnv = (import nixpkgs-stable { inherit system; }).direnv;
+          })
+      ];
+      supportedSystems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
+
+      # Import custom library functions
+      lib = import ./lib { lib = nixpkgs.lib; };
+    in
+    flake-utils.lib.eachSystem supportedSystems
+      (system:
+      let
+        pkgs = import nixpkgs {
+          inherit system overlays;
+          config.allowUnfree = true;
+        };
+      in
+      {
+        packages = {
+          inherit (pkgs) k9s;
+        };
+
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [
+            nixpkgs-fmt
+            nil
+          ];
+        };
+
       })
-    ];
-    supportedSystems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin"];
-
-    # Import custom library functions
-    lib = import ./lib {lib = nixpkgs.lib;};
-  in
-    flake-utils.lib.eachSystem supportedSystems (system: let
-      pkgs = import nixpkgs {
-        inherit system overlays;
-        config.allowUnfree = true;
-      };
-    in {
-      packages = {
-        inherit (pkgs) k9s;
-      };
-
-      devShells.default = pkgs.mkShell {
-        packages = with pkgs; [
-          nixpkgs-fmt
-          nil
-        ];
-      };
-
-    })
     // {
       # Expose library functions for external use
       lib = lib;
 
       darwinConfigurations.daedalus = darwin.lib.darwinSystem {
         modules = [
-          {nixpkgs.overlays = overlays;}
+          { nixpkgs.overlays = overlays; }
           home-manager.darwinModules.home-manager
           ./hosts/darwin
           nix-homebrew.darwinModules.nix-homebrew
@@ -154,28 +165,30 @@
             };
           }
         ];
-        specialArgs = {inherit inputs;};
+        specialArgs = { inherit inputs; };
       };
 
-      homeConfigurations = let
-        mkLinuxHome = system: home-manager.lib.homeManagerConfiguration {
-          pkgs = import nixpkgs {
-            inherit system overlays;
-            config.allowUnfree = true;
+      homeConfigurations =
+        let
+          mkLinuxHome = system: home-manager.lib.homeManagerConfiguration {
+            pkgs = import nixpkgs {
+              inherit system overlays;
+              config.allowUnfree = true;
+            };
+            modules = [
+              ./hosts/linux
+              catppuccin.homeModules.catppuccin
+            ];
+            extraSpecialArgs = { inherit inputs; };
           };
-          modules = [
-            ./hosts/linux
-            catppuccin.homeModules.catppuccin
-          ];
-          extraSpecialArgs = {inherit inputs;};
+        in
+        {
+          # x86_64 Linux
+          linux = mkLinuxHome "x86_64-linux";
+          server = mkLinuxHome "x86_64-linux";
+          # aarch64 Linux
+          "linux-aarch64" = mkLinuxHome "aarch64-linux";
+          "server-aarch64" = mkLinuxHome "aarch64-linux";
         };
-      in {
-        # x86_64 Linux
-        linux = mkLinuxHome "x86_64-linux";
-        server = mkLinuxHome "x86_64-linux";
-        # aarch64 Linux
-        "linux-aarch64" = mkLinuxHome "aarch64-linux";
-        "server-aarch64" = mkLinuxHome "aarch64-linux";
-      };
     };
 }

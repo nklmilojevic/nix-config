@@ -1,19 +1,26 @@
-{pkgs, ...}: let
-  user = let
-    envUser = builtins.getEnv "USER";
-  in
+{ inputs
+, pkgs
+, ...
+}:
+let
+  user =
+    let
+      envUser = builtins.getEnv "USER";
+    in
     if envUser != "" then envUser else "nkl";
   xdg_configHome = "/home/${user}/.config";
-in {
+in
+{
   home = {
     enableNixpkgsReleaseCheck = false;
     username = "${user}";
     homeDirectory = "/home/${user}";
-    packages = pkgs.callPackage ./packages.nix {};
+    packages = pkgs.callPackage ./packages.nix { };
     stateVersion = "26.05";
   };
 
   imports = [
+    inputs.nixvim.homeModules.nixvim
     ../shared/home-manager.nix
   ];
 }

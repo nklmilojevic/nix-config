@@ -9,6 +9,7 @@ with pkgs; [
   qrencode
 
   # Databases
+  mariadb.client
   postgresql_16
   redis
 
@@ -34,6 +35,7 @@ with pkgs; [
 
   # Misc utilities
   mc
+  pv
   pwgen
   restic
   tree-sitter
