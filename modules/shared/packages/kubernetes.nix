@@ -1,6 +1,7 @@
 # Kubernetes ecosystem
-{pkgs}:
-with pkgs; [
+{ pkgs }:
+with pkgs;
+[
   kubectl
   kubernetes-helm
   helmfile

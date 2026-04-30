@@ -2,7 +2,8 @@
   inputs,
   pkgs,
   ...
-}: {
+}:
+{
   imports = [
     ../../modules/darwin/home-manager.nix
     ../../modules/shared

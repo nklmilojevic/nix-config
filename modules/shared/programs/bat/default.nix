@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   config = {
     catppuccin = {
       bat = {

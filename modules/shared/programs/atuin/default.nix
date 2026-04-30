@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   catppuccin = {
     fish = {
       enable = true;

@@ -1,8 +1,9 @@
-{pkgs}: let
-  lib = import ../../lib {lib = pkgs.lib;};
+{ pkgs }:
+let
+  lib = import ../../lib { lib = pkgs.lib; };
 in
-  lib.mkPackageList {
-    inherit pkgs;
-    shared = ../shared/packages;
-    extra = [];
-  }
+lib.mkPackageList {
+  inherit pkgs;
+  shared = ../shared/packages;
+  extra = [ ];
+}

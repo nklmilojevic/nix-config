@@ -326,23 +326,142 @@ in
       settings = {
         preset = "helix";
         spec = [
-          { __unkeyed-1 = "<leader><tab>"; group = "tabs"; mode = [ "n" "x" ]; }
-          { __unkeyed-1 = "<leader>b"; group = "buffer"; mode = [ "n" "x" ]; }
-          { __unkeyed-1 = "<leader>c"; group = "code"; mode = [ "n" "x" ]; }
-          { __unkeyed-1 = "<leader>f"; group = "file/find"; mode = [ "n" "x" ]; }
-          { __unkeyed-1 = "<leader>g"; group = "git"; mode = [ "n" "x" ]; }
-          { __unkeyed-1 = "<leader>gh"; group = "hunks"; mode = [ "n" "x" ]; }
-          { __unkeyed-1 = "<leader>G"; group = "github"; mode = [ "n" "x" ]; }
-          { __unkeyed-1 = "<leader>q"; group = "quit/session"; mode = [ "n" "x" ]; }
-          { __unkeyed-1 = "<leader>s"; group = "search"; mode = [ "n" "x" ]; }
-          { __unkeyed-1 = "<leader>u"; group = "ui"; mode = [ "n" "x" ]; }
-          { __unkeyed-1 = "<leader>w"; group = "windows"; mode = [ "n" "x" ]; }
-          { __unkeyed-1 = "<leader>x"; group = "diagnostics/quickfix"; mode = [ "n" "x" ]; }
-          { __unkeyed-1 = "["; group = "prev"; mode = [ "n" "x" ]; }
-          { __unkeyed-1 = "]"; group = "next"; mode = [ "n" "x" ]; }
-          { __unkeyed-1 = "g"; group = "goto"; mode = [ "n" "x" ]; }
-          { __unkeyed-1 = "gs"; group = "surround"; mode = [ "n" "x" ]; }
-          { __unkeyed-1 = "z"; group = "fold"; mode = [ "n" "x" ]; }
+          {
+            __unkeyed-1 = "<leader><tab>";
+            group = "tabs";
+            mode = [
+              "n"
+              "x"
+            ];
+          }
+          {
+            __unkeyed-1 = "<leader>b";
+            group = "buffer";
+            mode = [
+              "n"
+              "x"
+            ];
+          }
+          {
+            __unkeyed-1 = "<leader>c";
+            group = "code";
+            mode = [
+              "n"
+              "x"
+            ];
+          }
+          {
+            __unkeyed-1 = "<leader>f";
+            group = "file/find";
+            mode = [
+              "n"
+              "x"
+            ];
+          }
+          {
+            __unkeyed-1 = "<leader>g";
+            group = "git";
+            mode = [
+              "n"
+              "x"
+            ];
+          }
+          {
+            __unkeyed-1 = "<leader>gh";
+            group = "hunks";
+            mode = [
+              "n"
+              "x"
+            ];
+          }
+          {
+            __unkeyed-1 = "<leader>G";
+            group = "github";
+            mode = [
+              "n"
+              "x"
+            ];
+          }
+          {
+            __unkeyed-1 = "<leader>q";
+            group = "quit/session";
+            mode = [
+              "n"
+              "x"
+            ];
+          }
+          {
+            __unkeyed-1 = "<leader>s";
+            group = "search";
+            mode = [
+              "n"
+              "x"
+            ];
+          }
+          {
+            __unkeyed-1 = "<leader>u";
+            group = "ui";
+            mode = [
+              "n"
+              "x"
+            ];
+          }
+          {
+            __unkeyed-1 = "<leader>w";
+            group = "windows";
+            mode = [
+              "n"
+              "x"
+            ];
+          }
+          {
+            __unkeyed-1 = "<leader>x";
+            group = "diagnostics/quickfix";
+            mode = [
+              "n"
+              "x"
+            ];
+          }
+          {
+            __unkeyed-1 = "[";
+            group = "prev";
+            mode = [
+              "n"
+              "x"
+            ];
+          }
+          {
+            __unkeyed-1 = "]";
+            group = "next";
+            mode = [
+              "n"
+              "x"
+            ];
+          }
+          {
+            __unkeyed-1 = "g";
+            group = "goto";
+            mode = [
+              "n"
+              "x"
+            ];
+          }
+          {
+            __unkeyed-1 = "gs";
+            group = "surround";
+            mode = [
+              "n"
+              "x"
+            ];
+          }
+          {
+            __unkeyed-1 = "z";
+            group = "fold";
+            mode = [
+              "n"
+              "x"
+            ];
+          }
         ];
       };
     };
@@ -453,7 +572,12 @@ in
                 desc = "Find File";
                 action.__raw = "function() Snacks.picker.files({ cwd = UserNixvim.project_root() }) end";
               }
-              { icon = " "; key = "n"; desc = "New File"; action = ":ene | startinsert"; }
+              {
+                icon = " ";
+                key = "n";
+                desc = "New File";
+                action = ":ene | startinsert";
+              }
               {
                 icon = " ";
                 key = "g";
@@ -478,14 +602,24 @@ in
                 desc = "Projects";
                 action.__raw = "function() Snacks.picker.projects() end";
               }
-              { icon = " "; key = "q"; desc = "Quit"; action = ":qa"; }
+              {
+                icon = " ";
+                key = "q";
+                desc = "Quit";
+                action = ":qa";
+              }
             ];
           };
           sections = [
             { section = "header"; }
-            { section = "keys"; gap = 1; padding = 1; }
+            {
+              section = "keys";
+              gap = 1;
+              padding = 1;
+            }
           ];
         };
+        explorer.enabled = true;
         indent.enabled = true;
         input.enabled = true;
         notifier.enabled = true;
@@ -493,7 +627,10 @@ in
           enabled = true;
           win.input.keys."<a-c>" = {
             __unkeyed-1 = "toggle_cwd";
-            mode = [ "n" "i" ];
+            mode = [
+              "n"
+              "i"
+            ];
           };
           actions.toggle_cwd.__raw = ''
             function(picker)
@@ -546,7 +683,14 @@ in
           "<C-y>" = [ "select_and_accept" ];
         };
         sources = {
-          default = [ "copilot" "lsp" "path" "snippets" "buffer" "dadbod" ];
+          default = [
+            "copilot"
+            "lsp"
+            "path"
+            "snippets"
+            "buffer"
+            "dadbod"
+          ];
           providers = {
             copilot = {
               name = "copilot";
@@ -586,7 +730,11 @@ in
 
     plugins.lint = {
       enable = true;
-      autoCmd.event = [ "BufWritePost" "BufEnter" "InsertLeave" ];
+      autoCmd.event = [
+        "BufWritePost"
+        "BufEnter"
+        "InsertLeave"
+      ];
       lintersByFt = {
         go = [ "golangcilint" ];
         markdown = [ "markdownlint-cli2" ];
@@ -603,22 +751,64 @@ in
       mockDevIcons = true;
       settings = {
         file = {
-          ".keep" = { glyph = "󰊢"; hl = "MiniIconsGrey"; };
-          ".eslintrc.js" = { glyph = "󰱺"; hl = "MiniIconsYellow"; };
-          ".go-version" = { glyph = ""; hl = "MiniIconsBlue"; };
-          ".node-version" = { glyph = ""; hl = "MiniIconsGreen"; };
-          ".prettierrc" = { glyph = ""; hl = "MiniIconsPurple"; };
-          ".yarnrc.yml" = { glyph = ""; hl = "MiniIconsBlue"; };
-          "devcontainer.json" = { glyph = ""; hl = "MiniIconsAzure"; };
-          "eslint.config.js" = { glyph = "󰱺"; hl = "MiniIconsYellow"; };
-          "package.json" = { glyph = ""; hl = "MiniIconsGreen"; };
-          "tsconfig.json" = { glyph = ""; hl = "MiniIconsAzure"; };
-          "tsconfig.build.json" = { glyph = ""; hl = "MiniIconsAzure"; };
-          "yarn.lock" = { glyph = ""; hl = "MiniIconsBlue"; };
+          ".keep" = {
+            glyph = "󰊢";
+            hl = "MiniIconsGrey";
+          };
+          ".eslintrc.js" = {
+            glyph = "󰱺";
+            hl = "MiniIconsYellow";
+          };
+          ".go-version" = {
+            glyph = "";
+            hl = "MiniIconsBlue";
+          };
+          ".node-version" = {
+            glyph = "";
+            hl = "MiniIconsGreen";
+          };
+          ".prettierrc" = {
+            glyph = "";
+            hl = "MiniIconsPurple";
+          };
+          ".yarnrc.yml" = {
+            glyph = "";
+            hl = "MiniIconsBlue";
+          };
+          "devcontainer.json" = {
+            glyph = "";
+            hl = "MiniIconsAzure";
+          };
+          "eslint.config.js" = {
+            glyph = "󰱺";
+            hl = "MiniIconsYellow";
+          };
+          "package.json" = {
+            glyph = "";
+            hl = "MiniIconsGreen";
+          };
+          "tsconfig.json" = {
+            glyph = "";
+            hl = "MiniIconsAzure";
+          };
+          "tsconfig.build.json" = {
+            glyph = "";
+            hl = "MiniIconsAzure";
+          };
+          "yarn.lock" = {
+            glyph = "";
+            hl = "MiniIconsBlue";
+          };
         };
         filetype = {
-          dotenv = { glyph = ""; hl = "MiniIconsYellow"; };
-          gotmpl = { glyph = "󰟓"; hl = "MiniIconsGrey"; };
+          dotenv = {
+            glyph = "";
+            hl = "MiniIconsYellow";
+          };
+          gotmpl = {
+            glyph = "󰟓";
+            hl = "MiniIconsGrey";
+          };
         };
       };
     };
@@ -696,7 +886,12 @@ in
         options = {
           theme = "auto";
           globalstatus = true;
-          disabled_filetypes.statusline = [ "dashboard" "alpha" "ministarter" "snacks_dashboard" ];
+          disabled_filetypes.statusline = [
+            "dashboard"
+            "alpha"
+            "ministarter"
+            "snacks_dashboard"
+          ];
         };
         sections.__raw = ''
           {

@@ -1,6 +1,7 @@
 # Security and encryption tools
-{pkgs}:
-with pkgs; [
+{ pkgs }:
+with pkgs;
+[
   _1password-cli
   age
   sops

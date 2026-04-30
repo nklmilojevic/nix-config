@@ -2,7 +2,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   config = lib.mkMerge [
     {
       home.packages = [

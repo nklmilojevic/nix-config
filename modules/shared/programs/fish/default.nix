@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   catppuccin = {
     fish = {
       enable = true;
@@ -105,12 +106,12 @@
 
     functions = {
       psgrep = {
-        argumentNames = ["process"];
+        argumentNames = [ "process" ];
         description = "greps for processes";
         body = "ps aux | rg $process | rg -v rg";
       };
       y = {
-        argumentNames = ["argv"];
+        argumentNames = [ "argv" ];
         description = "opens yazi file manager and changes directory on exit";
         body = ''
           set tmp (mktemp -t "yazi-cwd.XXXXXX")

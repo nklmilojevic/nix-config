@@ -1,6 +1,7 @@
 # Fish shell and shell ecosystem
-{pkgs}:
-with pkgs; [
+{ pkgs }:
+with pkgs;
+[
   fish
   fishPlugins.puffer
   fishPlugins.done

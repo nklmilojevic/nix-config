@@ -1,6 +1,7 @@
 # Development tools and utilities
-{pkgs}:
-with pkgs; [
+{ pkgs }:
+with pkgs;
+[
   # Media
   ffmpeg_7
   imagemagick

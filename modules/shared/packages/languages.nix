@@ -1,6 +1,7 @@
 # Programming language runtimes and tools
-{pkgs}:
-with pkgs; [
+{ pkgs }:
+with pkgs;
+[
   # Go
   go
   hugo

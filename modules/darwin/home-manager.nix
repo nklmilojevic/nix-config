@@ -1,6 +1,7 @@
-{ inputs
-, pkgs
-, ...
+{
+  inputs,
+  pkgs,
+  ...
 }:
 let
   user = "nkl";
@@ -149,26 +150,28 @@ in
 
   home-manager = {
     useGlobalPkgs = true;
-    users.${user} = { pkgs, ... }: {
-      home = {
-        enableNixpkgsReleaseCheck = false;
-        packages = pkgs.callPackage ./packages.nix { };
-        stateVersion = "26.05";
+    users.${user} =
+      { pkgs, ... }:
+      {
+        home = {
+          enableNixpkgsReleaseCheck = false;
+          packages = pkgs.callPackage ./packages.nix { };
+          stateVersion = "26.05";
+        };
+
+        imports = [
+          inputs.nixvim.homeModules.nixvim
+          ../shared/home-manager.nix
+          ./programs/ghostty
+          ./programs/hammerspoon
+          ./programs/karabiner
+          ./programs/swiftbar
+          ./programs/1password-agent
+        ];
+
+        # Marked broken Oct 20, 2022 check later to remove this
+        # https://github.com/nix-community/home-manager/issues/3344
+        manual.manpages.enable = false;
       };
-
-      imports = [
-        inputs.nixvim.homeModules.nixvim
-        ../shared/home-manager.nix
-        ./programs/ghostty
-        ./programs/hammerspoon
-        ./programs/karabiner
-        ./programs/swiftbar
-        ./programs/1password-agent
-      ];
-
-      # Marked broken Oct 20, 2022 check later to remove this
-      # https://github.com/nix-community/home-manager/issues/3344
-      manual.manpages.enable = false;
-    };
   };
 }

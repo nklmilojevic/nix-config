@@ -1,4 +1,5 @@
-{pkgs, ...}: let
+{ pkgs, ... }:
+let
   kubePlugin = pkgs.tmuxPlugins.mkTmuxPlugin {
     pluginName = "kube";
     version = "1.0.0";
@@ -31,7 +32,8 @@
       sha256 = "sha256-9Hb9dn2qHF6KcIhtogvycX3Z0MoQrLPLCzZXtjGlPHw=";
     };
   };
-in {
+in
+{
   programs.tmux = {
     enable = true;
     terminal = "tmux-256color";

@@ -87,14 +87,18 @@ tasks:
     cmds:
       - echo "Generating SSH config..."
       - mkdir -p $(dirname {{.SSH_CONFIG_FILE}})
-      - "{{.OP}} read 'op://legemi4nfmddm5osivm3cmejem/eallxdl2umzqln63sb46m3w32a/notesPlain' > {{.SSH_CONFIG_FILE}}"
+      - "{{.OP}} read
+        'op://legemi4nfmddm5osivm3cmejem/eallxdl2umzqln63sb46m3w32a/notesPlain'
+        > {{.SSH_CONFIG_FILE}}"
       - echo "SSH config generated in {{.SSH_CONFIG_FILE}}"
 
   generate-age-key:
     cmds:
       - echo "Generating Age key..."
       - mkdir -p $(dirname {{.AGE_KEY_FILE}})
-      - "{{.OP}} read 'op://legemi4nfmddm5osivm3cmejem/rsguk7qmlg2pufvtc7xyd2h6gi/password' > {{.AGE_KEY_FILE}}"
+      - "{{.OP}} read
+        'op://legemi4nfmddm5osivm3cmejem/rsguk7qmlg2pufvtc7xyd2h6gi/password' >
+        {{.AGE_KEY_FILE}}"
       - echo "Age key generated in {{.AGE_KEY_FILE}}"
 
   install-fonts:

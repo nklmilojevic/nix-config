@@ -1,4 +1,5 @@
-{config, ...}: {
+{ config, ... }:
+{
   homebrew = {
     enable = true;
     onActivation.cleanup = "uninstall";
@@ -17,7 +18,6 @@
       "cleanshot"
       "cloudflare-warp"
       "cryptomator"
-      "cursor"
       "daisydisk"
       "devutils"
       "discord"
@@ -30,7 +30,6 @@
       "hammerspoon"
       "iina"
       "intellij-idea"
-      "jordanbaird-ice"
       "karabiner-elements"
       "keycastr"
       "little-snitch"
@@ -53,6 +52,7 @@
       "stats"
       "tableplus"
       "telegram"
+      "thaw"
       "viber"
       "visual-studio-code"
       "vlc"

@@ -1,6 +1,7 @@
 # Nix ecosystem tools
-{pkgs}:
-with pkgs; [
+{ pkgs }:
+with pkgs;
+[
   nil
   nixd
   alejandra

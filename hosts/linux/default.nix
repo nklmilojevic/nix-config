@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ../../modules/linux/home-manager.nix
     ../../modules/shared

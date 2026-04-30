@@ -1,6 +1,7 @@
 # Essential CLI tools
-{pkgs}:
-with pkgs; [
+{ pkgs }:
+with pkgs;
+[
   curl
   curlie
   wget

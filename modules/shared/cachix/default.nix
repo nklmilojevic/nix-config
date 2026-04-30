@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   nix.settings = {
     substituters = [
       "https://nkl-nix-config.cachix.org"

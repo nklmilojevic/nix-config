@@ -23,6 +23,8 @@
 
     nix-homebrew = {
       url = "github:zhaofengli/nix-homebrew";
+      inputs.brew-src.url = "github:Homebrew/brew/5.1.7";
+      inputs.brew-src.flake = false;
     };
 
     homebrew-core = {
@@ -79,31 +81,33 @@
   };
 
   outputs =
-    { self
-    , nixpkgs
-    , flake-utils
-    , home-manager
-    , darwin
-    , nix-homebrew
-    , nixvim
-    , krewfile
-    , catppuccin
-    , claude-code-overlay
-    , codex-cli-nix
-    , opencode-nix
-    , gemini-cli-nix
-    , talosctl
-    , mailersend-cli
-    , mailerlite-cli
-    , atuin-nix
-    , nixpkgs-stable
-    , ...
-    } @ inputs:
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+      home-manager,
+      darwin,
+      nix-homebrew,
+      nixvim,
+      krewfile,
+      catppuccin,
+      claude-code-overlay,
+      codex-cli-nix,
+      opencode-nix,
+      gemini-cli-nix,
+      talosctl,
+      mailersend-cli,
+      mailerlite-cli,
+      atuin-nix,
+      nixpkgs-stable,
+      ...
+    }@inputs:
     let
       overlays = [
         claude-code-overlay.overlays.default
         talosctl.overlays.default
-        (final: prev:
+        (
+          final: prev:
           let
             system = final.stdenv.hostPlatform.system;
           in
@@ -115,15 +119,21 @@
             mailerlite = mailerlite-cli.packages.${system}.default;
             atuin = atuin-nix.packages.${system}.default;
             direnv = (import nixpkgs-stable { inherit system; }).direnv;
-          })
+            pwgen = (import nixpkgs-stable { inherit system; }).pwgen;
+          }
+        )
       ];
-      supportedSystems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
+      supportedSystems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
+      ];
 
       # Import custom library functions
       lib = import ./lib { lib = nixpkgs.lib; };
     in
-    flake-utils.lib.eachSystem supportedSystems
-      (system:
+    flake-utils.lib.eachSystem supportedSystems (
+      system:
       let
         pkgs = import nixpkgs {
           inherit system overlays;
@@ -142,7 +152,8 @@
           ];
         };
 
-      })
+      }
+    )
     // {
       # Expose library functions for external use
       lib = lib;
@@ -170,17 +181,19 @@
 
       homeConfigurations =
         let
-          mkLinuxHome = system: home-manager.lib.homeManagerConfiguration {
-            pkgs = import nixpkgs {
-              inherit system overlays;
-              config.allowUnfree = true;
+          mkLinuxHome =
+            system:
+            home-manager.lib.homeManagerConfiguration {
+              pkgs = import nixpkgs {
+                inherit system overlays;
+                config.allowUnfree = true;
+              };
+              modules = [
+                ./hosts/linux
+                catppuccin.homeModules.catppuccin
+              ];
+              extraSpecialArgs = { inherit inputs; };
             };
-            modules = [
-              ./hosts/linux
-              catppuccin.homeModules.catppuccin
-            ];
-            extraSpecialArgs = { inherit inputs; };
-          };
         in
         {
           # x86_64 Linux

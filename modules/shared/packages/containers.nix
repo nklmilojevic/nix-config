@@ -1,6 +1,7 @@
 # Container tools
-{pkgs}:
-with pkgs; [
+{ pkgs }:
+with pkgs;
+[
   docker
   lazydocker
   hadolint
