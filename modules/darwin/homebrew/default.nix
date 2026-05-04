@@ -9,6 +9,7 @@
 
     casks = [
       "1password"
+      "alfred"
       "balenaetcher"
       "bambu-studio"
       "brave-browser"
@@ -43,7 +44,6 @@
       "protonvpn"
       "proxyman"
       "rapidapi"
-      "raycast"
       "screen-studio"
       "slack"
       "swiftbar"
