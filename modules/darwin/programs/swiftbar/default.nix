@@ -1,12 +1,20 @@
 {
-  config,
   lib,
-  pkgs,
   ...
 }:
+let
+  pluginsDir = ./plugins;
+  plugins = builtins.attrNames (builtins.readDir pluginsDir);
+in
 {
-  home.activation.installSwiftBarPlugins = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    mkdir -p ${config.home.homeDirectory}/.swiftbar-plugins
-    ${pkgs.rsync}/bin/rsync -avz --chmod=D2755,F755 ${./plugins}/ ${config.home.homeDirectory}/.swiftbar-plugins/
-  '';
+  home.file = lib.genAttrs (map (name: ".swiftbar-plugins/${name}") plugins) (
+    target:
+    let
+      name = lib.removePrefix ".swiftbar-plugins/" target;
+    in
+    {
+      source = pluginsDir + "/${name}";
+      executable = true;
+    }
+  );
 }

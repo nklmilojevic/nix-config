@@ -1,12 +1,51 @@
 {
-  config,
-  lib,
+  pkgs,
   ...
 }:
+let
+  tomlFormat = pkgs.formats.toml { };
+in
 {
-  home.activation.installCodexConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    mkdir -p ${config.home.homeDirectory}/.codex
-    cp ${./config.toml} ${config.home.homeDirectory}/.codex/config.toml
-    chmod 644 ${config.home.homeDirectory}/.codex/config.toml
-  '';
+  home.file.".codex/config.toml".source = tomlFormat.generate "codex-config.toml" {
+    model_reasoning_effort = "high";
+    model_reasoning_summary = "auto";
+    model = "gpt-5.3-codex";
+    file_opener = "none";
+    show_raw_agent_reasoning = true;
+    web_search = "live";
+    sandbox_mode = "workspace-write";
+    approval_policy = "on-request";
+
+    sandbox_workspace_write = {
+      network_access = true;
+      writable_roots = [
+        "~/.cache"
+        "~/.cache/pip"
+        "~/.cache/uv"
+        "~/.cargo"
+        "~/.rustup"
+        "~/.yarn"
+        "~/.npm"
+        "~/.local/share/pnpm"
+      ];
+    };
+
+    shell_environment_policy = {
+      "inherit" = "all";
+      ignore_default_excludes = true;
+    };
+
+    mcp_servers.context7 = {
+      command = "npx";
+      args = [
+        "-y"
+        "@upstash/context7-mcp"
+      ];
+    };
+
+    features = {
+      collab = true;
+      collaboration_modes = true;
+    };
+  };
 }
