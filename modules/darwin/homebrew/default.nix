@@ -9,6 +9,7 @@
 
     casks = [
       "1password"
+      "antinote"
       "alfred"
       "balenaetcher"
       "bambu-studio"
@@ -22,7 +23,6 @@
       "daisydisk"
       "devutils"
       "discord"
-      "elgato-stream-deck"
       "fantastical"
       "firefox@developer-edition"
       "forklift"
@@ -30,9 +30,7 @@
       "gpg-suite"
       "hammerspoon"
       "iina"
-      "intellij-idea"
       "karabiner-elements"
-      "keycastr"
       "little-snitch"
       "lunar"
       "maestral"
@@ -50,7 +48,7 @@
       "syntax-highlight"
       "spotify"
       "stats"
-      "tableplus"
+      "tablepro"
       "telegram"
       "thaw"
       "viber"
@@ -58,7 +56,6 @@
       "vlc"
       "whatsapp"
       "zed"
-      "zen"
       "zoom"
     ];
 

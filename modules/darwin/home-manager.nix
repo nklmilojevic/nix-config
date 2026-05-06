@@ -69,7 +69,7 @@ in
         "/Applications/FSNotes.app/"
         "/Applications/Spotify.app/"
         "/Applications/RapidAPI.app/"
-        "/Applications/TablePlus.app/"
+        "/Applications/TablePro.app/"
         "/Applications/Linear.app/"
       ];
     };
