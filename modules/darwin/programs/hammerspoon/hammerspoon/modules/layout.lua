@@ -1,7 +1,7 @@
-macbook = {
+local macbook = {
 	{ "Firefox Developer Edition", nil, nil, hs.layout.maximized, nil, nil },
 	{ "Safari", nil, nil, hs.layout.maximized, nil, nil },
-	{ "Brave Browser", nil, nil, hs.layout.maximized, nil, nil },
+	{ "Brave Origin Beta", nil, nil, hs.layout.maximized, nil, nil },
 	{ "Ghostty", nil, nil, hs.layout.maximized, nil, nil },
 	{ "WezTerm", nil, nil, hs.layout.maximized, nil, nil },
 	{ "Slack", nil, nil, hs.layout.maximized, nil, nil },
@@ -18,10 +18,10 @@ macbook = {
 	{ "Zed", nil, nil, hs.layout.maximized, nil, nil },
 }
 
-dell = {
+local dell = {
 	{ "Firefox Developer Edition", nil, nil, hs.layout.left50, nil, nil },
 	{ "Safari", nil, nil, hs.layout.left50, nil, nil },
-	{ "Brave Browser", nil, nil, hs.layout.left50, nil, nil },
+	{ "Brave Origin Beta", nil, nil, hs.layout.left50, nil, nil },
 	{ "Ghostty", nil, nil, hs.layout.right50, nil, nil },
 	{ "WezTerm", nil, nil, hs.layout.right50, nil, nil },
 	{ "Slack", nil, nil, hs.layout.left50, nil, nil },
@@ -38,25 +38,46 @@ dell = {
 	{ "Zed", nil, nil, hs.layout.left50, nil, nil },
 }
 
-function screenDetect()
-	-- redneck engineering to wait so window load doesn't fail
-	time = os.time()
-	wait = 2
-	newtime = time + wait
-	while time < newtime do
-		time = os.time()
+local function hasExternalScreen()
+	local names = {}
+	local external = false
+	for _, screen in ipairs(hs.screen.allScreens()) do
+		local name = screen:name() or "(unnamed)"
+		table.insert(names, name)
+		if not name:match("Built%-in") then
+			external = true
+		end
 	end
-
-	if hs.screen("Built%-in") then
-		hs.layout.apply(macbook)
-	elseif hs.screen("Dell") then
-		hs.layout.apply(dell)
-	else
-		print("Nothing to do.")
-	end
-
-	print("Screens rearranged.")
+	print("[layout] Detected screens: " .. table.concat(names, ", "))
+	return external
 end
 
-screenWatcher = hs.screen.watcher.new(screenDetect)
+local function applyLayout()
+	if hasExternalScreen() then
+		hs.layout.apply(dell)
+		print("[layout] Applied dell layout")
+	else
+		hs.layout.apply(macbook)
+		print("[layout] Applied macbook layout")
+	end
+end
+
+-- Debounce: hot-plug and wake events often fire several times in quick
+-- succession, and apps need a beat to settle before windows can be moved.
+local pendingTimer = nil
+local function scheduleLayout(delay)
+	if pendingTimer then
+		pendingTimer:stop()
+	end
+	pendingTimer = hs.timer.doAfter(delay or 2, function()
+		pendingTimer = nil
+		applyLayout()
+	end)
+end
+
+screenWatcher = hs.screen.watcher.new(function()
+	scheduleLayout(2)
+end)
 screenWatcher:start()
+
+scheduleLayout(1)

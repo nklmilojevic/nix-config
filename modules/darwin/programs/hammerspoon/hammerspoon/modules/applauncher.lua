@@ -11,7 +11,7 @@ hs.spoons.use("AppLauncher", {
 		n = "FSNotes",
 		m = "Mail",
 		z = "Messages",
-		f = "Brave Browser",
+		f = "Brave Origin Beta",
 		r = "Ghostty",
 		t = "Telegram",
 		d = "Discord",
