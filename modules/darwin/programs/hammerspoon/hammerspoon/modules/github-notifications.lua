@@ -114,10 +114,20 @@ local function markThreadRead(id, callback)
 		if callback then callback() end
 		return
 	end
+	headers["Content-Type"] = "application/json"
 	hs.http.doAsyncRequest(
 		"https://api.github.com/notifications/threads/" .. id,
-		"PATCH", "", headers,
-		function() if callback then callback() end end
+		"PATCH", '{"read":true}', headers,
+		function(status, body)
+			-- 205 Reset Content is the documented success code.
+			if status ~= 205 and status ~= 200 then
+				print(string.format(
+					"[gh-notif] markThreadRead %s -> %s %s",
+					id, tostring(status), (body or ""):sub(1, 200)
+				))
+			end
+			if callback then callback() end
+		end
 	)
 end
 
@@ -127,9 +137,20 @@ local function markAllRead(callback)
 		if callback then callback() end
 		return
 	end
+	headers["Content-Type"] = "application/json"
 	hs.http.doAsyncRequest(
-		"https://api.github.com/notifications", "PUT", "", headers,
-		function() if callback then callback() end end
+		"https://api.github.com/notifications", "PUT",
+		string.format('{"last_read_at":"%s","read":true}', os.date("!%Y-%m-%dT%H:%M:%SZ")),
+		headers,
+		function(status, body)
+			if status ~= 205 and status ~= 202 and status ~= 200 then
+				print(string.format(
+					"[gh-notif] markAllRead -> %s %s",
+					tostring(status), (body or ""):sub(1, 200)
+				))
+			end
+			if callback then callback() end
+		end
 	)
 end
 
