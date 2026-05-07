@@ -26,6 +26,37 @@ local primed = false
 local pollTimer = nil
 local refresh -- forward decl
 
+-- GitHub's GET /notifications endpoint lags PATCH/PUT writes by ~30–60s, so
+-- threads we just marked read keep reappearing on the next poll. Track local
+-- dismissals and filter them out until propagation catches up.
+local dismissedAt = {}
+local DISMISS_TTL = 120 -- seconds
+
+local function markDismissed(id)
+	if id then
+		dismissedAt[id] = os.time()
+	end
+end
+
+local function filterDismissed(list)
+	local now = os.time()
+	local out = {}
+	for _, n in ipairs(list) do
+		local at = n.id and dismissedAt[n.id]
+		if at then
+			if (now - at) < DISMISS_TTL then
+				-- still within propagation window, hide it
+			else
+				dismissedAt[n.id] = nil
+				out[#out + 1] = n
+			end
+		else
+			out[#out + 1] = n
+		end
+	end
+	return out
+end
+
 local REASON_TEXT = {
 	assign = "assigned",
 	author = "author",
@@ -108,50 +139,45 @@ local function apiToWebURL(apiURL)
 	return (apiURL:gsub("api%.github%.com/repos", "github.com"):gsub("/pulls/", "/pull/"))
 end
 
-local function markThreadRead(id, callback)
-	local headers = authHeaders()
-	if not headers or not id then
+-- Mark-as-read endpoints are routed through curl (via hs.task) instead of
+-- hs.http.doAsyncRequest. hs.http insists on adding a body / Content-Length to
+-- PATCH and PUT, and GitHub treats body presence (specifically a last_read_at
+-- field) as a cutoff filter — threads "updated since" that instant are not
+-- marked, so they reappear on the next poll. SwiftBar's plugin worked because
+-- curl with no -d sends a true bodyless request. Match that behaviour.
+local function curlAsync(method, url, label, callback)
+	local token = getToken()
+	if not token then
 		if callback then callback() end
 		return
 	end
-	headers["Content-Type"] = "application/json"
-	hs.http.doAsyncRequest(
-		"https://api.github.com/notifications/threads/" .. id,
-		"PATCH", '{"read":true}', headers,
-		function(status, body)
-			-- 205 Reset Content is the documented success code.
-			if status ~= 205 and status ~= 200 then
-				print(string.format(
-					"[gh-notif] markThreadRead %s -> %s %s",
-					id, tostring(status), (body or ""):sub(1, 200)
-				))
-			end
-			if callback then callback() end
-		end
-	)
+	hs.task.new("/usr/bin/curl", function(exitCode, stdout, stderr)
+		print(string.format(
+			"[gh-notif] %s -> exit=%s stdout=%s stderr=%s",
+			label, tostring(exitCode), (stdout or ""):sub(1, 200), (stderr or ""):sub(1, 200)
+		))
+		if callback then callback() end
+	end, {
+		"-s", "-o", "/dev/null", "-w", "%{http_code}",
+		"--connect-timeout", "5", "--max-time", "10",
+		"-X", method,
+		"-H", "Accept: application/vnd.github+json",
+		"-H", "Authorization: Bearer " .. token,
+		url,
+	}):start()
+end
+
+local function markThreadRead(id, callback)
+	if not id then
+		if callback then callback() end
+		return
+	end
+	curlAsync("PATCH", "https://api.github.com/notifications/threads/" .. id,
+		"markThreadRead " .. id, callback)
 end
 
 local function markAllRead(callback)
-	local headers = authHeaders()
-	if not headers then
-		if callback then callback() end
-		return
-	end
-	headers["Content-Type"] = "application/json"
-	hs.http.doAsyncRequest(
-		"https://api.github.com/notifications", "PUT",
-		string.format('{"last_read_at":"%s","read":true}', os.date("!%Y-%m-%dT%H:%M:%SZ")),
-		headers,
-		function(status, body)
-			if status ~= 205 and status ~= 202 and status ~= 200 then
-				print(string.format(
-					"[gh-notif] markAllRead -> %s %s",
-					tostring(status), (body or ""):sub(1, 200)
-				))
-			end
-			if callback then callback() end
-		end
-	)
+	curlAsync("PUT", "https://api.github.com/notifications", "markAllRead", callback)
 end
 
 local function notifyOne(notif)
@@ -182,6 +208,7 @@ local function dismissOne(id, webURL)
 			break
 		end
 	end
+	markDismissed(id)
 	setBadge()
 	markThreadRead(id)
 	if webURL then hs.urlevent.openURL(webURL) end
@@ -243,6 +270,9 @@ local function buildMenu()
 	table.insert(items, {
 		title = "Mark all as read",
 		fn = function()
+			for _, n in ipairs(notifications) do
+				markDismissed(n.id)
+			end
 			notifications = {}
 			setBadge()
 			markAllRead(function() if refresh then refresh() end end)
@@ -276,22 +306,24 @@ refresh = function()
 		local ok, data = pcall(hs.json.decode, body)
 		if not ok or type(data) ~= "table" then return end
 
+		local filtered = filterDismissed(data)
+
 		-- Notify on the first new id, matching the SwiftBar plugin's behaviour.
 		-- Skip the very first poll so reloading Hammerspoon doesn't spam.
 		if primed then
-			for _, n in ipairs(data) do
+			for _, n in ipairs(filtered) do
 				if n.id and not seenIDs[n.id] then
 					notifyOne(n)
 					break
 				end
 			end
 		end
-		for _, n in ipairs(data) do
+		for _, n in ipairs(filtered) do
 			if n.id then seenIDs[n.id] = true end
 		end
 		primed = true
 
-		notifications = data
+		notifications = filtered
 		setBadge()
 	end)
 end
