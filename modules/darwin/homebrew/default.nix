@@ -46,7 +46,6 @@
       "slack"
       "syntax-highlight"
       "spotify"
-      "stats"
       "tablepro"
       "telegram"
       "thaw"
