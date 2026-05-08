@@ -7,6 +7,7 @@
 --   primes the seen-ids set, so reloading Hammerspoon doesn't spam you).
 
 local sf = require("modules/sf-symbols")
+local httpx = require("modules/http")
 
 local KEYCHAIN_SERVICE = "swiftbar-github"
 local KEYCHAIN_ACCOUNT = "token"
@@ -25,6 +26,7 @@ local seenIDs = {}
 local primed = false
 local pollTimer = nil
 local refresh -- forward decl
+local clearDismissed -- forward decl
 
 -- GitHub's GET /notifications endpoint lags PATCH/PUT writes by ~30–60s, so
 -- threads we just marked read keep reappearing on the next poll. Track local
@@ -139,45 +141,30 @@ local function apiToWebURL(apiURL)
 	return (apiURL:gsub("api%.github%.com/repos", "github.com"):gsub("/pulls/", "/pull/"))
 end
 
--- Mark-as-read endpoints are routed through curl (via hs.task) instead of
--- hs.http.doAsyncRequest. hs.http insists on adding a body / Content-Length to
--- PATCH and PUT, and GitHub treats body presence (specifically a last_read_at
--- field) as a cutoff filter — threads "updated since" that instant are not
--- marked, so they reappear on the next poll. SwiftBar's plugin worked because
--- curl with no -d sends a true bodyless request. Match that behaviour.
-local function curlAsync(method, url, label, callback)
-	local token = getToken()
-	if not token then
-		if callback then callback() end
-		return
-	end
-	hs.task.new("/usr/bin/curl", function(exitCode, stdout, stderr)
-		print(string.format(
-			"[gh-notif] %s -> exit=%s stdout=%s stderr=%s",
-			label, tostring(exitCode), (stdout or ""):sub(1, 200), (stderr or ""):sub(1, 200)
-		))
-		if callback then callback() end
-	end, {
-		"-s", "-o", "/dev/null", "-w", "%{http_code}",
-		"--connect-timeout", "5", "--max-time", "10",
-		"-X", method,
-		"-H", "Accept: application/vnd.github+json",
-		"-H", "Authorization: Bearer " .. token,
-		url,
-	}):start()
-end
-
 local function markThreadRead(id, callback)
-	if not id then
+	local headers = authHeaders()
+	if not headers or not id then
 		if callback then callback() end
 		return
 	end
-	curlAsync("PATCH", "https://api.github.com/notifications/threads/" .. id,
-		"markThreadRead " .. id, callback)
+	httpx.send("PATCH", "https://api.github.com/notifications/threads/" .. id, headers,
+		function(ok, err)
+			if not ok then print("[gh-notif] markThreadRead " .. id .. " failed: " .. (err or "")) end
+			if callback then callback() end
+		end)
 end
 
 local function markAllRead(callback)
-	curlAsync("PUT", "https://api.github.com/notifications", "markAllRead", callback)
+	local headers = authHeaders()
+	if not headers then
+		if callback then callback() end
+		return
+	end
+	httpx.send("PUT", "https://api.github.com/notifications", headers,
+		function(ok, err)
+			if not ok then print("[gh-notif] markAllRead failed: " .. (err or "")) end
+			if callback then callback() end
+		end)
 end
 
 local function notifyOne(notif)
@@ -282,6 +269,10 @@ local function buildMenu()
 		title = "Open on GitHub",
 		fn = function() hs.urlevent.openURL("https://github.com/notifications") end,
 	})
+	table.insert(items, {
+		title = "Clear local cache",
+		fn = function() if clearDismissed then clearDismissed() end end,
+	})
 	table.insert(items, { title = "-" })
 	table.insert(items, {
 		title = "Reset token",
@@ -301,15 +292,18 @@ refresh = function()
 		setBadge()
 		return
 	end
-	hs.http.doAsyncRequest(API_LIST, "GET", nil, headers, function(status, body)
-		if status ~= 200 or not body then return end
-		local ok, data = pcall(hs.json.decode, body)
-		if not ok or type(data) ~= "table" then return end
+	httpx.getJSON(API_LIST, headers, function(data, err)
+		if err or type(data) ~= "table" then
+			print("[gh-notif] refresh failed: " .. (err or "non-table response"))
+			return
+		end
 
 		local filtered = filterDismissed(data)
+		print(string.format(
+			"[gh-notif] refresh ok: api=%d dismissed_filtered=%d kept=%d",
+			#data, #data - #filtered, #filtered
+		))
 
-		-- Notify on the first new id, matching the SwiftBar plugin's behaviour.
-		-- Skip the very first poll so reloading Hammerspoon doesn't spam.
 		if primed then
 			for _, n in ipairs(filtered) do
 				if n.id and not seenIDs[n.id] then
@@ -326,6 +320,16 @@ refresh = function()
 		notifications = filtered
 		setBadge()
 	end)
+end
+
+-- Expose a way to clear the local dismissal map manually, so a stale
+-- "still in cooldown" filter can be reset without an hs.reload.
+clearDismissed = function()
+	local n = 0
+	for _ in pairs(dismissedAt) do n = n + 1 end
+	dismissedAt = {}
+	print(string.format("[gh-notif] cleared %d dismissed entries", n))
+	if refresh then refresh() end
 end
 
 if menubar then

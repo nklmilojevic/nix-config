@@ -8,6 +8,7 @@
 --   the seen-ids set).
 
 local sf = require("modules/sf-symbols")
+local httpx = require("modules/http")
 
 local KEYCHAIN_SERVICE = "swiftbar-incident-io"
 local KEYCHAIN_ACCOUNT = "api-key"
@@ -145,17 +146,13 @@ end
 local function fetchDashboardURL(callback)
 	local headers = authHeaders()
 	if not headers then if callback then callback() end return end
-	hs.http.doAsyncRequest(API_BASE .. "/v1/identity", "GET", nil, headers,
-		function(status, body)
-			if status == 200 and body then
-				local ok, data = pcall(hs.json.decode, body)
-				if ok and data and data.identity and data.identity.dashboard_url then
-					dashboardURL = data.identity.dashboard_url
-				end
-			end
-			if callback then callback() end
+	httpx.getJSON(API_BASE .. "/v1/identity", headers, function(data, err)
+		if not err and data and data.identity and data.identity.dashboard_url then
+			dashboardURL = data.identity.dashboard_url
 		end
-	)
+		if err then print("[incident-io] fetchDashboardURL failed: " .. err) end
+		if callback then callback() end
+	end)
 end
 
 local function fetchIncidents(statusCategories, pageSize, callback)
@@ -165,14 +162,14 @@ local function fetchIncidents(statusCategories, pageSize, callback)
 	for _, cat in ipairs(statusCategories) do
 		query = query .. "&status_category[one_of]=" .. urlEncode(cat)
 	end
-	hs.http.doAsyncRequest(API_BASE .. "/v2/incidents" .. query, "GET", nil, headers,
-		function(status, body)
-			if status ~= 200 or not body then callback({}) return end
-			local ok, data = pcall(hs.json.decode, body)
-			if not ok or not data or not data.incidents then callback({}) return end
-			callback(data.incidents)
+	httpx.getJSON(API_BASE .. "/v2/incidents" .. query, headers, function(data, err)
+		if err or not data or not data.incidents then
+			if err then print("[incident-io] fetchIncidents failed: " .. err) end
+			callback({})
+			return
 		end
-	)
+		callback(data.incidents)
+	end)
 end
 
 local function buildIncidentItem(incident)

@@ -6,6 +6,7 @@
 --   (after the first poll primes the seen-ids set).
 
 local sf = require("modules/sf-symbols")
+local httpx = require("modules/http")
 
 local KEYCHAIN_SERVICE = "swiftbar-github"
 local KEYCHAIN_ACCOUNT = "token"
@@ -89,10 +90,12 @@ local function fetchPRs(query, callback)
 	local headers = authHeaders()
 	if not headers then callback({}) return end
 	local url = "https://api.github.com/search/issues?per_page=15&q=" .. urlEncode(query)
-	hs.http.doAsyncRequest(url, "GET", nil, headers, function(status, body)
-		if status ~= 200 or not body then callback({}) return end
-		local ok, data = pcall(hs.json.decode, body)
-		if not ok or not data or not data.items then callback({}) return end
+	httpx.getJSON(url, headers, function(data, err)
+		if err or not data or not data.items then
+			if err then print("[gh-prs] fetchPRs failed: " .. err) end
+			callback({})
+			return
+		end
 		callback(data.items)
 	end)
 end
@@ -100,11 +103,9 @@ end
 local function fetchUser(callback)
 	local headers = authHeaders()
 	if not headers then if callback then callback() end return end
-	hs.http.doAsyncRequest("https://api.github.com/user", "GET", nil, headers, function(status, body)
-		if status == 200 and body then
-			local ok, data = pcall(hs.json.decode, body)
-			if ok and data and data.login then username = data.login end
-		end
+	httpx.getJSON("https://api.github.com/user", headers, function(data, err)
+		if not err and data and data.login then username = data.login end
+		if err then print("[gh-prs] fetchUser failed: " .. err) end
 		if callback then callback() end
 	end)
 end
