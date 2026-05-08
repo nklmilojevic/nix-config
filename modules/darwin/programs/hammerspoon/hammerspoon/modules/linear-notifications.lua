@@ -6,7 +6,6 @@
 --   primes the seen-ids set).
 
 local sf = require("modules/sf-symbols")
-local httpx = require("modules/http")
 
 local KEYCHAIN_SERVICE = "swiftbar-linear"
 local KEYCHAIN_ACCOUNT = "api-key"
@@ -160,13 +159,12 @@ end
 local function postGraphQL(query, callback)
 	local headers = authHeaders()
 	if not headers then if callback then callback(nil) end return end
-	httpx.postJSON(API_URL, headers, { query = query }, function(data, err)
-		if err then
-			print("[linear] postGraphQL failed: " .. err)
-			if callback then callback(nil) end
-			return
-		end
-		if callback then callback(data) end
+	local body = hs.json.encode({ query = query })
+	hs.http.doAsyncRequest(API_URL, "POST", body, headers, function(status, respBody)
+		if status ~= 200 or not respBody then if callback then callback(nil) end return end
+		local ok, data = pcall(hs.json.decode, respBody)
+		if not ok then if callback then callback(nil) end return end
+		callback(data)
 	end)
 end
 

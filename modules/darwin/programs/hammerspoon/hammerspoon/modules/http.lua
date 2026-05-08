@@ -15,6 +15,7 @@ local CURL = "/usr/bin/curl"
 local function buildArgs(method, url, headers, body)
 	local args = {
 		"-sS", "--fail",
+		"-g", -- disable URL globbing so '[' and ']' in query strings work
 		"--connect-timeout", "5", "--max-time", "15",
 		"-X", method,
 	}
@@ -30,16 +31,36 @@ local function buildArgs(method, url, headers, body)
 	return args
 end
 
-local function run(method, url, headers, body, callback)
-	hs.task.new(CURL, function(exitCode, stdout, stderr)
+-- Serialize all curl invocations through a single-slot queue. hs.task seems
+-- to silently drop completion callbacks when several curls are spawned in the
+-- same Lua tick; running them one at a time keeps every callback firing.
+-- Polling cadence is ~60s, so the throughput hit is negligible.
+local queue = {}
+local active = nil
+
+local function pump()
+	if active or #queue == 0 then return end
+	local job = table.remove(queue, 1)
+	active = hs.task.new(CURL, function(exitCode, stdout, stderr)
+		active = nil
 		if exitCode == 0 then
-			callback(stdout or "", nil)
+			job.callback(stdout or "", nil)
 		else
-			callback(stdout or "", string.format(
+			job.callback(stdout or "", string.format(
 				"exit=%s %s", tostring(exitCode), (stderr or ""):sub(1, 300)
 			))
 		end
-	end, buildArgs(method, url, headers, body)):start()
+		pump()
+	end, job.args)
+	active:start()
+end
+
+local function run(method, url, headers, body, callback)
+	queue[#queue + 1] = {
+		args = buildArgs(method, url, headers, body),
+		callback = callback,
+	}
+	pump()
 end
 
 local function decodeJSON(body)
