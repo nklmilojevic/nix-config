@@ -11,7 +11,7 @@ local KEYCHAIN_SERVICE = "swiftbar-github"
 local KEYCHAIN_ACCOUNT = "token"
 local POLL_SECONDS = 60
 
-local menubar = hs.menubar.new()
+local menubar = hs.menubar.new(true, "github-prs")
 local createdPRs = {}
 local assignedPRs = {}
 local reviewPRs = {}

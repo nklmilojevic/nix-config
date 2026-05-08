@@ -7,7 +7,7 @@ local sf = require("modules/sf-symbols")
 local hyper = { "ctrl", "alt", "cmd", "shift" }
 local SLEEP_TYPE = "displayIdle"
 
-local menubar = hs.menubar.new()
+local menubar = hs.menubar.new(true, "guarana")
 local timedRevert = nil
 local timedRevertEnd = nil
 local syncTimer = nil

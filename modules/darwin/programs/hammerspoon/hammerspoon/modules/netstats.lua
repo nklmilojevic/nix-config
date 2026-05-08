@@ -30,7 +30,7 @@ local function fmt(bps)
   return string.format("%.1f MB/s", bps / 1024 / 1024)
 end
 
-local menubar = hs.menubar.new()
+local menubar = hs.menubar.new(true, "netstats")
 menubar:setTitle("")
 
 local titleW, titleH = 64, 22

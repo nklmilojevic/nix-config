@@ -14,7 +14,7 @@ local KEYCHAIN_ACCOUNT = "token"
 local POLL_SECONDS = 60
 local API_LIST = "https://api.github.com/notifications?per_page=25"
 
-local menubar = hs.menubar.new()
+local menubar = hs.menubar.new(true, "github-notifications")
 -- bellActive: rendered in default color, displayed as template so macOS
 -- repaints it to the menubar foreground (white in dark menubar).
 -- bellIdle/bellMissing: rendered in fixed gray, displayed non-template.

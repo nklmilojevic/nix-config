@@ -14,7 +14,7 @@ local API_URL = "https://api.linear.app/graphql"
 
 local NOTIF_QUERY = [[{ notifications(first: 20) { nodes { id type readAt createdAt inboxUrl title subtitle actor { name } ... on IssueNotification { issue { id identifier title url team { name } } comment { id body } } ... on ProjectNotification { project { id name url } projectUpdate { id body } } } } }]]
 
-local menubar = hs.menubar.new()
+local menubar = hs.menubar.new(true, "linear-notifications")
 local notifications = {}
 local seenIDs = {}
 local primed = false

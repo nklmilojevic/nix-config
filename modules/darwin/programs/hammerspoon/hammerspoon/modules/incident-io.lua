@@ -14,7 +14,7 @@ local KEYCHAIN_ACCOUNT = "api-key"
 local POLL_SECONDS = 60
 local API_BASE = "https://api.incident.io"
 
-local menubar = hs.menubar.new()
+local menubar = hs.menubar.new(true, "incident-io")
 local activeIncidents = {}
 local pastIncidents = {}
 local dashboardURL = "https://app.incident.io"
