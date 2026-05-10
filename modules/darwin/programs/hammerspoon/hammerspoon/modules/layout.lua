@@ -25,7 +25,7 @@ local dell = {
 	{ "Ghostty", nil, nil, hs.layout.right50, nil, nil },
 	{ "WezTerm", nil, nil, hs.layout.right50, nil, nil },
 	{ "Slack", nil, nil, hs.layout.left50, nil, nil },
-	{ "Telegram", "Telegram", nil, hs.layout.right30, nil, nil },
+	{ "Telegram", nil, nil, hs.layout.right30, nil, nil },
 	{ "Messages", nil, nil, hs.layout.right30, nil, nil },
 	{ "TablePro", nil, nil, nil, nil, hs.geometry.rect(200, 44, 1400, 986) },
 	{ "Fantastical", nil, nil, nil, nil, hs.geometry.rect(1090, 129, 1608, 1102) },

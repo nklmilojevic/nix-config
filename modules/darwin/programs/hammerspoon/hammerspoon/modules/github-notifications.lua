@@ -8,6 +8,7 @@
 
 local sf = require("modules/sf-symbols")
 local httpx = require("modules/http")
+local Seen = require("modules/seen")
 
 local KEYCHAIN_SERVICE = "swiftbar-github"
 local KEYCHAIN_ACCOUNT = "token"
@@ -22,8 +23,7 @@ local bellActive = sf.symbol("bell.fill")
 local bellIdle = sf.symbol("bell.fill", { color = "gray" })
 local bellMissing = sf.symbol("bell.slash", { color = "gray" })
 local notifications = {}
-local seenIDs = {}
-local primed = false
+local seen = Seen.new("githubNotifSeenIDs")
 local pollTimer = nil
 local refresh -- forward decl
 local clearDismissed -- forward decl
@@ -286,6 +286,10 @@ local function buildMenu()
 end
 
 refresh = function()
+	-- Capture pollTimer as an upvalue so the hs.timer userdata isn't GC'd
+	-- after the chunk returns. Without a closure-held reference the local
+	-- below falls out of scope and auto-refresh dies after the first fire.
+	local _ = pollTimer
 	local headers = authHeaders()
 	if not headers then
 		notifications = {}
@@ -304,18 +308,19 @@ refresh = function()
 			#data, #data - #filtered, #filtered
 		))
 
-		if primed then
+		if seen.primed then
 			for _, n in ipairs(filtered) do
-				if n.id and not seenIDs[n.id] then
+				if n.id and not seen:has(n.id) then
 					notifyOne(n)
 					break
 				end
 			end
 		end
 		for _, n in ipairs(filtered) do
-			if n.id then seenIDs[n.id] = true end
+			seen:mark(n.id)
 		end
-		primed = true
+		seen.primed = true
+		seen:save()
 
 		notifications = filtered
 		setBadge()

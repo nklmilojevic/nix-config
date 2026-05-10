@@ -323,13 +323,12 @@ local function commit(char, alias)
 			"if(window.setRecents)setRecents(" .. hs.json.encode(getRecents()) .. ");"
 		)
 	end
-	hs.pasteboard.setContents(char)
 	hideOnly()
 	if prevApp and prevApp:isRunning() then
 		prevApp:activate()
 	end
 	hs.timer.doAfter(0.06, function()
-		hs.eventtap.keyStroke({ "cmd" }, "v", 0)
+		hs.eventtap.keyStrokes(char)
 	end)
 end
 

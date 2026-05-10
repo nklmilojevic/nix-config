@@ -6,6 +6,7 @@
 --   (after the first poll primes the seen-ids set).
 
 local sf = require("modules/sf-symbols")
+local Seen = require("modules/seen")
 
 local KEYCHAIN_SERVICE = "swiftbar-github"
 local KEYCHAIN_ACCOUNT = "token"
@@ -16,8 +17,7 @@ local createdPRs = {}
 local assignedPRs = {}
 local reviewPRs = {}
 local username = nil
-local seenIDs = {}
-local primed = false
+local seen = Seen.new("githubPRsSeenIDs")
 local pollTimer = nil
 local refresh -- forward decl
 
@@ -130,11 +130,11 @@ local function notifyPR(pr, kind)
 end
 
 local function checkNewAndNotify(items, prefix)
-	if not primed then return end
+	if not seen.primed then return end
 	for _, pr in ipairs(items) do
 		if pr.id then
 			local key = prefix .. "-" .. pr.id
-			if not seenIDs[key] then
+			if not seen:has(key) then
 				if prefix == "review" or prefix == "assigned" then
 					notifyPR(pr, prefix)
 				end
@@ -145,8 +145,9 @@ end
 
 local function markSeen(items, prefix)
 	for _, pr in ipairs(items) do
-		if pr.id then seenIDs[prefix .. "-" .. pr.id] = true end
+		if pr.id then seen:mark(prefix .. "-" .. pr.id) end
 	end
+	seen:save()
 end
 
 local function buildPRItem(pr)
@@ -223,6 +224,9 @@ local function buildMenu()
 end
 
 refresh = function()
+	-- Capture pollTimer as an upvalue so the hs.timer userdata isn't GC'd
+	-- after the chunk returns.
+	local _ = pollTimer
 	if not getToken() then
 		createdPRs, assignedPRs, reviewPRs = {}, {}, {}
 		setBadge()
@@ -249,7 +253,7 @@ refresh = function()
 		checkNewAndNotify(items, "review")
 		markSeen(items, "review")
 		reviewPRs = items
-		primed = true
+		seen.primed = true
 		setBadge()
 	end)
 end

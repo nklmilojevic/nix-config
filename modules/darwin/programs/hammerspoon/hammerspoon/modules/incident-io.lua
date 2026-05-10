@@ -8,6 +8,7 @@
 --   the seen-ids set).
 
 local sf = require("modules/sf-symbols")
+local Seen = require("modules/seen")
 
 local KEYCHAIN_SERVICE = "swiftbar-incident-io"
 local KEYCHAIN_ACCOUNT = "api-key"
@@ -18,8 +19,7 @@ local menubar = hs.menubar.new(true, "incident-io")
 local activeIncidents = {}
 local pastIncidents = {}
 local dashboardURL = "https://app.incident.io"
-local seenIDs = {}
-local primed = false
+local seen = Seen.new("incidentIoSeenIDs")
 local pollTimer = nil
 local refresh -- forward decl
 
@@ -64,14 +64,6 @@ local function authHeaders()
 	}
 end
 
-local function hasLive()
-	for _, inc in ipairs(activeIncidents) do
-		local cat = inc.incident_status and inc.incident_status.category
-		if cat == "live" then return true end
-	end
-	return false
-end
-
 local function setBadge()
 	if not menubar then return end
 	local hasToken = getToken() ~= nil
@@ -95,12 +87,7 @@ local function setBadge()
 	if not hasToken then
 		menubar:setTitle("")
 	elseif count > 0 then
-		-- Red count when any incident is in 'live' status, default otherwise.
-		local style = { font = { size = 13 } }
-		if hasLive() then
-			style.color = { red = 0.9, green = 0.2, blue = 0.2, alpha = 1 }
-		end
-		menubar:setTitle(hs.styledtext.new(" " .. count, style))
+		menubar:setTitle(hs.styledtext.new(" " .. count, { font = { size = 13 } }))
 	else
 		menubar:setTitle("")
 	end
@@ -297,6 +284,9 @@ local function buildMenu()
 end
 
 refresh = function()
+	-- Capture pollTimer as an upvalue so the hs.timer userdata isn't GC'd
+	-- after the chunk returns.
+	local _ = pollTimer
 	if not getToken() then
 		activeIncidents = {}
 		pastIncidents = {}
@@ -307,18 +297,19 @@ refresh = function()
 	fetchIncidents({ "live", "triage" }, 25, function(incidents)
 		activeIncidents = incidents
 
-		if primed then
+		if seen.primed then
 			for _, inc in ipairs(incidents) do
-				if inc.id and not seenIDs[inc.id] then
+				if inc.id and not seen:has(inc.id) then
 					notifyOne(inc)
 					break
 				end
 			end
 		end
 		for _, inc in ipairs(incidents) do
-			if inc.id then seenIDs[inc.id] = true end
+			seen:mark(inc.id)
 		end
-		primed = true
+		seen.primed = true
+		seen:save()
 
 		setBadge()
 	end)

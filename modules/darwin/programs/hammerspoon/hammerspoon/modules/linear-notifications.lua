@@ -6,6 +6,7 @@
 --   primes the seen-ids set).
 
 local sf = require("modules/sf-symbols")
+local Seen = require("modules/seen")
 
 local KEYCHAIN_SERVICE = "swiftbar-linear"
 local KEYCHAIN_ACCOUNT = "api-key"
@@ -16,8 +17,7 @@ local NOTIF_QUERY = [[{ notifications(first: 20) { nodes { id type readAt create
 
 local menubar = hs.menubar.new(true, "linear-notifications")
 local notifications = {}
-local seenIDs = {}
-local primed = false
+local seen = Seen.new("linearSeenIDs")
 local pollTimer = nil
 local refresh -- forward decl
 
@@ -285,6 +285,9 @@ local function buildMenu()
 end
 
 refresh = function()
+	-- Capture pollTimer as an upvalue so the hs.timer userdata isn't GC'd
+	-- after the chunk returns.
+	local _ = pollTimer
 	if not getToken() then
 		notifications = {}
 		setBadge()
@@ -294,18 +297,19 @@ refresh = function()
 		if not data or not data.data or not data.data.notifications then return end
 		local nodes = data.data.notifications.nodes or {}
 
-		if primed then
+		if seen.primed then
 			for _, n in ipairs(nodes) do
-				if n.id and not n.readAt and not seenIDs[n.id] then
+				if n.id and not n.readAt and not seen:has(n.id) then
 					notifyOne(n)
 					break
 				end
 			end
 		end
 		for _, n in ipairs(nodes) do
-			if n.id and not n.readAt then seenIDs[n.id] = true end
+			if not n.readAt then seen:mark(n.id) end
 		end
-		primed = true
+		seen.primed = true
+		seen:save()
 
 		notifications = nodes
 		setBadge()
