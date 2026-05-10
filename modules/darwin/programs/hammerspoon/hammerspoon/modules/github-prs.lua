@@ -6,6 +6,7 @@
 --   (after the first poll primes the seen-ids set).
 
 local sf = require("modules/sf-symbols")
+local Keychain = require("modules/keychain")
 local Seen = require("modules/seen")
 
 local KEYCHAIN_SERVICE = "swiftbar-github"
@@ -18,6 +19,7 @@ local assignedPRs = {}
 local reviewPRs = {}
 local username = nil
 local seen = Seen.new("githubPRsSeenIDs")
+local lastBadgeState = nil
 local pollTimer = nil
 local refresh -- forward decl
 
@@ -25,18 +27,8 @@ local iconActive = sf.symbol("arrow.triangle.branch")
 local iconIdle = sf.symbol("arrow.triangle.branch", { color = "gray" })
 local iconMissing = sf.symbol("arrow.triangle.branch", { color = "gray" })
 
-local function shellEscape(s)
-	return "'" .. (s or ""):gsub("'", "'\\''") .. "'"
-end
-
 local function getToken()
-	local out, ok = hs.execute(string.format(
-		"security find-generic-password -s %s -a %s -w 2>/dev/null",
-		shellEscape(KEYCHAIN_SERVICE), shellEscape(KEYCHAIN_ACCOUNT)
-	))
-	if not ok or not out then return nil end
-	out = out:gsub("%s+$", "")
-	return out ~= "" and out or nil
+	return Keychain.get(KEYCHAIN_SERVICE, KEYCHAIN_ACCOUNT)
 end
 
 local function authHeaders()
@@ -56,6 +48,9 @@ local function setBadge()
 	if not menubar then return end
 	local hasToken = getToken() ~= nil
 	local count = totalCount()
+	local state = string.format("%s:%d", hasToken and "token" or "missing", count)
+	if state == lastBadgeState then return end
+	lastBadgeState = state
 
 	local icon, isTemplate
 	if not hasToken then
@@ -237,16 +232,22 @@ refresh = function()
 		return
 	end
 
+	local remaining = 3
+	local function done()
+		remaining = remaining - 1
+		if remaining == 0 then setBadge() end
+	end
+
 	fetchPRs("is:pr is:open author:" .. username, function(items)
 		createdPRs = items
-		setBadge()
+		done()
 	end)
 
 	fetchPRs("is:pr is:open assignee:" .. username, function(items)
 		checkNewAndNotify(items, "assigned")
 		markSeen(items, "assigned")
 		assignedPRs = items
-		setBadge()
+		done()
 	end)
 
 	fetchPRs("is:pr is:open review-requested:" .. username, function(items)
@@ -254,7 +255,7 @@ refresh = function()
 		markSeen(items, "review")
 		reviewPRs = items
 		seen.primed = true
-		setBadge()
+		done()
 	end)
 end
 

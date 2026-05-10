@@ -8,6 +8,7 @@
 --   the seen-ids set).
 
 local sf = require("modules/sf-symbols")
+local Keychain = require("modules/keychain")
 local Seen = require("modules/seen")
 
 local KEYCHAIN_SERVICE = "swiftbar-incident-io"
@@ -20,6 +21,7 @@ local activeIncidents = {}
 local pastIncidents = {}
 local dashboardURL = "https://app.incident.io"
 local seen = Seen.new("incidentIoSeenIDs")
+local lastBadgeState = nil
 local pollTimer = nil
 local refresh -- forward decl
 
@@ -27,32 +29,16 @@ local iconActive = sf.symbol("dot.radiowaves.left.and.right")
 local iconIdle = sf.symbol("dot.radiowaves.left.and.right", { color = "gray" })
 local iconMissing = sf.symbol("exclamationmark.triangle", { color = "gray" })
 
-local function shellEscape(s)
-	return "'" .. (s or ""):gsub("'", "'\\''") .. "'"
-end
-
 local function getToken()
-	local out, ok = hs.execute(string.format(
-		"security find-generic-password -s %s -a %s -w 2>/dev/null",
-		shellEscape(KEYCHAIN_SERVICE), shellEscape(KEYCHAIN_ACCOUNT)
-	))
-	if not ok or not out then return nil end
-	out = out:gsub("%s+$", "")
-	return out ~= "" and out or nil
+	return Keychain.get(KEYCHAIN_SERVICE, KEYCHAIN_ACCOUNT)
 end
 
 local function setToken(token)
-	hs.execute(string.format(
-		"security add-generic-password -s %s -a %s -w %s -U",
-		shellEscape(KEYCHAIN_SERVICE), shellEscape(KEYCHAIN_ACCOUNT), shellEscape(token)
-	))
+	return Keychain.set(KEYCHAIN_SERVICE, KEYCHAIN_ACCOUNT, token)
 end
 
 local function deleteToken()
-	hs.execute(string.format(
-		"security delete-generic-password -s %s -a %s 2>/dev/null",
-		shellEscape(KEYCHAIN_SERVICE), shellEscape(KEYCHAIN_ACCOUNT)
-	))
+	return Keychain.delete(KEYCHAIN_SERVICE, KEYCHAIN_ACCOUNT)
 end
 
 local function authHeaders()
@@ -68,6 +54,9 @@ local function setBadge()
 	if not menubar then return end
 	local hasToken = getToken() ~= nil
 	local count = #activeIncidents
+	local state = string.format("%s:%d", hasToken and "token" or "missing", count)
+	if state == lastBadgeState then return end
+	lastBadgeState = state
 
 	local icon, isTemplate
 	if not hasToken then
