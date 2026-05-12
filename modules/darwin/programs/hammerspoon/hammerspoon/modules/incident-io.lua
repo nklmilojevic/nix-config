@@ -14,6 +14,7 @@ local Seen = require("modules/seen")
 local KEYCHAIN_SERVICE = "swiftbar-incident-io"
 local KEYCHAIN_ACCOUNT = "api-key"
 local POLL_SECONDS = 60
+local INITIAL_REFRESH_DELAY_SECONDS = 50
 local API_BASE = "https://api.incident.io"
 
 local menubar = hs.menubar.new(true, "incident-io")
@@ -23,6 +24,7 @@ local dashboardURL = "https://app.incident.io"
 local seen = Seen.new("incidentIoSeenIDs")
 local lastBadgeState = nil
 local pollTimer = nil
+local initialRefreshTimer = nil
 local refresh -- forward decl
 
 local iconActive = sf.symbol("dot.radiowaves.left.and.right")
@@ -273,9 +275,9 @@ local function buildMenu()
 end
 
 refresh = function()
-	-- Capture pollTimer as an upvalue so the hs.timer userdata isn't GC'd
-	-- after the chunk returns.
-	local _ = pollTimer
+	-- Capture timers as upvalues so the hs.timer userdata isn't GC'd after the
+	-- chunk returns.
+	local _ = pollTimer or initialRefreshTimer
 	if not getToken() then
 		activeIncidents = {}
 		pastIncidents = {}
@@ -310,6 +312,9 @@ end
 if menubar then
 	menubar:setMenu(buildMenu)
 	setBadge()
-	fetchDashboardURL(refresh)
-	pollTimer = hs.timer.doEvery(POLL_SECONDS, refresh)
+	initialRefreshTimer = hs.timer.doAfter(INITIAL_REFRESH_DELAY_SECONDS, function()
+		initialRefreshTimer = nil
+		fetchDashboardURL(refresh)
+		pollTimer = hs.timer.doEvery(POLL_SECONDS, refresh)
+	end)
 end

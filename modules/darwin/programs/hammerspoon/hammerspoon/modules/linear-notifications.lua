@@ -11,7 +11,8 @@ local Seen = require("modules/seen")
 
 local KEYCHAIN_SERVICE = "swiftbar-linear"
 local KEYCHAIN_ACCOUNT = "api-key"
-local POLL_SECONDS = 60
+local POLL_SECONDS = 120
+local INITIAL_REFRESH_DELAY_SECONDS = 20
 local API_URL = "https://api.linear.app/graphql"
 
 local NOTIF_QUERY = [[{ notifications(first: 20) { nodes { id type readAt createdAt inboxUrl title subtitle actor { name } ... on IssueNotification { issue { id identifier title url team { name } } comment { id body } } ... on ProjectNotification { project { id name url } projectUpdate { id body } } } } }]]
@@ -21,6 +22,7 @@ local notifications = {}
 local seen = Seen.new("linearSeenIDs")
 local lastBadgeState = nil
 local pollTimer = nil
+local initialRefreshTimer = nil
 local refresh -- forward decl
 
 local iconActive = sf.symbol("lineweight")
@@ -274,9 +276,9 @@ local function buildMenu()
 end
 
 refresh = function()
-	-- Capture pollTimer as an upvalue so the hs.timer userdata isn't GC'd
-	-- after the chunk returns.
-	local _ = pollTimer
+	-- Capture timers as upvalues so the hs.timer userdata isn't GC'd after the
+	-- chunk returns.
+	local _ = pollTimer or initialRefreshTimer
 	if not getToken() then
 		notifications = {}
 		setBadge()
@@ -308,6 +310,9 @@ end
 if menubar then
 	menubar:setMenu(buildMenu)
 	setBadge()
-	refresh()
-	pollTimer = hs.timer.doEvery(POLL_SECONDS, refresh)
+	initialRefreshTimer = hs.timer.doAfter(INITIAL_REFRESH_DELAY_SECONDS, function()
+		initialRefreshTimer = nil
+		refresh()
+		pollTimer = hs.timer.doEvery(POLL_SECONDS, refresh)
+	end)
 end

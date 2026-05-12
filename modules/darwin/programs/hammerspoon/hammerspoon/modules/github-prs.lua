@@ -11,7 +11,8 @@ local Seen = require("modules/seen")
 
 local KEYCHAIN_SERVICE = "swiftbar-github"
 local KEYCHAIN_ACCOUNT = "token"
-local POLL_SECONDS = 60
+local POLL_SECONDS = 180
+local INITIAL_REFRESH_DELAY_SECONDS = 35
 
 local menubar = hs.menubar.new(true, "github-prs")
 local createdPRs = {}
@@ -21,6 +22,7 @@ local username = nil
 local seen = Seen.new("githubPRsSeenIDs")
 local lastBadgeState = nil
 local pollTimer = nil
+local initialRefreshTimer = nil
 local refresh -- forward decl
 
 local iconActive = sf.symbol("arrow.triangle.branch")
@@ -219,9 +221,9 @@ local function buildMenu()
 end
 
 refresh = function()
-	-- Capture pollTimer as an upvalue so the hs.timer userdata isn't GC'd
-	-- after the chunk returns.
-	local _ = pollTimer
+	-- Capture timers as upvalues so the hs.timer userdata isn't GC'd after the
+	-- chunk returns.
+	local _ = pollTimer or initialRefreshTimer
 	if not getToken() then
 		createdPRs, assignedPRs, reviewPRs = {}, {}, {}
 		setBadge()
@@ -262,6 +264,9 @@ end
 if menubar then
 	menubar:setMenu(buildMenu)
 	setBadge()
-	refresh()
-	pollTimer = hs.timer.doEvery(POLL_SECONDS, refresh)
+	initialRefreshTimer = hs.timer.doAfter(INITIAL_REFRESH_DELAY_SECONDS, function()
+		initialRefreshTimer = nil
+		refresh()
+		pollTimer = hs.timer.doEvery(POLL_SECONDS, refresh)
+	end)
 end

@@ -14,6 +14,7 @@ local Seen = require("modules/seen")
 local KEYCHAIN_SERVICE = "swiftbar-github"
 local KEYCHAIN_ACCOUNT = "token"
 local POLL_SECONDS = 60
+local INITIAL_REFRESH_DELAY_SECONDS = 5
 local API_LIST = "https://api.github.com/notifications?per_page=25"
 
 local menubar = hs.menubar.new(true, "github-notifications")
@@ -27,6 +28,7 @@ local notifications = {}
 local seen = Seen.new("githubNotifSeenIDs")
 local lastBadgeState = nil
 local pollTimer = nil
+local initialRefreshTimer = nil
 local refresh -- forward decl
 local clearDismissed -- forward decl
 
@@ -275,10 +277,9 @@ local function buildMenu()
 end
 
 refresh = function()
-	-- Capture pollTimer as an upvalue so the hs.timer userdata isn't GC'd
-	-- after the chunk returns. Without a closure-held reference the local
-	-- below falls out of scope and auto-refresh dies after the first fire.
-	local _ = pollTimer
+	-- Capture timers as upvalues so the hs.timer userdata isn't GC'd after the
+	-- chunk returns.
+	local _ = pollTimer or initialRefreshTimer
 	local headers = authHeaders()
 	if not headers then
 		notifications = {}
@@ -329,6 +330,9 @@ end
 if menubar then
 	menubar:setMenu(buildMenu)
 	setBadge()
-	refresh()
-	pollTimer = hs.timer.doEvery(POLL_SECONDS, refresh)
+	initialRefreshTimer = hs.timer.doAfter(INITIAL_REFRESH_DELAY_SECONDS, function()
+		initialRefreshTimer = nil
+		refresh()
+		pollTimer = hs.timer.doEvery(POLL_SECONDS, refresh)
+	end)
 end
