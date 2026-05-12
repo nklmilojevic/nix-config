@@ -1,6 +1,6 @@
 -- Fast emoji grid picker. Custom hs.webview UI (Tahoe-style rounded panel,
--- blurred background, 10-col emoji grid) with all scoring done in-page so
--- per-keystroke ranking is microseconds, not a fork/exec round-trip.
+-- blurred background, 9-col emoji grid) with all scoring done in-page so
+-- per-keystroke ranking stays inside WebKit.
 
 local hyper = { "ctrl", "alt", "cmd", "shift" }
 local RECENTS_KEY = "emojiPickerRecents"
@@ -36,8 +36,6 @@ local function bumpRecent(alias)
 	hs.settings.set(RECENTS_KEY, r)
 end
 
--- ── HTML / CSS / JS ─────────────────────────────────────────────────────────
-
 local CSS = [[
 :root {
   color-scheme: dark;
@@ -54,7 +52,7 @@ body {
 }
 .frame {
   width: 100%; height: 100%;
-  background: rgba(38, 38, 40, 0.72);
+  background: rgba(38, 38, 40, 0.78);
   -webkit-backdrop-filter: blur(48px) saturate(180%);
   backdrop-filter: blur(48px) saturate(180%);
   border-radius: 22px;
@@ -181,7 +179,7 @@ function defaultList(){
   return out;
 }
 
-function render(){
+function render(keepSelectedVisible){
   if(current.length === 0){
     $grid.innerHTML = '<div class="empty">no matches</div>';
     return;
@@ -190,8 +188,10 @@ function render(){
     `<div class="cell${i===selected?' selected':''}" data-i="${i}" title="${e.n}">${e.c}</div>`
   ).join('');
   $grid.innerHTML = html;
-  const sel = $grid.querySelector('.cell.selected');
-  if(sel) sel.scrollIntoView({block:'nearest'});
+  if(keepSelectedVisible){
+    const sel = $grid.querySelector('.cell.selected');
+    if(sel) sel.scrollIntoView({block:'nearest'});
+  }
 }
 
 function update(){
@@ -199,7 +199,8 @@ function update(){
   current = q.trim() ? search(q) : defaultList();
   if(selected >= current.length) selected = Math.max(0, current.length-1);
   if(selected < 0) selected = 0;
-  render();
+  render(false);
+  $grid.scrollTop = 0;
 }
 
 function move(dx, dy){
@@ -213,7 +214,7 @@ function move(dx, dy){
   if(next < 0) next = 0;
   if(next >= current.length) next = current.length - 1;
   selected = next;
-  render();
+  render(true);
 }
 
 function pick(){
@@ -232,8 +233,6 @@ document.addEventListener('keydown', (e) => {
   if(e.key === 'ArrowRight'){ e.preventDefault(); move(1,0); return; }
   if(e.key === 'ArrowUp'){ e.preventDefault(); move(0,-1); return; }
   if(e.key === 'ArrowDown'){ e.preventDefault(); move(0,1); return; }
-  // If the input lost focus (e.g. user clicked grid then resumed typing),
-  // route printable keystrokes back to it.
   if(document.activeElement !== $input && e.key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey){
     $input.focus();
   }
@@ -256,7 +255,10 @@ window.resetUI = () => {
 };
 
 update();
-$input.focus();
+requestAnimationFrame(() => requestAnimationFrame(() => {
+  window.webkit.messageHandlers.emojiPicker.postMessage({action:'ready'});
+  $input.focus();
+}));
 ]]
 
 local function buildHtml()
@@ -273,10 +275,16 @@ local function buildHtml()
 		.. [[</script></body></html>]]
 end
 
--- ── Webview ─────────────────────────────────────────────────────────────────
-
 local prevApp
 local userContent = hs.webview.usercontent.new("emojiPicker")
+local webview
+local cachedHsWindow
+local isShown = false
+local isReady = false
+local warming = false
+local mapped = false
+
+local OFFSCREEN = { x = -20000, y = -20000, w = WIDTH, h = HEIGHT }
 
 local function rectForFocusedScreen()
 	local screen = hs.screen.mainScreen():frame()
@@ -288,25 +296,79 @@ local function rectForFocusedScreen()
 	}
 end
 
-local webview = hs.webview
-	.new(rectForFocusedScreen(), { developerExtrasEnabled = false }, userContent)
-	:windowStyle({ "borderless" })
-	:allowTextEntry(true)
-	:transparent(true)
-	:allowGestures(false)
-	:allowMagnificationGestures(false)
-	:allowNewWindows(false)
-	:shadow(false)
-	:html(buildHtml())
+local function parkWebview()
+	if not webview then
+		return
+	end
+	webview:alpha(0)
+	webview:frame(OFFSCREEN)
+end
 
-local isShown = false
+local function createWebview()
+	isReady = false
+	mapped = false
+	cachedHsWindow = nil
+	webview = hs.webview
+		.new(rectForFocusedScreen(), { developerExtrasEnabled = false }, userContent)
+		:windowStyle({ "borderless" })
+		:allowTextEntry(true)
+		:transparent(true)
+		:allowGestures(false)
+		:allowMagnificationGestures(false)
+		:allowNewWindows(false)
+		:shadow(false)
+		:alpha(0)
+		:html(buildHtml())
+
+	webview:windowCallback(function(action, _, focused)
+		if action == "focusChange" and focused == false and isShown then
+			isShown = false
+			parkWebview()
+		end
+	end)
+end
+
+local function ensureWebview()
+	if not webview then
+		createWebview()
+	end
+	return webview
+end
+
+local function rebuildWebview()
+	if webview then
+		webview:delete()
+		webview = nil
+	end
+	mapped = false
+	cachedHsWindow = nil
+	createWebview()
+end
+
+local function getHsWindow()
+	if not webview then
+		return nil
+	end
+	if cachedHsWindow then
+		return cachedHsWindow
+	end
+	cachedHsWindow = webview:hswindow()
+	return cachedHsWindow
+end
+
+local function activateHammerspoon()
+	local apps = hs.application.applicationsForBundleID("org.hammerspoon.Hammerspoon")
+	if apps and apps[1] then
+		apps[1]:activate(true)
+	end
+end
 
 local function hideOnly()
-	if not isShown then
+	if not webview or not isShown then
 		return
 	end
 	isShown = false
-	webview:hide()
+	parkWebview()
 end
 
 local function dismiss()
@@ -319,7 +381,7 @@ end
 local function commit(char, alias)
 	if alias then
 		bumpRecent(alias)
-		webview:evaluateJavaScript(
+		ensureWebview():evaluateJavaScript(
 			"if(window.setRecents)setRecents(" .. hs.json.encode(getRecents()) .. ");"
 		)
 	end
@@ -332,51 +394,78 @@ local function commit(char, alias)
 	end)
 end
 
+local function lap(t0, label)
+	local ms = (hs.timer.secondsSinceEpoch() - t0) * 1000
+	print(string.format("[emoji-picker] %-22s %6.1f ms", label, ms))
+	return hs.timer.secondsSinceEpoch()
+end
+
+local function focusShownWebview()
+	if not webview then
+		return
+	end
+	local t = hs.timer.secondsSinceEpoch()
+	webview:bringToFront(true)
+	t = lap(t, "bringToFront")
+	local hsw = getHsWindow()
+	t = lap(t, "getHsWindow")
+	if hsw then
+		hsw:raise()
+		t = lap(t, "hsw:raise")
+		hsw:focus()
+		t = lap(t, "hsw:focus")
+	end
+	webview:evaluateJavaScript("if(window.resetUI)resetUI();")
+	lap(t, "evalJS resetUI")
+end
+
+local function showNow()
+	local t = hs.timer.secondsSinceEpoch()
+	local view = ensureWebview()
+	t = lap(t, "ensureWebview")
+	view:frame(rectForFocusedScreen())
+	t = lap(t, "frame")
+	view:alpha(1)
+	t = lap(t, "alpha(1)")
+	if not mapped then
+		view:show()
+		mapped = true
+		t = lap(t, "view:show()")
+	end
+	activateHammerspoon()
+	t = lap(t, "activateHammerspoon")
+	isShown = true
+	warming = false
+	focusShownWebview()
+end
+
+local function show()
+	print("[emoji-picker] ── show begin ──")
+	local t = hs.timer.secondsSinceEpoch()
+	prevApp = hs.application.frontmostApplication()
+	lap(t, "frontmostApplication")
+	ensureWebview()
+	showNow()
+end
+
 userContent:setCallback(function(msg)
 	local body = msg and msg.body
 	if type(body) ~= "table" then
 		dismiss()
 		return
 	end
-	if body.action == "cancel" then
+	if body.action == "ready" then
+		isReady = true
+		if warming and webview and not isShown then
+			parkWebview()
+			warming = false
+		end
+	elseif body.action == "cancel" then
 		dismiss()
 	elseif body.action == "pick" and body.char then
 		commit(body.char, body.alias)
 	end
 end)
-
--- Click outside the picker → window loses key → dismiss (without re-activating
--- prevApp, since the click already moved focus to wherever the user clicked).
-webview:windowCallback(function(action, _, focused)
-	if action == "focusChange" and focused == false and isShown then
-		hideOnly()
-	end
-end)
-
-local function activateHammerspoon()
-	local apps = hs.application.applicationsForBundleID("org.hammerspoon.Hammerspoon")
-	if apps and apps[1] then
-		apps[1]:activate(true)
-	end
-end
-
-local function show()
-	prevApp = hs.application.frontmostApplication()
-	webview:frame(rectForFocusedScreen())
-	activateHammerspoon()
-	webview:show()
-	webview:bringToFront(true)
-	local hsw = webview:hswindow()
-	if hsw then
-		hsw:raise()
-		hsw:focus()
-	end
-	isShown = true
-	-- input.focus() runs in JS regardless of OS-level key window state, so
-	-- queueing it before the window is fully key is fine — keystrokes will
-	-- land in the input as soon as the window becomes key.
-	webview:evaluateJavaScript("if(window.resetUI)resetUI();")
-end
 
 local function toggle()
 	if isShown then
@@ -388,18 +477,47 @@ end
 
 hs.hotkey.bind(hyper, "space", toggle)
 
--- Warm up WebKit: show the webview far offscreen so it lays out and paints
--- once, then hide it. Skips bringToFront/focus so it never steals key status.
--- This makes the very first Hyper+Space feel as snappy as subsequent ones.
-hs.timer.doAfter(1.0, function()
+createWebview()
+
+local function warmup()
 	if isShown then
 		return
 	end
-	local home = rectForFocusedScreen()
-	webview:frame({ x = -20000, y = -20000, w = WIDTH, h = HEIGHT })
-	webview:show()
-	hs.timer.doAfter(0.2, function()
-		webview:hide()
-		webview:frame(home)
+	warming = true
+	local view = ensureWebview()
+	view:frame(rectForFocusedScreen())
+	view:alpha(0)
+	if not mapped then
+		view:show()
+		mapped = true
+	end
+	-- Prime hswindow cache off the hot path. hs.webview:hswindow() walks the
+	-- AX window list, which takes ~1.5s. Run after one runloop tick so the
+	-- NSWindow is registered with the AX system.
+	hs.timer.doAfter(0.05, function()
+		if view == webview then
+			getHsWindow()
+		end
 	end)
+	hs.timer.doAfter(1.0, function()
+		if warming and view == webview and not isShown then
+			warming = false
+			view:frame(OFFSCREEN)
+		end
+	end)
+end
+
+-- Paint once at the real on-screen position with alpha 0 so WebKit composites
+-- against a live display, then park offscreen. The window stays mapped — every
+-- subsequent show is just alpha + frame, no NSWindow unmap/remap round-trip.
+warmup()
+
+local caffeinateWatcher = hs.caffeinate.watcher.new(function(event)
+	if event == hs.caffeinate.watcher.systemDidWake then
+		if not isShown then
+			rebuildWebview()
+			hs.timer.doAfter(1.0, warmup)
+		end
+	end
 end)
+caffeinateWatcher:start()
