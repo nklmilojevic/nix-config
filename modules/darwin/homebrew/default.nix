@@ -12,7 +12,6 @@
       "antinote"
       "alfred"
       "balenaetcher"
-      "bambu-studio"
       "brave-browser"
       "calibre"
       "chatgpt"

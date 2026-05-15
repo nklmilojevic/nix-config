@@ -59,6 +59,7 @@
       enable = true;
       package = null;
       tslsIntegration = false;
+      vtslsIntegration = false;
     };
 
     gopls = {
