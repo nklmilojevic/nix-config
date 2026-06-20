@@ -28,7 +28,7 @@
       "ghostty"
       "gpg-suite"
       "hammerspoon"
-      "iina"
+      # "iina"
       "karabiner-elements"
       "little-snitch"
       "lunar"
@@ -64,6 +64,7 @@
       "Cascadea" = 1432182561;
       "Developer" = 640199958;
       "Home Assistant" = 1099568401;
+      "Hand Mirror" = 1502839586;
       "Hover for Safari" = 1540705431;
       "FSNotes" = 1277179284;
       "iMovie" = 408981434;

@@ -84,6 +84,8 @@ in
 {
   programs.nixvim = {
     enable = true;
+    nixpkgs.source = pkgs.path;
+    version.enableNixpkgsReleaseCheck = false;
     viAlias = true;
     vimAlias = true;
     defaultEditor = true;

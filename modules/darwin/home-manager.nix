@@ -56,7 +56,7 @@ in
       wvous-tr-corner = 1;
       persistent-apps = [
         # "/System/Cryptexes/App/System/Applications/Safari.app"
-        "/Applications/Brave Origin Beta.app"
+        "/Applications/Brave Origin.app"
         "/System/Applications/Mail.app/"
         "/System/Applications/Messages.app/"
         "/Applications/Slack.app/"

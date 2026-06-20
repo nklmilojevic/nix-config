@@ -14,4 +14,5 @@ with pkgs;
   fluxcd
   skaffold
   talosctl
+  vals
 ]

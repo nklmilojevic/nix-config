@@ -282,10 +282,12 @@ refresh = function()
 	local _ = pollTimer or initialRefreshTimer
 	local headers = authHeaders()
 	if not headers then
+		print("[gh-notif] refresh skipped: no token")
 		notifications = {}
 		setBadge()
 		return
 	end
+	print("[gh-notif] refresh: requesting " .. API_LIST)
 	httpx.getJSON(API_LIST, headers, function(data, err)
 		if err or type(data) ~= "table" then
 			print("[gh-notif] refresh failed: " .. (err or "non-table response"))

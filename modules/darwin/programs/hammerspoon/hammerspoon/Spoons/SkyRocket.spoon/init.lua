@@ -127,10 +127,35 @@ function SkyRocket:stop()
   self.dragging = false
   self.dragType = nil
 
+  if self.watchdog then
+    self.watchdog:stop()
+    self.watchdog = nil
+  end
+
   self.windowCanvas:hide()
   self.cancelHandler:stop()
   self.dragHandler:stop()
   self.clickHandler:start()
+end
+
+-- The mouse-up can be lost (its eventtap disabled by timeout, or an error in
+-- a callback), leaving `dragging` stuck true with the canvas on screen. End
+-- the drag whenever the button is no longer actually held.
+function SkyRocket:startWatchdog()
+  if self.watchdog then self.watchdog:stop() end
+  self.watchdog = hs.timer.doEvery(1, function()
+    if not self.dragging then
+      if self.watchdog then
+        self.watchdog:stop()
+        self.watchdog = nil
+      end
+      return
+    end
+    local buttons = hs.eventtap.checkMouseButtons()
+    if not (buttons.left or buttons.right) then
+      self:stop()
+    end
+  end)
 end
 
 function SkyRocket:isResizing()
@@ -176,22 +201,21 @@ function SkyRocket:handleCancel()
   return function()
     if not self.dragging then return end
 
-    if self:isResizing() then
-      self:resizeWindowToCanvas()
-    else
-      self:moveWindowToCanvas()
+    -- An error here (window died, app unresponsive) must not skip stop(),
+    -- or the taps stay in drag mode and eat mouse events until reload.
+    local ok, err = pcall(function()
+      if self:isResizing() then
+        self:resizeWindowToCanvas()
+      else
+        self:moveWindowToCanvas()
+      end
+    end)
+    if not ok then
+      print("[SkyRocket] drag finish failed: " .. tostring(err))
     end
 
     self:stop()
   end
-end
-
-function SkyRocket:resizeCanvasToWindow()
-  local position = self.targetWindow:topLeft()
-  local size = self.targetWindow:size()
-
-  self.windowCanvas:topLeft({ x = position.x, y = position.y })
-  self.windowCanvas:size({ w = size.w, h = size.h })
 end
 
 function SkyRocket:resizeWindowToCanvas()
@@ -221,7 +245,13 @@ end
 
 function SkyRocket:handleClick()
   return function(event)
-    if self.dragging then return true end
+    -- clickHandler is stopped during a real drag, so seeing dragging==true
+    -- here means a previous drag never finished. Recover and let the click
+    -- through instead of swallowing every mouse-down until reload.
+    if self.dragging then
+      self:stop()
+      return nil
+    end
 
     local flags = event:getFlags()
     local eventType = event:getType()
@@ -230,11 +260,22 @@ function SkyRocket:handleClick()
     local isResizing = eventType == self.resizeStartMouseEvent and flags:containExactly(self.resizeModifiers)
 
     if isMoving or isResizing then
+      -- All fallible reads happen before any state changes, so an error or
+      -- nil here can't leave the handlers half-switched into drag mode.
       local currentWindow = getWindowUnderMouse()
+      if not currentWindow then return nil end
 
-      if self.disabledApps[currentWindow:application():name()] then
+      local app = currentWindow:application()
+      if not app or self.disabledApps[app:name()] then
         return nil
       end
+
+      local position = currentWindow:topLeft()
+      local size = currentWindow:size()
+      if not position or not size then return nil end
+
+      self.windowCanvas:topLeft({ x = position.x, y = position.y })
+      self.windowCanvas:size({ w = size.w, h = size.h })
 
       self.dragging = true
       self.targetWindow = currentWindow
@@ -245,12 +286,12 @@ function SkyRocket:handleClick()
         self.dragType = dragTypes.resize
       end
 
-      self:resizeCanvasToWindow()
       self.windowCanvas:show()
 
       self.cancelHandler:start()
       self.dragHandler:start()
       self.clickHandler:stop()
+      self:startWatchdog()
 
       -- Prevent selection
       return true

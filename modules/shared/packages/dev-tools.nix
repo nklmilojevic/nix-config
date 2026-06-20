@@ -20,9 +20,11 @@ with pkgs;
   rdap
   trippy
   nextdns
+  playwright
 
   # Build/task tools
   go-task
+  just
   lefthook
   minijinja
   mailersend
@@ -35,6 +37,7 @@ with pkgs;
   opencode
 
   # Misc utilities
+  home-assistant-cli
   mc
   pv
   pwgen

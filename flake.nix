@@ -23,8 +23,6 @@
 
     nix-homebrew = {
       url = "github:zhaofengli/nix-homebrew";
-      inputs.brew-src.url = "github:Homebrew/brew/5.1.11";
-      inputs.brew-src.flake = false;
     };
 
     homebrew-core = {
@@ -119,7 +117,9 @@
             mailerlite = mailerlite-cli.packages.${system}.default;
             atuin = atuin-nix.packages.${system}.default;
             direnv = (import nixpkgs-stable { inherit system; }).direnv;
+            kubernetes-helm = (import nixpkgs-stable { inherit system; }).kubernetes-helm;
             pwgen = (import nixpkgs-stable { inherit system; }).pwgen;
+            rclone = (import nixpkgs-stable { inherit system; }).rclone;
           }
         )
       ];
@@ -147,6 +147,7 @@
 
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
+            just
             nixpkgs-fmt
             nil
           ];

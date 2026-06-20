@@ -11,7 +11,7 @@ with pkgs;
   git
   gh
   jq
-  yq
+  yq-go
   openssh
   openssl
   tree

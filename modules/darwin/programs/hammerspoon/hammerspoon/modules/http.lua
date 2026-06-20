@@ -1,10 +1,13 @@
--- Curl-backed JSON HTTP helpers.
+-- JSON HTTP helpers.
 --
--- We use curl via hs.task instead of hs.http.doAsyncRequest because:
---   * NSURLSession's URL cache can silently return stale responses;
---   * hs.http mishandles empty-body PATCH/PUT against the GitHub API;
---   * curl matches the byte-for-byte behaviour of the SwiftBar plugins that
---     these modules replaced.
+-- GET uses hs.http.doAsyncRequest with explicit no-cache headers — the curl
+-- path via hs.task was silently dropping completion callbacks under load and
+-- wedging the single-slot queue.
+--
+-- PATCH/PUT/DELETE still go through curl: hs.http mishandles empty-body
+-- writes against the GitHub API, so the mark-as-read calls have to shell out.
+-- The curl queue keeps a watchdog so a dropped task callback can't stall it
+-- indefinitely.
 --
 -- All callbacks receive (data | nil, err | nil).
 
@@ -37,22 +40,48 @@ end
 -- Polling cadence is ~60s, so the throughput hit is negligible.
 local queue = {}
 local active = nil
+local activeWatchdog = nil
+
+-- curl --max-time is 15s; give the OS a few seconds of slack before the
+-- watchdog steps in. Without this, a single dropped hs.task callback wedges
+-- the queue forever and the next pump() short-circuits silently.
+local WATCHDOG_SECONDS = 25
 
 local function pump()
 	if active or #queue == 0 then return end
 	local job = table.remove(queue, 1)
-	active = hs.task.new(CURL, function(exitCode, stdout, stderr)
+	local done = false
+	local taskRef
+
+	local function finish(body, err)
+		if done then return end
+		done = true
+		if activeWatchdog then
+			activeWatchdog:stop()
+			activeWatchdog = nil
+		end
 		active = nil
+		job.callback(body or "", err)
+		pump()
+	end
+
+	taskRef = hs.task.new(CURL, function(exitCode, stdout, stderr)
 		if exitCode == 0 then
-			job.callback(stdout or "", nil)
+			finish(stdout, nil)
 		else
-			job.callback(stdout or "", string.format(
+			finish(stdout, string.format(
 				"exit=%s %s", tostring(exitCode), (stderr or ""):sub(1, 300)
 			))
 		end
-		pump()
 	end, job.args)
-	active:start()
+	active = taskRef
+	activeWatchdog = hs.timer.doAfter(WATCHDOG_SECONDS, function()
+		if done then return end
+		print("[httpx] watchdog: task callback never fired, force-clearing queue")
+		if taskRef then pcall(function() taskRef:terminate() end) end
+		finish("", "watchdog timeout")
+	end)
+	taskRef:start()
 end
 
 local function run(method, url, headers, body, callback)
@@ -73,8 +102,22 @@ end
 
 -- GET URL, decode JSON. callback(data, err).
 function M.getJSON(url, headers, callback)
-	run("GET", url, headers, nil, function(body, err)
-		if err then callback(nil, err) return end
+	local h = {}
+	for k, v in pairs(headers or {}) do h[k] = v end
+	-- NSURLSession's protocol cache will happily hand back a stale response
+	-- to a repeated GET against the same URL with the same Authorization
+	-- header; force a fresh fetch on every poll.
+	h["Cache-Control"] = "no-cache"
+	h["Pragma"] = "no-cache"
+	hs.http.doAsyncRequest(url, "GET", nil, h, function(status, body)
+		if status == nil or status < 0 then
+			callback(nil, "network error status=" .. tostring(status))
+			return
+		end
+		if status < 200 or status >= 300 then
+			callback(nil, string.format("http %d: %s", status, (body or ""):sub(1, 200)))
+			return
+		end
 		callback(decodeJSON(body))
 	end)
 end

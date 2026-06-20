@@ -283,6 +283,10 @@ local isShown = false
 local isReady = false
 local warming = false
 local mapped = false
+-- hs.timer objects are garbage-collected (and never fire) unless referenced;
+-- a collected park timer leaves the invisible webview mapped at screen
+-- center, silently swallowing clicks.
+local primeTimer, parkTimer, wakeWarmupTimer, typeTimer
 
 local OFFSCREEN = { x = -20000, y = -20000, w = WIDTH, h = HEIGHT }
 
@@ -389,7 +393,7 @@ local function commit(char, alias)
 	if prevApp and prevApp:isRunning() then
 		prevApp:activate()
 	end
-	hs.timer.doAfter(0.06, function()
+	typeTimer = hs.timer.doAfter(0.06, function()
 		hs.eventtap.keyStrokes(char)
 	end)
 end
@@ -494,12 +498,12 @@ local function warmup()
 	-- Prime hswindow cache off the hot path. hs.webview:hswindow() walks the
 	-- AX window list, which takes ~1.5s. Run after one runloop tick so the
 	-- NSWindow is registered with the AX system.
-	hs.timer.doAfter(0.05, function()
+	primeTimer = hs.timer.doAfter(0.05, function()
 		if view == webview then
 			getHsWindow()
 		end
 	end)
-	hs.timer.doAfter(1.0, function()
+	parkTimer = hs.timer.doAfter(1.0, function()
 		if warming and view == webview and not isShown then
 			warming = false
 			view:frame(OFFSCREEN)
@@ -512,11 +516,23 @@ end
 -- subsequent show is just alpha + frame, no NSWindow unmap/remap round-trip.
 warmup()
 
+-- Backstop: if any parking step is ever lost, the invisible mapped webview
+-- sits at screen center and swallows clicks until reload. Re-park it.
+parkWatchdog = hs.timer.doEvery(5, function()
+	if webview and mapped and not isShown and not warming then
+		local f = webview:frame()
+		if f and f.x ~= OFFSCREEN.x then
+			print("[emoji-picker] watchdog: re-parking stray webview")
+			parkWebview()
+		end
+	end
+end)
+
 local caffeinateWatcher = hs.caffeinate.watcher.new(function(event)
 	if event == hs.caffeinate.watcher.systemDidWake then
 		if not isShown then
 			rebuildWebview()
-			hs.timer.doAfter(1.0, warmup)
+			wakeWarmupTimer = hs.timer.doAfter(1.0, warmup)
 		end
 	end
 end)

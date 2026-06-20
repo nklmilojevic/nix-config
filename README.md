@@ -1,29 +1,21 @@
 # Nix Configuration Repository
 
-A comprehensive guide to set up and manage your system configuration using Nix, Taskfile, and 1Password.
+A comprehensive guide to set up and manage your system configuration using Nix, just, and 1Password.
 
 ---
 
-## Installation
+## Requirements
 
-### Step 1: Install Taskfile
-
-Run the following command to install Taskfile:
-
-```sh
-sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
-```
-
-Ensure `~/.local/bin` is in your `PATH`:
-
-```sh
-export PATH="$HOME/.local/bin:$PATH"
-```
-
-### Requirements
-
-- **Nix Package Manager**
+- **Nix Package Manager** (installed in step 2 below)
 - **1Password CLI**
+
+This repo uses [`just`](https://github.com/casey/just) as its command runner.
+You do **not** need to install `just` yourself — it is provided by the flake's
+dev shell, so a freshly-Nix'd machine can run it via `nix develop` (see below).
+`just` is also installed system-wide once you apply the configuration.
+
+Recipes are organized into modules (`just <module> <recipe>`). Run `just` on its
+own to see everything that is available.
 
 ---
 
@@ -33,15 +25,34 @@ export PATH="$HOME/.local/bin:$PATH"
 
 ```sh
 git clone https://github.com/nklmilojevic/nix-config
+cd nix-config
 ```
 
 ### 2. Install Nix (if not already installed)
 
+This is the one bootstrap step that cannot use `just` (you need Nix before you
+have `just`). Run the installer directly:
+
 ```sh
-task setup-nix
+curl -sSf -L https://install.lix.systems/lix | sh -s -- install
 ```
 
-### 3. Sign in to 1Password CLI
+Open a new shell afterwards so `nix` is on your `PATH`.
+
+> The same command is also exposed as `just bootstrap setup-nix` for convenience
+> once you already have `just` available.
+
+### 3. Enter the dev shell (gives you `just`)
+
+```sh
+nix develop
+```
+
+This drops you into a shell with `just` available, so you can run the recipes
+below before the system configuration has ever been applied. (If you use
+`direnv`, `direnv allow` does the same thing.)
+
+### 4. Sign in to 1Password CLI
 
 ```sh
 op signin
@@ -49,27 +60,29 @@ op signin
 
 ---
 
-## Available Tasks
+## Available Recipes
 
-### Basic Tasks
+### Nix
 
-- **`task build`**: Build the configuration for your current system.
-- **`task switch`**: Apply the new configuration.
-- **`task universal-build`**: Build and apply configuration (combines `build` and `switch`).
-- **`task update`**: Update the `flake.lock` file.
-- **`task clean`**: Clean build artifacts.
-- **`task edit`**: Open configuration files for editing.
-- **`task status`**: Show the current Nix-Darwin and Home Manager status.
+- **`just build`**: Build the configuration for your current system.
+- **`just switch`**: Apply the new configuration.
+- **`just universal-build`**: Build and apply configuration (combines `build` and `switch`).
+- **`just darwin-refresh`**: Refresh the Nix-Darwin configuration in one step.
+- **`just update`**: Update the `flake.lock` file.
+- **`just clean`**: Clean build artifacts.
+- **`just edit`**: Open configuration files for editing.
+- **`just status`**: Show the current Nix-Darwin and Home Manager status.
 
-### Secret Management Tasks
+### Bootstrap
 
-- **`task check-op-signin`**: Verify 1Password CLI authentication.
-- **`task all-secrets`**: Generate all secret files.
-- **`task generate-secrets`**: Generate environment variables.
-- **`task generate-ssh-config`**: Generate SSH configuration.
-- **`task generate-atuin-key`**: Generate Atuin sync key.
-- **`task generate-age-key`**: Generate Age encryption key.
-- **`task install-fonts`**: Install private fonts from 1Password (macOS only).
+- **`just bootstrap setup-nix`**: Install the Nix package manager (Lix).
+
+### Secrets
+
+- **`just secrets ssh-config`**: Generate SSH configuration.
+- **`just secrets atuin-key`**: Generate Atuin sync key.
+- **`just secrets age-key`**: Generate Age encryption key.
+- **`just secrets install-fonts`**: Install private fonts from 1Password (macOS only).
 
 ---
 
@@ -100,7 +113,7 @@ Secrets are securely managed through 1Password CLI and are automatically fetched
 2. Build and switch to the new configuration:
 
    ```sh
-   task universal-build
+   just universal-build
    ```
 
 ### Post-Installation
@@ -115,9 +128,9 @@ After switching configurations, the system will automatically:
 
 ## Maintenance
 
-- **Update dependencies**: `task update`
-- **Clean build artifacts**: `task clean`
-- **Check configuration status**: `task status`
+- **Update dependencies**: `just update`
+- **Clean build artifacts**: `just clean`
+- **Check configuration status**: `just status`
 
 ---
 

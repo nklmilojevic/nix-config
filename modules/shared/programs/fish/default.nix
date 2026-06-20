@@ -25,6 +25,10 @@
       set -gx NPM_CONFIG_PREFIX $HOME/.npm-global
       set -gx SSH_AUTH_SOCK $HOME/.1password/agent.sock
 
+      # home-assistant-cli secrets, resolved on demand by `op run` (see hass-cli alias)
+      set -gx HASS_SERVER "op://Private/hass-cli/HASS_SERVER"
+      set -gx HASS_TOKEN "op://Private/hass-cli/HASS_TOKEN"
+
       set -U __done_allow_nongraphical 1
       set -U --append __done_exclude '^htop'
       set -U --append __done_exclude '^btop'
@@ -102,6 +106,9 @@
       gh = "op plugin run -- gh";
       openai = "op plugin run -- openai";
       llm = "op plugin run -- llm";
+
+      # Resolves HASS_SERVER/HASS_TOKEN op:// refs via 1Password on every call
+      hass-cli = "op run --account my.1password.eu -- hass-cli";
     };
 
     functions = {
