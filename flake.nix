@@ -5,7 +5,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.05";
     flake-utils.url = "github:numtide/flake-utils";
-    catppuccin.url = "github:catppuccin/nix";
+    catppuccin = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixvim = {
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -35,11 +38,6 @@
       flake = false;
     };
 
-    homebrew-bundle = {
-      url = "github:homebrew/homebrew-bundle";
-      flake = false;
-    };
-
     krewfile = {
       url = "github:brumhard/krewfile";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -47,34 +45,42 @@
 
     claude-code-overlay = {
       url = "github:nklmilojevic/claude-code-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     codex-cli-nix = {
       url = "github:nklmilojevic/codex-cli-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     opencode-nix = {
       url = "github:nklmilojevic/opencode-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     gemini-cli-nix = {
       url = "github:nklmilojevic/gemini-cli-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     talosctl = {
       url = "github:nklmilojevic/talosctl-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     mailersend-cli = {
       url = "github:mailersend/mailersend-cli";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     mailerlite-cli = {
       url = "github:mailerlite/mailerlite-cli";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     atuin-nix = {
       url = "github:nklmilojevic/atuin-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -108,6 +114,7 @@
           final: prev:
           let
             system = final.stdenv.hostPlatform.system;
+            stable = import nixpkgs-stable { inherit system; };
           in
           {
             codex = codex-cli-nix.packages.${system}.default;
@@ -116,10 +123,12 @@
             mailersend = mailersend-cli.packages.${system}.default;
             mailerlite = mailerlite-cli.packages.${system}.default;
             atuin = atuin-nix.packages.${system}.default;
-            direnv = (import nixpkgs-stable { inherit system; }).direnv;
-            kubernetes-helm = (import nixpkgs-stable { inherit system; }).kubernetes-helm;
-            pwgen = (import nixpkgs-stable { inherit system; }).pwgen;
-            rclone = (import nixpkgs-stable { inherit system; }).rclone;
+            inherit (stable)
+              direnv
+              kubernetes-helm
+              pwgen
+              rclone
+              ;
           }
         )
       ];

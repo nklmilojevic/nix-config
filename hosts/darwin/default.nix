@@ -53,7 +53,6 @@
           "view-secret"
           "view-allocations"
           "view-cert"
-          "view-secret"
           "view-utilization"
           "tree"
         ];

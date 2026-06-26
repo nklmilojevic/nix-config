@@ -28,7 +28,7 @@
       "ghostty"
       "gpg-suite"
       "hammerspoon"
-      # "iina"
+      "iina"
       "karabiner-elements"
       "little-snitch"
       "lunar"

@@ -25,31 +25,11 @@
     in
     sharedPackages ++ extra;
 
-  # Standard user configuration
-  # Usage: mkUser { name = "nkl"; home = "/Users/nkl"; shell = pkgs.fish; }
-  mkUser =
-    {
-      name,
-      home,
-      shell ? null,
-    }:
-    {
-      users.users.${name} = {
-        inherit home;
-      }
-      // lib.optionalAttrs (shell != null) { inherit shell; };
-    };
-
   # Common nixpkgs config
   nixpkgsConfig = {
     allowUnfree = true;
     allowBroken = true;
     allowInsecure = false;
     allowUnsupportedSystem = true;
-  };
-
-  # Common nix settings
-  nixSettings = {
-    experimental-features = "nix-command flakes";
   };
 }
