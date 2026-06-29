@@ -37,6 +37,7 @@ with pkgs;
   opencode
 
   # Misc utilities
+  android-tools
   home-assistant-cli
   mc
   pv

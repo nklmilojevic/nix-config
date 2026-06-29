@@ -175,7 +175,7 @@ in
       helm-ls
       intelephense
       lua-language-server
-      marksman
+      markdown-oxide
       markdown-toc
       markdownlint-cli2
       nil
@@ -186,14 +186,14 @@ in
       php84Packages.php-codesniffer
       phpactor
       prettier
-      python3Packages.python-lsp-ruff
-      python3Packages.python-lsp-server
-      python3Packages.ruff
+      python314Packages.python-lsp-ruff
+      python314Packages.python-lsp-server
+      python314Packages.ruff
       ripgrep
       rust-analyzer
       shellcheck
       shfmt
-      sqlfluff
+      sleek
       statix
       stylua
       svelte-language-server
@@ -204,7 +204,9 @@ in
       typescript-language-server
       vscode-langservers-extracted
       vtsls
-      vue-language-server
+      # vue-language-server  # disabled: nixpkgs builds it with insecure pnpm 10.34.0
+      # (CVE-2026-55487/55698/55180/55697); pnpm_11 crashes during build on darwin.
+      # Re-enable once nixpkgs bumps Volar's pnpm. vue_ls config kept in lsp.nix.
       yaml-language-server
     ];
 
@@ -742,9 +744,6 @@ in
         markdown = [ "markdownlint-cli2" ];
         nix = [ "statix" ];
         php = [ "phpcs" ];
-        sql = [ "sqlfluff" ];
-        mysql = [ "sqlfluff" ];
-        plsql = [ "sqlfluff" ];
       };
     };
 
@@ -989,11 +988,6 @@ in
         '';
         formatters = {
           injected.options.ignore_errors = true;
-          sqlfluff.args = [
-            "format"
-            "--dialect=ansi"
-            "-"
-          ];
         };
         formatters_by_ft = {
           fish = [ "fish_indent" ];
@@ -1015,9 +1009,9 @@ in
           nix = [ "nixfmt" ];
           php = [ "php_cs_fixer" ];
           sh = [ "shfmt" ];
-          sql = [ "sqlfluff" ];
-          mysql = [ "sqlfluff" ];
-          plsql = [ "sqlfluff" ];
+          sql = [ "sleek" ];
+          mysql = [ "sleek" ];
+          plsql = [ "sleek" ];
           svelte = [ "prettier" ];
         };
       };

@@ -31,7 +31,7 @@
       enable = true;
       package = null;
     };
-    marksman = {
+    markdown_oxide = {
       enable = true;
       package = null;
     };
