@@ -26,6 +26,9 @@ with pkgs;
   go-task
   just
   lefthook
+  nixfmt
+  oxfmt
+  stylua
   minijinja
   mailersend
   mailerlite

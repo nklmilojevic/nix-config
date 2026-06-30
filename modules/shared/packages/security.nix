@@ -8,4 +8,5 @@ with pkgs;
   nmap
   rustscan
   tshark
+  zizmor
 ]

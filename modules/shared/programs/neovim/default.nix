@@ -162,7 +162,6 @@ in
       ansible-language-server
       basedpyright
       bash-language-server
-      biome
       docker-compose-language-service
       dockerfile-language-server
       fd
@@ -181,6 +180,7 @@ in
       nil
       nixd
       nixfmt
+      oxfmt
       pgformatter
       php84Packages.php-cs-fixer
       php84Packages.php-codesniffer
@@ -990,6 +990,26 @@ in
           injected.options.ignore_errors = true;
         };
         formatters_by_ft = {
+          # oxfmt (Oxc) handles the whole web/JS ecosystem it actually
+          # supports in v0.53: js/ts(x), json(c/5), css/scss/less, yaml,
+          # toml, html, vue, markdown/mdx, graphql. svelte still needs
+          # prettier (oxfmt no-ops without svelte/compiler); sh/sql/lua/nix/
+          # go/php aren't supported by oxfmt and keep their own formatters.
+          css = [ "oxfmt" ];
+          scss = [ "oxfmt" ];
+          less = [ "oxfmt" ];
+          javascript = [ "oxfmt" ];
+          javascriptreact = [ "oxfmt" ];
+          typescript = [ "oxfmt" ];
+          typescriptreact = [ "oxfmt" ];
+          json = [ "oxfmt" ];
+          jsonc = [ "oxfmt" ];
+          json5 = [ "oxfmt" ];
+          yaml = [ "oxfmt" ];
+          toml = [ "oxfmt" ];
+          html = [ "oxfmt" ];
+          vue = [ "oxfmt" ];
+          graphql = [ "oxfmt" ];
           fish = [ "fish_indent" ];
           go = [
             "goimports"
@@ -997,12 +1017,12 @@ in
           ];
           lua = [ "stylua" ];
           markdown = [
-            "prettier"
+            "oxfmt"
             "markdownlint-cli2"
             "markdown-toc"
           ];
           "markdown.mdx" = [
-            "prettier"
+            "oxfmt"
             "markdownlint-cli2"
             "markdown-toc"
           ];
