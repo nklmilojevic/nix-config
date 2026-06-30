@@ -91,6 +91,14 @@
     };
 
     functions = {
+      claude = {
+        description = "launch Claude Code with GH_TOKEN pre-resolved from 1Password (no biometric popups in-session)";
+        body = ''
+          set -lx CLAUDE_SESSION 1
+          set -lx GH_TOKEN (op read --account my.1password.eu "op://Private/GitHub Personal Access Token/token")
+          command claude $argv
+        '';
+      };
       psgrep = {
         argumentNames = [ "process" ];
         description = "greps for processes";

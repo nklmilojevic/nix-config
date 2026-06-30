@@ -1,0 +1,50 @@
+[pre-commit]
+parallel = true
+skip = ["merge", "rebase"]
+
+[pre-commit.commands.format-nix]
+glob = ["*.nix"]
+run = "nixfmt {staged_files}"
+stage_fixed = true
+
+[pre-commit.commands.format-web]
+glob = [
+  "*.json",
+  "*.json5",
+  "*.jsonc",
+  "*.yaml",
+  "*.yml",
+  "*.toml",
+  "*.md",
+  "*.markdown",
+  "*.mdx",
+  "*.css",
+  "*.scss",
+  "*.html",
+]
+exclude = ['^\.github/']
+run = "oxfmt {staged_files}"
+stage_fixed = true
+
+[pre-commit.commands.format-lua]
+# Scoped to my own Hammerspoon config; vendored Spoons/ are left untouched.
+glob = [
+  "modules/darwin/programs/hammerspoon/hammerspoon/init.lua",
+  "modules/darwin/programs/hammerspoon/hammerspoon/modules/*.lua",
+]
+run = "stylua {staged_files}"
+stage_fixed = true
+
+[pre-commit.commands.format-just]
+glob = ["*.just", ".justfile", "justfile"]
+run = 'for f in {staged_files}; do just --fmt --unstable --justfile "$f"; done'
+stage_fixed = true
+
+[pre-commit.commands.zizmor]
+glob = [
+  ".github/workflows/*.yml",
+  ".github/workflows/*.yaml",
+  ".github/actions/**/action.yml",
+  ".github/actions/**/action.yaml",
+]
+run = "zizmor --offline {staged_files}"
