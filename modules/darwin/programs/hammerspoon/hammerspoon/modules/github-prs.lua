@@ -35,7 +35,9 @@ end
 
 local function authHeaders()
 	local token = getToken()
-	if not token then return nil end
+	if not token then
+		return nil
+	end
 	return {
 		["Accept"] = "application/vnd.github+json",
 		["Authorization"] = "Bearer " .. token,
@@ -47,11 +49,15 @@ local function totalCount()
 end
 
 local function setBadge()
-	if not menubar then return end
+	if not menubar then
+		return
+	end
 	local hasToken = getToken() ~= nil
 	local count = totalCount()
 	local state = string.format("%s:%d", hasToken and "token" or "missing", count)
-	if state == lastBadgeState then return end
+	if state == lastBadgeState then
+		return
+	end
 	lastBadgeState = state
 
 	local icon, isTemplate
@@ -84,25 +90,43 @@ end
 
 local function fetchPRs(query, callback)
 	local headers = authHeaders()
-	if not headers then callback({}) return end
+	if not headers then
+		callback({})
+		return
+	end
 	local url = "https://api.github.com/search/issues?per_page=15&q=" .. urlEncode(query)
 	hs.http.doAsyncRequest(url, "GET", nil, headers, function(status, body)
-		if status ~= 200 or not body then callback({}) return end
+		if status ~= 200 or not body then
+			callback({})
+			return
+		end
 		local ok, data = pcall(hs.json.decode, body)
-		if not ok or not data or not data.items then callback({}) return end
+		if not ok or not data or not data.items then
+			callback({})
+			return
+		end
 		callback(data.items)
 	end)
 end
 
 local function fetchUser(callback)
 	local headers = authHeaders()
-	if not headers then if callback then callback() end return end
+	if not headers then
+		if callback then
+			callback()
+		end
+		return
+	end
 	hs.http.doAsyncRequest("https://api.github.com/user", "GET", nil, headers, function(status, body)
 		if status == 200 and body then
 			local ok, data = pcall(hs.json.decode, body)
-			if ok and data and data.login then username = data.login end
+			if ok and data and data.login then
+				username = data.login
+			end
 		end
-		if callback then callback() end
+		if callback then
+			callback()
+		end
 	end)
 end
 
@@ -117,17 +141,25 @@ local function notifyPR(pr, kind)
 	else
 		notifTitle = "New PR"
 	end
-	hs.notify.new(function() if pr.html_url then hs.urlevent.openURL(pr.html_url) end end, {
-		title = notifTitle,
-		informativeText = title,
-		autoWithdraw = true,
-		hasActionButton = true,
-		actionButtonTitle = "Open",
-	}):send()
+	hs.notify
+		.new(function()
+			if pr.html_url then
+				hs.urlevent.openURL(pr.html_url)
+			end
+		end, {
+			title = notifTitle,
+			informativeText = title,
+			autoWithdraw = true,
+			hasActionButton = true,
+			actionButtonTitle = "Open",
+		})
+		:send()
 end
 
 local function checkNewAndNotify(items, prefix)
-	if not seen.primed then return end
+	if not seen.primed then
+		return
+	end
 	for _, pr in ipairs(items) do
 		if pr.id then
 			local key = prefix .. "-" .. pr.id
@@ -142,7 +174,9 @@ end
 
 local function markSeen(items, prefix)
 	for _, pr in ipairs(items) do
-		if pr.id then seen:mark(prefix .. "-" .. pr.id) end
+		if pr.id then
+			seen:mark(prefix .. "-" .. pr.id)
+		end
 	end
 	seen:save()
 end
@@ -155,24 +189,39 @@ local function buildPRItem(pr)
 	local label = prefix .. short
 
 	local style = {}
-	if pr.draft then style.color = { red = 0.55, green = 0.55, blue = 0.55, alpha = 1 } end
+	if pr.draft then
+		style.color = { red = 0.55, green = 0.55, blue = 0.55, alpha = 1 }
+	end
 	local titleAttr = next(style) and hs.styledtext.new(label, style) or label
 
 	local submenu = {
 		{ title = string.format("%s #%s", repo, pr.number or "?"), disabled = true },
-		{ title = "Open", fn = function() if pr.html_url then hs.urlevent.openURL(pr.html_url) end end },
+		{
+			title = "Open",
+			fn = function()
+				if pr.html_url then
+					hs.urlevent.openURL(pr.html_url)
+				end
+			end,
+		},
 	}
 
 	return {
 		title = titleAttr,
-		fn = function() if pr.html_url then hs.urlevent.openURL(pr.html_url) end end,
+		fn = function()
+			if pr.html_url then
+				hs.urlevent.openURL(pr.html_url)
+			end
+		end,
 		menu = submenu,
 	}
 end
 
 local function buildSection(items, label, color)
 	local entries = {}
-	if #items == 0 then return entries end
+	if #items == 0 then
+		return entries
+	end
 	table.insert(entries, {
 		title = hs.styledtext.new(string.format("%s (%d)", label, #items), { color = color }),
 		disabled = true,
@@ -190,8 +239,12 @@ local function buildMenu()
 	if not getToken() then
 		table.insert(items, { title = "GitHub token not configured", disabled = true })
 		table.insert(items, { title = "-" })
-		table.insert(items, { title = "Open GitHub tokens settings",
-			fn = function() hs.urlevent.openURL("https://github.com/settings/tokens") end })
+		table.insert(items, {
+			title = "Open GitHub tokens settings",
+			fn = function()
+				hs.urlevent.openURL("https://github.com/settings/tokens")
+			end,
+		})
 		return items
 	end
 
@@ -214,9 +267,18 @@ local function buildMenu()
 		table.insert(items, { title = "-" })
 	end
 
-	table.insert(items, { title = "Refresh", fn = function() refresh() end })
-	table.insert(items, { title = "Open Pull Requests",
-		fn = function() hs.urlevent.openURL("https://github.com/pulls") end })
+	table.insert(items, {
+		title = "Refresh",
+		fn = function()
+			refresh()
+		end,
+	})
+	table.insert(items, {
+		title = "Open Pull Requests",
+		fn = function()
+			hs.urlevent.openURL("https://github.com/pulls")
+		end,
+	})
 	return items
 end
 
@@ -230,14 +292,20 @@ refresh = function()
 		return
 	end
 	if not username then
-		fetchUser(function() if username then refresh() end end)
+		fetchUser(function()
+			if username then
+				refresh()
+			end
+		end)
 		return
 	end
 
 	local remaining = 3
 	local function done()
 		remaining = remaining - 1
-		if remaining == 0 then setBadge() end
+		if remaining == 0 then
+			setBadge()
+		end
 	end
 
 	fetchPRs("is:pr is:open author:" .. username, function(items)

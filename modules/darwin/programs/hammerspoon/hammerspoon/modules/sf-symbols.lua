@@ -136,7 +136,9 @@ end
 local function writeRenderer()
 	hs.execute("mkdir -p " .. shellEscape(CACHE_DIR))
 	local out = io.open(RENDERER, "w")
-	if not out then return false end
+	if not out then
+		return false
+	end
 	out:write(SWIFT_RENDERER)
 	out:close()
 	return true
@@ -159,13 +161,19 @@ function M.symbol(name, opts)
 	if not hs.fs.attributes(path) then
 		local cmd = string.format(
 			"/usr/bin/swift %s %s %d %s %s %s 2>/dev/null",
-			shellEscape(RENDERER), shellEscape(name), pointSize,
-			shellEscape(weight), shellEscape(color), shellEscape(path)
+			shellEscape(RENDERER),
+			shellEscape(name),
+			pointSize,
+			shellEscape(weight),
+			shellEscape(color),
+			shellEscape(path)
 		)
 		hs.execute(cmd)
 	end
 
-	if not hs.fs.attributes(path) then return nil end
+	if not hs.fs.attributes(path) then
+		return nil
+	end
 	return hs.image.imageFromPath(path)
 end
 

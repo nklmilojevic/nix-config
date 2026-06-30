@@ -385,9 +385,7 @@ end
 local function commit(char, alias)
 	if alias then
 		bumpRecent(alias)
-		ensureWebview():evaluateJavaScript(
-			"if(window.setRecents)setRecents(" .. hs.json.encode(getRecents()) .. ");"
-		)
+		ensureWebview():evaluateJavaScript("if(window.setRecents)setRecents(" .. hs.json.encode(getRecents()) .. ");")
 	end
 	hideOnly()
 	if prevApp and prevApp:isRunning() then

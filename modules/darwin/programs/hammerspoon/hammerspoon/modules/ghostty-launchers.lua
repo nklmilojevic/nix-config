@@ -19,9 +19,9 @@ local function launchInGhosttySplit(splitMods, command)
 end
 
 local launchers = {
-	{ key = "c", splitMods = { "cmd" },            command = "ccc" },
-	{ key = "g", splitMods = { "cmd" },            command = "lg" },
-	{ key = "y", splitMods = { "cmd", "shift" },   command = "yazi" },
+	{ key = "c", splitMods = { "cmd" }, command = "ccc" },
+	{ key = "g", splitMods = { "cmd" }, command = "lg" },
+	{ key = "y", splitMods = { "cmd", "shift" }, command = "yazi" },
 }
 
 for _, l in ipairs(launchers) do

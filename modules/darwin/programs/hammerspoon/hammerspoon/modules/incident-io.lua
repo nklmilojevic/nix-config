@@ -45,7 +45,9 @@ end
 
 local function authHeaders()
 	local token = getToken()
-	if not token then return nil end
+	if not token then
+		return nil
+	end
 	return {
 		["Accept"] = "application/json",
 		["Authorization"] = "Bearer " .. token,
@@ -53,11 +55,15 @@ local function authHeaders()
 end
 
 local function setBadge()
-	if not menubar then return end
+	if not menubar then
+		return
+	end
 	local hasToken = getToken() ~= nil
 	local count = #activeIncidents
 	local state = string.format("%s:%d", hasToken and "token" or "missing", count)
-	if state == lastBadgeState then return end
+	if state == lastBadgeState then
+		return
+	end
 	lastBadgeState = state
 
 	local icon, isTemplate
@@ -103,15 +109,17 @@ local function notifyOne(incident)
 	end
 	local url = slackOrPermalink(incident)
 
-	hs.notify.new(function()
-		hs.urlevent.openURL(url)
-	end, {
-		title = title,
-		informativeText = name,
-		autoWithdraw = true,
-		hasActionButton = true,
-		actionButtonTitle = "Open",
-	}):send()
+	hs.notify
+		.new(function()
+			hs.urlevent.openURL(url)
+		end, {
+			title = title,
+			informativeText = name,
+			autoWithdraw = true,
+			hasActionButton = true,
+			actionButtonTitle = "Open",
+		})
+		:send()
 end
 
 local function urlEncode(s)
@@ -122,35 +130,47 @@ end
 
 local function fetchDashboardURL(callback)
 	local headers = authHeaders()
-	if not headers then if callback then callback() end return end
-	hs.http.doAsyncRequest(API_BASE .. "/v1/identity", "GET", nil, headers,
-		function(status, body)
-			if status == 200 and body then
-				local ok, data = pcall(hs.json.decode, body)
-				if ok and data and data.identity and data.identity.dashboard_url then
-					dashboardURL = data.identity.dashboard_url
-				end
-			end
-			if callback then callback() end
+	if not headers then
+		if callback then
+			callback()
 		end
-	)
+		return
+	end
+	hs.http.doAsyncRequest(API_BASE .. "/v1/identity", "GET", nil, headers, function(status, body)
+		if status == 200 and body then
+			local ok, data = pcall(hs.json.decode, body)
+			if ok and data and data.identity and data.identity.dashboard_url then
+				dashboardURL = data.identity.dashboard_url
+			end
+		end
+		if callback then
+			callback()
+		end
+	end)
 end
 
 local function fetchIncidents(statusCategories, pageSize, callback)
 	local headers = authHeaders()
-	if not headers then callback({}) return end
+	if not headers then
+		callback({})
+		return
+	end
 	local query = "?page_size=" .. pageSize
 	for _, cat in ipairs(statusCategories) do
 		query = query .. "&status_category[one_of]=" .. urlEncode(cat)
 	end
-	hs.http.doAsyncRequest(API_BASE .. "/v2/incidents" .. query, "GET", nil, headers,
-		function(status, body)
-			if status ~= 200 or not body then callback({}) return end
-			local ok, data = pcall(hs.json.decode, body)
-			if not ok or not data or not data.incidents then callback({}) return end
-			callback(data.incidents)
+	hs.http.doAsyncRequest(API_BASE .. "/v2/incidents" .. query, "GET", nil, headers, function(status, body)
+		if status ~= 200 or not body then
+			callback({})
+			return
 		end
-	)
+		local ok, data = pcall(hs.json.decode, body)
+		if not ok or not data or not data.incidents then
+			callback({})
+			return
+		end
+		callback(data.incidents)
+	end)
 end
 
 local function buildIncidentItem(incident)
@@ -175,8 +195,12 @@ local function buildIncidentItem(incident)
 	end
 
 	local subParts = {}
-	if severity then table.insert(subParts, "Severity: " .. severity) end
-	if status then table.insert(subParts, "Status: " .. status) end
+	if severity then
+		table.insert(subParts, "Severity: " .. severity)
+	end
+	if status then
+		table.insert(subParts, "Status: " .. status)
+	end
 
 	local submenu = {}
 	if #subParts > 0 then
@@ -185,7 +209,9 @@ local function buildIncidentItem(incident)
 	if incident.permalink and incident.permalink ~= "" then
 		table.insert(submenu, {
 			title = "Open in incident.io",
-			fn = function() hs.urlevent.openURL(incident.permalink) end,
+			fn = function()
+				hs.urlevent.openURL(incident.permalink)
+			end,
 		})
 	end
 	local team = incident.slack_team_id
@@ -193,19 +219,25 @@ local function buildIncidentItem(incident)
 	if team and team ~= "" and channel and channel ~= "" then
 		table.insert(submenu, {
 			title = "Open Slack channel",
-			fn = function() hs.urlevent.openURL(string.format("slack://channel?team=%s&id=%s", team, channel)) end,
+			fn = function()
+				hs.urlevent.openURL(string.format("slack://channel?team=%s&id=%s", team, channel))
+			end,
 		})
 	end
 	if incident.call_url and incident.call_url ~= "" then
 		table.insert(submenu, {
 			title = "Join call",
-			fn = function() hs.urlevent.openURL(incident.call_url) end,
+			fn = function()
+				hs.urlevent.openURL(incident.call_url)
+			end,
 		})
 	end
 
 	return {
 		title = titleAttr,
-		fn = function() hs.urlevent.openURL(slackOrPermalink(incident)) end,
+		fn = function()
+			hs.urlevent.openURL(slackOrPermalink(incident))
+		end,
 		menu = #submenu > 0 and submenu or nil,
 	}
 end
@@ -214,7 +246,9 @@ local function promptForToken()
 	local btn, token = hs.dialog.textPrompt(
 		"incident.io API Key",
 		"Paste an incident.io API key (with read:incident scope).",
-		"", "Save", "Cancel"
+		"",
+		"Save",
+		"Cancel"
 	)
 	if btn == "Save" and token and token ~= "" then
 		setToken(token)
@@ -231,7 +265,9 @@ local function buildMenu()
 		table.insert(items, { title = "Set API key…", fn = promptForToken })
 		table.insert(items, {
 			title = "Get an API key…",
-			fn = function() hs.urlevent.openURL("https://app.incident.io/settings/api-keys") end,
+			fn = function()
+				hs.urlevent.openURL("https://app.incident.io/settings/api-keys")
+			end,
 		})
 		return items
 	end
@@ -256,10 +292,17 @@ local function buildMenu()
 	end
 
 	table.insert(items, { title = "-" })
-	table.insert(items, { title = "Refresh", fn = function() refresh() end })
+	table.insert(items, {
+		title = "Refresh",
+		fn = function()
+			refresh()
+		end,
+	})
 	table.insert(items, {
 		title = "Open incident.io",
-		fn = function() hs.urlevent.openURL(dashboardURL) end,
+		fn = function()
+			hs.urlevent.openURL(dashboardURL)
+		end,
 	})
 	table.insert(items, { title = "-" })
 	table.insert(items, {
@@ -305,8 +348,9 @@ refresh = function()
 		setBadge()
 	end)
 
-	fetchIncidents({ "closed", "learning", "canceled", "declined", "merged" }, 10,
-		function(incidents) pastIncidents = incidents end)
+	fetchIncidents({ "closed", "learning", "canceled", "declined", "merged" }, 10, function(incidents)
+		pastIncidents = incidents
+	end)
 end
 
 if menubar then

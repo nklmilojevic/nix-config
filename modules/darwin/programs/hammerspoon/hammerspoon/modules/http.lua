@@ -17,10 +17,15 @@ local CURL = "/usr/bin/curl"
 
 local function buildArgs(method, url, headers, body)
 	local args = {
-		"-sS", "--fail",
+		"-sS",
+		"--fail",
 		"-g", -- disable URL globbing so '[' and ']' in query strings work
-		"--connect-timeout", "5", "--max-time", "15",
-		"-X", method,
+		"--connect-timeout",
+		"5",
+		"--max-time",
+		"15",
+		"-X",
+		method,
 	}
 	for k, v in pairs(headers or {}) do
 		args[#args + 1] = "-H"
@@ -48,13 +53,17 @@ local activeWatchdog = nil
 local WATCHDOG_SECONDS = 25
 
 local function pump()
-	if active or #queue == 0 then return end
+	if active or #queue == 0 then
+		return
+	end
 	local job = table.remove(queue, 1)
 	local done = false
 	local taskRef
 
 	local function finish(body, err)
-		if done then return end
+		if done then
+			return
+		end
 		done = true
 		if activeWatchdog then
 			activeWatchdog:stop()
@@ -69,16 +78,20 @@ local function pump()
 		if exitCode == 0 then
 			finish(stdout, nil)
 		else
-			finish(stdout, string.format(
-				"exit=%s %s", tostring(exitCode), (stderr or ""):sub(1, 300)
-			))
+			finish(stdout, string.format("exit=%s %s", tostring(exitCode), (stderr or ""):sub(1, 300)))
 		end
 	end, job.args)
 	active = taskRef
 	activeWatchdog = hs.timer.doAfter(WATCHDOG_SECONDS, function()
-		if done then return end
+		if done then
+			return
+		end
 		print("[httpx] watchdog: task callback never fired, force-clearing queue")
-		if taskRef then pcall(function() taskRef:terminate() end) end
+		if taskRef then
+			pcall(function()
+				taskRef:terminate()
+			end)
+		end
 		finish("", "watchdog timeout")
 	end)
 	taskRef:start()
@@ -103,7 +116,9 @@ end
 -- GET URL, decode JSON. callback(data, err).
 function M.getJSON(url, headers, callback)
 	local h = {}
-	for k, v in pairs(headers or {}) do h[k] = v end
+	for k, v in pairs(headers or {}) do
+		h[k] = v
+	end
 	-- NSURLSession's protocol cache will happily hand back a stale response
 	-- to a repeated GET against the same URL with the same Authorization
 	-- header; force a fresh fetch on every poll.
@@ -125,11 +140,16 @@ end
 -- POST JSON payload, decode JSON response. callback(data, err).
 function M.postJSON(url, headers, payload, callback)
 	local h = {}
-	for k, v in pairs(headers or {}) do h[k] = v end
+	for k, v in pairs(headers or {}) do
+		h[k] = v
+	end
 	h["Content-Type"] = h["Content-Type"] or "application/json"
 	local body = hs.json.encode(payload or {})
 	run("POST", url, h, body, function(respBody, err)
-		if err then callback(nil, err) return end
+		if err then
+			callback(nil, err)
+			return
+		end
 		callback(decodeJSON(respBody))
 	end)
 end
@@ -138,7 +158,9 @@ end
 -- mark-as-read style). callback(ok, err) — err nil on success.
 function M.send(method, url, headers, callback)
 	run(method, url, headers, nil, function(_, err)
-		if callback then callback(err == nil, err) end
+		if callback then
+			callback(err == nil, err)
+		end
 	end)
 end
 

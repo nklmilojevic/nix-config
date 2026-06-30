@@ -23,10 +23,13 @@ function M.get(service, account)
 		return cached ~= false and cached or nil
 	end
 
-	local out, ok = hs.execute(string.format(
-		"security find-generic-password -s %s -a %s -w 2>/dev/null",
-		shellEscape(service), shellEscape(account)
-	))
+	local out, ok = hs.execute(
+		string.format(
+			"security find-generic-password -s %s -a %s -w 2>/dev/null",
+			shellEscape(service),
+			shellEscape(account)
+		)
+	)
 	if not ok or not out then
 		cache[key] = false
 		return nil
@@ -39,10 +42,14 @@ function M.get(service, account)
 end
 
 function M.set(service, account, value)
-	local _, ok = hs.execute(string.format(
-		"security add-generic-password -s %s -a %s -w %s -U",
-		shellEscape(service), shellEscape(account), shellEscape(value)
-	))
+	local _, ok = hs.execute(
+		string.format(
+			"security add-generic-password -s %s -a %s -w %s -U",
+			shellEscape(service),
+			shellEscape(account),
+			shellEscape(value)
+		)
+	)
 
 	local key = cacheKey(service, account)
 	cache[key] = ok and value or nil
@@ -50,10 +57,13 @@ function M.set(service, account, value)
 end
 
 function M.delete(service, account)
-	local _, ok = hs.execute(string.format(
-		"security delete-generic-password -s %s -a %s 2>/dev/null",
-		shellEscape(service), shellEscape(account)
-	))
+	local _, ok = hs.execute(
+		string.format(
+			"security delete-generic-password -s %s -a %s 2>/dev/null",
+			shellEscape(service),
+			shellEscape(account)
+		)
+	)
 
 	cache[cacheKey(service, account)] = false
 	return ok

@@ -25,13 +25,17 @@ function M:has(id)
 end
 
 function M:mark(id)
-	if id == nil or self.ids[id] then return end
+	if id == nil or self.ids[id] then
+		return
+	end
 	self.ids[id] = true
 	self.dirty = true
 end
 
 function M:save()
-	if not self.dirty then return end
+	if not self.dirty then
+		return
+	end
 	hs.settings.set(self.key, self.ids)
 	self.dirty = false
 end

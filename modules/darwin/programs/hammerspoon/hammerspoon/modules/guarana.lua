@@ -66,10 +66,30 @@ local function buildMenu()
 	local items = {
 		{ title = isAwake() and "Go to sleep" or "Wake up", fn = toggle },
 		{ title = "-" },
-		{ title = "Stay awake for 30 minutes", fn = function() setAwake(true, 30 * 60) end },
-		{ title = "Stay awake for 1 hour",     fn = function() setAwake(true, 60 * 60) end },
-		{ title = "Stay awake for 2 hours",    fn = function() setAwake(true, 2 * 60 * 60) end },
-		{ title = "Stay awake indefinitely",   fn = function() setAwake(true) end },
+		{
+			title = "Stay awake for 30 minutes",
+			fn = function()
+				setAwake(true, 30 * 60)
+			end,
+		},
+		{
+			title = "Stay awake for 1 hour",
+			fn = function()
+				setAwake(true, 60 * 60)
+			end,
+		},
+		{
+			title = "Stay awake for 2 hours",
+			fn = function()
+				setAwake(true, 2 * 60 * 60)
+			end,
+		},
+		{
+			title = "Stay awake indefinitely",
+			fn = function()
+				setAwake(true)
+			end,
+		},
 	}
 	if timedRevertEnd then
 		local remaining = timedRevertEnd - os.time()

@@ -27,11 +27,9 @@ run = "oxfmt {staged_files}"
 stage_fixed = true
 
 [pre-commit.commands.format-lua]
-# Scoped to my own Hammerspoon config; vendored Spoons/ are left untouched.
-glob = [
-  "modules/darwin/programs/hammerspoon/hammerspoon/init.lua",
-  "modules/darwin/programs/hammerspoon/hammerspoon/modules/*.lua",
-]
+# All Lua in the repo is my own Hammerspoon config now (the vendored Spoons
+# were folded into modules/). stylua reads .stylua.toml for style.
+glob = ["*.lua"]
 run = "stylua {staged_files}"
 stage_fixed = true
 
