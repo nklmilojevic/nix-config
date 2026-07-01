@@ -82,6 +82,11 @@
       url = "github:nklmilojevic/atuin-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    sofka = {
+      url = "github:nklmilojevic/sofka";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -103,6 +108,7 @@
       mailersend-cli,
       mailerlite-cli,
       atuin-nix,
+      sofka,
       nixpkgs-stable,
       ...
     }@inputs:
@@ -110,6 +116,7 @@
       overlays = [
         claude-code-overlay.overlays.default
         talosctl.overlays.default
+        sofka.overlays.default
         (
           final: prev:
           let

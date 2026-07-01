@@ -8,6 +8,7 @@ with pkgs;
   kustomize
   kubeconform
   k9s
+  sofka
   stern
   kubecolor
   kubecm
