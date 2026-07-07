@@ -18,6 +18,12 @@
   nixpkgs.hostPlatform = "aarch64-darwin";
   system.stateVersion = 5;
 
+  # Workaround for https://github.com/nix-darwin/nix-darwin/issues/1817
+  # nixos-render-docs dropped --toc-depth in nixpkgs-unstable, breaking the
+  # darwin manual (and the uninstaller, which depends on darwin-help).
+  documentation.enable = false;
+  system.tools.darwin-uninstaller.enable = false;
+
   home-manager = {
     backupFileExtension = "backup";
     users.nkl = {

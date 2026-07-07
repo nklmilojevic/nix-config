@@ -62,6 +62,21 @@ local function hasExternalScreen()
 	return external
 end
 
+-- Fingerprint of the current display arrangement, used both to wait for the
+-- configuration to stop changing and to skip redundant re-applies on wake.
+local function screenSignature()
+	local parts = {}
+	for _, screen in ipairs(hs.screen.allScreens()) do
+		local f = screen:fullFrame()
+		parts[#parts + 1] = string.format("%s:%d,%d,%d,%d", screen:name() or "?", f.x, f.y, f.w, f.h)
+	end
+	table.sort(parts)
+	local primary = hs.screen.primaryScreen()
+	return table.concat(parts, "|") .. "#" .. (primary and primary:name() or "?")
+end
+
+local lastAppliedSig = nil
+
 local function positionApp(entry)
 	local app = hs.application.get(entry.app)
 	if not app then
@@ -116,25 +131,107 @@ local function applyLayout()
 	for _, entry in ipairs(layout) do
 		queue[#queue + 1] = entry
 	end
+	lastAppliedSig = screenSignature()
 	step()
+end
+
+-- A layout applied while the session is locked is wasted: macOS restores
+-- its own remembered window positions at unlock and clobbers ours (observed
+-- when plugging in the dock wakes the machine). Defer until unlock instead.
+local function sessionLocked()
+	local props = hs.caffeinate.sessionProperties()
+	-- Key is absent while unlocked; bridges as true (or 1) while locked.
+	return not not (props and props["CGSSessionScreenIsLocked"])
+end
+
+local deferred = false
+local deferredForce = false
+
+-- Wait until the display arrangement is identical across two consecutive
+-- polls before applying: wake and hot-plug events fire while macOS is still
+-- bringing screens online, and a debounce timer armed before sleep fires
+-- immediately on wake, when the screen list is stale. Without the force
+-- flag, skip if the settled arrangement already matches the last apply —
+-- wake events also fire on plain display sleep where nothing changed.
+local SETTLE_INTERVAL = 1
+local SETTLE_MAX_POLLS = 15
+
+local settleTimer = nil
+local function applyWhenSettled(force)
+	if settleTimer then
+		settleTimer:stop()
+	end
+	local lastSig = screenSignature()
+	local polls = 0
+	settleTimer = hs.timer.doEvery(SETTLE_INTERVAL, function()
+		polls = polls + 1
+		local sig = screenSignature()
+		if sig ~= lastSig and polls < SETTLE_MAX_POLLS then
+			lastSig = sig
+			return
+		end
+		settleTimer:stop()
+		settleTimer = nil
+		if sig ~= lastSig then
+			print("[layout] Screens never settled, applying anyway")
+		end
+		if sessionLocked() then
+			deferred = true
+			deferredForce = deferredForce or force
+			print("[layout] Session locked, deferring until unlock")
+			return
+		end
+		if not force and sig == lastAppliedSig then
+			print("[layout] Screens unchanged since last apply, skipping")
+			return
+		end
+		applyLayout()
+	end)
 end
 
 -- Debounce: hot-plug and wake events often fire several times in quick
 -- succession, and apps need a beat to settle before windows can be moved.
 local pendingTimer = nil
-local function scheduleLayout(delay)
+local pendingForce = false
+local function scheduleLayout(delay, force)
+	pendingForce = pendingForce or force or false
 	if pendingTimer then
 		pendingTimer:stop()
 	end
 	pendingTimer = hs.timer.doAfter(delay or 2, function()
 		pendingTimer = nil
-		applyLayout()
+		local f = pendingForce
+		pendingForce = false
+		applyWhenSettled(f)
 	end)
 end
 
+-- Screen watcher events mean the arrangement really changed (or bounced),
+-- so always re-apply even if the settled arrangement matches the last one:
+-- macOS may have shuffled windows during a disconnect/reconnect bounce.
 screenWatcher = hs.screen.watcher.new(function()
-	scheduleLayout(2)
+	scheduleLayout(2, true)
 end)
 screenWatcher:start()
 
-scheduleLayout(1)
+-- Screen-parameter notifications can be dropped entirely when the display
+-- hot-plug is what wakes the machine, so wake/unlock events also trigger a
+-- (non-forced) apply. Unlock runs after macOS has finished restoring its
+-- own remembered window positions, so a deferred apply lands last and wins.
+layoutCaffeinateWatcher = hs.caffeinate.watcher.new(function(event)
+	if event == hs.caffeinate.watcher.screensDidUnlock and deferred then
+		deferred = false
+		local force = deferredForce
+		deferredForce = false
+		scheduleLayout(2, force)
+	elseif
+		event == hs.caffeinate.watcher.systemDidWake
+		or event == hs.caffeinate.watcher.screensDidWake
+		or event == hs.caffeinate.watcher.screensDidUnlock
+	then
+		scheduleLayout(2, false)
+	end
+end)
+layoutCaffeinateWatcher:start()
+
+scheduleLayout(1, true)

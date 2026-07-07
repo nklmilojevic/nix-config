@@ -77,6 +77,7 @@
       df = "df -h";
       mkdir = "mkdir -p -v";
       ccc = "claude";
+      s = "sofka";
       lg = "lazygit";
       grep = "rg";
 
