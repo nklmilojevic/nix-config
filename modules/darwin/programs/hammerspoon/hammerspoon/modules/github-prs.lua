@@ -8,6 +8,7 @@
 local sf = require("modules/sf-symbols")
 local Keychain = require("modules/keychain")
 local Seen = require("modules/seen")
+local Strings = require("modules/strings")
 
 local KEYCHAIN_SERVICE = "swiftbar-github"
 local KEYCHAIN_ACCOUNT = "token"
@@ -184,7 +185,7 @@ end
 local function buildPRItem(pr)
 	local title = pr.title or ""
 	local repo = (pr.repository_url or ""):gsub("https://api%.github%.com/repos/", "")
-	local short = #title > 50 and (title:sub(1, 47) .. "…") or title
+	local short = Strings.truncate(title, 50)
 	local prefix = pr.draft and "[Draft] " or ""
 	local label = prefix .. short
 

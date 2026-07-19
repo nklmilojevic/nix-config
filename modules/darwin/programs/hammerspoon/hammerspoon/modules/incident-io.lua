@@ -10,6 +10,7 @@
 local sf = require("modules/sf-symbols")
 local Keychain = require("modules/keychain")
 local Seen = require("modules/seen")
+local Strings = require("modules/strings")
 
 local KEYCHAIN_SERVICE = "swiftbar-incident-io"
 local KEYCHAIN_ACCOUNT = "api-key"
@@ -179,7 +180,7 @@ local function buildIncidentItem(incident)
 	local status = incident.incident_status and incident.incident_status.name
 	local category = incident.incident_status and incident.incident_status.category
 	local severity = incident.severity and incident.severity.name
-	local short = #name > 50 and (name:sub(1, 47) .. "…") or name
+	local short = Strings.truncate(name, 50)
 	local label = ref ~= "" and (ref .. " " .. short) or short
 
 	local style = nil

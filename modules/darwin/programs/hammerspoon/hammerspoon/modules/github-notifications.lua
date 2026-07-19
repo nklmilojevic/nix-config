@@ -10,6 +10,7 @@ local sf = require("modules/sf-symbols")
 local httpx = require("modules/http")
 local Keychain = require("modules/keychain")
 local Seen = require("modules/seen")
+local Strings = require("modules/strings")
 
 local KEYCHAIN_SERVICE = "swiftbar-github"
 local KEYCHAIN_ACCOUNT = "token"
@@ -261,7 +262,7 @@ local function buildMenu()
 			local title = subj.title or ""
 			local repo = (notif.repository or {}).full_name or ""
 			local reasonStr = REASON_TEXT[notif.reason] or notif.reason or ""
-			local short = #title > 60 and (title:sub(1, 57) .. "…") or title
+			local short = Strings.truncate(title, 60)
 			local label = string.format("%s — %s (%s)", short, repo, reasonStr)
 			local webURL
 			if typ == "Issue" or typ == "PullRequest" then

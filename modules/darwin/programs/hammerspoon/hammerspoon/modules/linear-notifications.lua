@@ -8,6 +8,7 @@
 local sf = require("modules/sf-symbols")
 local Keychain = require("modules/keychain")
 local Seen = require("modules/seen")
+local Strings = require("modules/strings")
 
 local KEYCHAIN_SERVICE = "swiftbar-linear"
 local KEYCHAIN_ACCOUNT = "api-key"
@@ -313,7 +314,7 @@ local function buildMenu()
 			local label, sub = formatNotification(notif)
 			local url = urlForNotification(notif)
 			local id = notif.id
-			local short = #label > 55 and (label:sub(1, 52) .. "…") or label
+			local short = Strings.truncate(label, 55)
 			table.insert(items, {
 				title = short,
 				fn = function()
