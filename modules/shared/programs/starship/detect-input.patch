@@ -1,0 +1,279 @@
+diff --git a/src/configs/kubernetes.rs b/src/configs/kubernetes.rs
+index e6720c4d..c36500b1 100644
+--- a/src/configs/kubernetes.rs
++++ b/src/configs/kubernetes.rs
+@@ -19,6 +19,7 @@ pub struct KubernetesConfig<'a> {
+     pub detect_files: Vec<&'a str>,
+     pub detect_folders: Vec<&'a str>,
+     pub detect_env_vars: Vec<&'a str>,
++    pub detect_input: Vec<&'a str>,
+     pub contexts: Vec<KubernetesContextConfig<'a>>,
+ }
+ 
+@@ -35,6 +36,7 @@ impl Default for KubernetesConfig<'_> {
+             detect_files: vec![],
+             detect_folders: vec![],
+             detect_env_vars: vec![],
++            detect_input: vec![],
+             contexts: vec![],
+         }
+     }
+diff --git a/src/context.rs b/src/context.rs
+index 759c4c0f..c2194b2b 100644
+--- a/src/context.rs
++++ b/src/context.rs
+@@ -279,6 +279,27 @@ impl<'a> Context<'a> {
+         iter.peek().is_none() || iter.any(|env_var| self.get_env(env_var).is_some())
+     }
+ 
++    /// Returns true if any of the `detect_input` regular expressions
++    /// match the shell's current command line buffer (passed via `--input`)
++    pub fn detect_input(&self, input_patterns: &[&str]) -> bool {
++        let Some(input) = self.properties.input.as_deref() else {
++            return false;
++        };
++        if input.is_empty() {
++            return false;
++        }
++
++        input_patterns
++            .iter()
++            .any(|pattern| match regex::Regex::new(pattern) {
++                Ok(re) => re.is_match(input),
++                Err(error) => {
++                    log::warn!("Invalid detect_input pattern `{pattern}`: {error}");
++                    false
++                }
++            })
++    }
++
+     /// Returns an enum indicating if `detect_env_vars` contains negated or non-negated variables
+     pub fn detect_env_vars2(&'a self, env_vars: &'a [&'a str]) -> Detected {
+         if env_vars.is_empty() {
+@@ -984,6 +1005,9 @@ pub struct Properties {
+     /// The keymap of fish/zsh/cmd
+     #[clap(short = 'k', long, default_value = "viins")]
+     pub keymap: String,
++    /// The current contents of the shell's command line buffer
++    #[clap(long)]
++    pub input: Option<String>,
+     /// The number of currently running jobs
+     #[clap(short, long, default_value_t, value_parser=parse_i64)]
+     pub jobs: i64,
+@@ -1002,6 +1026,7 @@ impl Default for Properties {
+             logical_path: None,
+             cmd_duration: None,
+             keymap: "viins".to_string(),
++            input: None,
+             jobs: 0,
+             shlvl: None,
+         }
+diff --git a/src/init/starship.fish b/src/init/starship.fish
+index ef73d747..58fe580a 100644
+--- a/src/init/starship.fish
++++ b/src/init/starship.fish
+@@ -38,7 +38,8 @@ function fish_prompt
+             printf "\e[1;32m❯\e[0m "
+         end
+     else
+-        ::STARSHIP:: prompt --terminal-width="$COLUMNS" --status=$STARSHIP_CMD_STATUS --pipestatus="$STARSHIP_CMD_PIPESTATUS" --keymap=$STARSHIP_KEYMAP --cmd-duration=$STARSHIP_DURATION --jobs=$STARSHIP_JOBS
++        set -l STARSHIP_INPUT (commandline --current-buffer | string collect)
++        ::STARSHIP:: prompt --terminal-width="$COLUMNS" --status=$STARSHIP_CMD_STATUS --pipestatus="$STARSHIP_CMD_PIPESTATUS" --keymap=$STARSHIP_KEYMAP --cmd-duration=$STARSHIP_DURATION --jobs=$STARSHIP_JOBS --input="$STARSHIP_INPUT"
+     end
+ end
+ 
+@@ -66,7 +67,8 @@ function fish_right_prompt
+             printf ""
+         end
+     else
+-        ::STARSHIP:: prompt --right --terminal-width="$COLUMNS" --status=$STARSHIP_CMD_STATUS --pipestatus="$STARSHIP_CMD_PIPESTATUS" --keymap=$STARSHIP_KEYMAP --cmd-duration=$STARSHIP_DURATION --jobs=$STARSHIP_JOBS
++        set -l STARSHIP_INPUT (commandline --current-buffer | string collect)
++        ::STARSHIP:: prompt --right --terminal-width="$COLUMNS" --status=$STARSHIP_CMD_STATUS --pipestatus="$STARSHIP_CMD_PIPESTATUS" --keymap=$STARSHIP_KEYMAP --cmd-duration=$STARSHIP_DURATION --jobs=$STARSHIP_JOBS --input="$STARSHIP_INPUT"
+     end
+ end
+ 
+@@ -141,6 +143,38 @@ function disable_transience --description 'remove transient prompt keybindings'
+     bind --user -M insert -e \r
+ end
+ 
++# Input detection (detect_input) related functions.
++# Repaints the prompt while typing so modules using `detect_input` can react
++# to the command being typed. Only repaints when the first word of the
++# command line changes, to avoid spawning starship on every keystroke.
++function __starship_input_repaint
++    set -l token (commandline --current-buffer | string trim -l | string split -m1 -f1 ' ')
++    if test "$token" != "$__starship_input_last_token"
++        set -g __starship_input_last_token "$token"
++        commandline -f repaint
++    end
++end
++
++function __starship_reset_input --on-event fish_postexec
++    set -g __starship_input_last_token ""
++end
++
++# --user is the default, but listed anyway to make it explicit.
++function enable_input_detection --description 'enable prompt repaint while typing for detect_input modules'
++    bind --user space self-insert __starship_input_repaint
++    bind --user -M insert space self-insert __starship_input_repaint
++    bind --user backspace backward-delete-char __starship_input_repaint
++    bind --user -M insert backspace backward-delete-char __starship_input_repaint
++end
++
++# Erasing a user binding will revert to the preset.
++function disable_input_detection --description 'remove input detection keybindings'
++    bind --user -e space
++    bind --user -M insert -e space
++    bind --user -e backspace
++    bind --user -M insert -e backspace
++end
++
+ # Set up the session key that will be used to store logs
+ # We don't use `random [min] [max]` because it is unavailable in older versions of fish shell
+ set -gx STARSHIP_SESSION_KEY (string sub -s1 -l16 (random)(random)(random)(random)(random)0000000000000000)
+diff --git a/src/modules/kubernetes.rs b/src/modules/kubernetes.rs
+index ba86c8d8..f0ac1a21 100644
+--- a/src/modules/kubernetes.rs
++++ b/src/modules/kubernetes.rs
+@@ -162,7 +162,17 @@ pub fn module<'a>(context: &'a Context) -> Option<Module<'a>> {
+         })
+     });
+ 
+-    if !is_kube_project.or(have_env_vars).unwrap_or(true) {
++    let have_input_config = !config.detect_input.is_empty();
++    let input_matches = have_input_config.then(|| context.detect_input(&config.detect_input));
++
++    let detected = match (is_kube_project.or(have_env_vars), input_matches) {
++        // No detection configured at all: always show (backward compatible)
++        (None, None) => true,
++        // Any configured detection can independently reveal the module
++        (dir_or_env, input) => dir_or_env.unwrap_or(false) || input.unwrap_or(false),
++    };
++
++    if !detected {
+         return None;
+     }
+ 
+@@ -530,6 +540,103 @@ users: []
+         dir.close()
+     }
+ 
++    #[test]
++    fn test_detect_input() -> io::Result<()> {
++        let dir = tempfile::tempdir()?;
++
++        let filename = dir.path().join("config");
++
++        let mut file = File::create(&filename)?;
++        file.write_all(
++            b"
++apiVersion: v1
++clusters: []
++contexts:
++  - context:
++      cluster: test_cluster
++      user: test_user
++    name: test_context
++current-context: test_context
++kind: Config
++preferences: {}
++users: []
++",
++        )?;
++        file.sync_all()?;
++
++        let empty_dir = tempfile::tempdir()?;
++
++        let base_config = toml::toml! {
++            [kubernetes]
++            disabled = false
++            detect_input = ["^(k|kubectl|helm)\\b"]
++        };
++
++        let actual_match = ModuleRenderer::new("kubernetes")
++            .path(empty_dir.path())
++            .env("KUBECONFIG", filename.to_string_lossy().as_ref())
++            .config(base_config.clone())
++            .input("kubectl get pods")
++            .collect();
++
++        let actual_alias = ModuleRenderer::new("kubernetes")
++            .path(empty_dir.path())
++            .env("KUBECONFIG", filename.to_string_lossy().as_ref())
++            .config(base_config.clone())
++            .input("k ")
++            .collect();
++
++        let actual_no_match = ModuleRenderer::new("kubernetes")
++            .path(empty_dir.path())
++            .env("KUBECONFIG", filename.to_string_lossy().as_ref())
++            .config(base_config.clone())
++            .input("ls -la")
++            .collect();
++
++        // Similar prefix must not match ("kubectx" != "kubectl", "kit" != "k")
++        let actual_prefix = ModuleRenderer::new("kubernetes")
++            .path(empty_dir.path())
++            .env("KUBECONFIG", filename.to_string_lossy().as_ref())
++            .config(base_config.clone())
++            .input("kit status")
++            .collect();
++
++        // Fresh prompt: no --input passed at all
++        let actual_no_input = ModuleRenderer::new("kubernetes")
++            .path(empty_dir.path())
++            .env("KUBECONFIG", filename.to_string_lossy().as_ref())
++            .config(base_config)
++            .collect();
++
++        // detect_input matching must reveal the module even when a configured
++        // directory scan does not match (OR semantics)
++        let actual_with_files_config = ModuleRenderer::new("kubernetes")
++            .path(empty_dir.path())
++            .env("KUBECONFIG", filename.to_string_lossy().as_ref())
++            .config(toml::toml! {
++                [kubernetes]
++                disabled = false
++                detect_files = ["k8s.ext"]
++                detect_input = ["^(k|kubectl|helm)\\b"]
++            })
++            .input("helm upgrade")
++            .collect();
++
++        let expected = Some(format!(
++            "{} in ",
++            Color::Cyan.bold().paint("☸ test_context")
++        ));
++
++        assert_eq!(expected, actual_match);
++        assert_eq!(expected, actual_alias);
++        assert_eq!(None, actual_no_match);
++        assert_eq!(None, actual_prefix);
++        assert_eq!(None, actual_no_input);
++        assert_eq!(expected, actual_with_files_config);
++
++        dir.close()
++    }
++
+     fn base_test_ctx_alias(ctx_name: &str, config: toml::Table, expected: &str) -> io::Result<()> {
+         let dir = tempfile::tempdir()?;
+ 
+diff --git a/src/test/mod.rs b/src/test/mod.rs
+index a01d5fcc..2c2b9fcb 100644
+--- a/src/test/mod.rs
++++ b/src/test/mod.rs
+@@ -156,6 +156,14 @@ impl<'a> ModuleRenderer<'a> {
+         self
+     }
+ 
++    pub fn input<T>(mut self, input: T) -> Self
++    where
++        T: Into<String>,
++    {
++        self.context.properties.input = Some(input.into());
++        self
++    }
++
+     pub fn status(mut self, status: i64) -> Self {
+         self.context.properties.status_code = Some(status.to_string());
+         self

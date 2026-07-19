@@ -1,3 +1,4 @@
+{ pkgs, lib, ... }:
 {
   catppuccin = {
     starship = {
@@ -5,8 +6,21 @@
     };
   };
 
+  # Repaint the prompt when the first word of the command line changes, so
+  # modules using the patched `detect_input` option can appear while typing.
+  # The function is defined by the patched `starship init fish`.
+  programs.fish.interactiveShellInit = lib.mkAfter "enable_input_detection";
+
   programs.starship = {
     enable = true;
+
+    # detect_input ("show on command", starship/starship#5509): reveal modules
+    # based on the command being typed. Patch generated from a local checkout;
+    # if it stops applying after a starship bump, regenerate it from
+    # https://github.com/starship/starship against the new tag.
+    package = pkgs.starship.overrideAttrs (old: {
+      patches = (old.patches or [ ]) ++ [ ./detect-input.patch ];
+    });
 
     enableTransience = true;
     enableFishIntegration = true;
@@ -69,7 +83,8 @@
       };
 
       kubernetes = {
-        disabled = true;
+        disabled = false;
+        detect_input = [ ''^(k|kubectl|helm|k9s|kustomize|stern|flux)\b'' ];
         format = "[󱃾 $context( \\($namespace\\))]($style) ";
         style = "dimmed blue";
       };
