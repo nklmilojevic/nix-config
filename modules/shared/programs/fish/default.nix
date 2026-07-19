@@ -37,6 +37,7 @@
 
       nix-your-shell fish | source
       atuin hex init fish | source
+      atuin pty-proxy init fish | source
       atuin init fish --disable-up-arrow | source
     '';
 

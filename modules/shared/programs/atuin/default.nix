@@ -26,6 +26,13 @@
         enabled = true;
         autostart = true;
       };
+      ai = {
+        enabled = true;
+        endpoint = "https://atuin-ai.nikola.wtf";
+        opening = {
+          send_last_command = true;
+        };
+      };
     };
   };
 }
