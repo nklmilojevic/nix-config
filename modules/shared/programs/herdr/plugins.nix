@@ -103,29 +103,6 @@ let
     install -m755 fzf $out/bin/fzf
   '';
 
-  tabTitleSrc = pkgs.fetchFromGitHub {
-    owner = "aarsh21";
-    repo = "herdr-tab-title";
-    rev = "2e85b286035803fb4cd1befb94b66111dad2cf1c"; # v0.1.6
-    hash = "sha256-dnS0eOtQhC/AZmvZMu/CnwfbXz1mqeCAFkwHXeGK0ig=";
-  };
-
-  # Vendored copy of the plugin's Cargo.lock (avoids cargoHash churn and IFD).
-  tabTitleBin = pkgs.rustPlatform.buildRustPackage {
-    pname = "herdr-tab-title";
-    version = "0.1.6";
-    src = tabTitleSrc;
-    cargoLock.lockFile = ./herdr-tab-title-Cargo.lock;
-    doCheck = false;
-  };
-
-  herdr-tab-title = pkgs.runCommand "herdr-plugin-tab-title-0.1.6" { } ''
-    mkdir -p $out/bin
-    cp -R ${tabTitleSrc}/. $out/
-    chmod -R u+w $out
-    install -m755 ${tabTitleBin}/bin/herdr-tab-title $out/bin/herdr-tab-title
-  '';
-
   # Release tarballs are the complete plugin layout (manifest + bin/herdr-sesh),
   # so no source checkout or Go build is needed.
   seshAsset =
@@ -174,10 +151,6 @@ let
     {
       id = "herdr-lazygit";
       package = herdr-lazygit;
-    }
-    {
-      id = "aarsh21.tab-title";
-      package = herdr-tab-title;
     }
     {
       id = "fullerzz.sesh";
