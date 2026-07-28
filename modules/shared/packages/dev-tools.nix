@@ -39,6 +39,9 @@ with pkgs;
   codex
   opencode
 
+  # Terminal multiplexing
+  herdr
+
   # Misc utilities
   android-tools
   home-assistant-cli

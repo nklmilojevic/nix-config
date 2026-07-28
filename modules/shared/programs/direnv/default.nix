@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, lib, ... }:
 {
   programs.direnv = {
     enable = true;
@@ -28,4 +28,17 @@
       }
     '';
   };
+
+  # No native home-manager option for devenv yet; mirror how the direnv
+  # module ships nix-direnv (direnv sources lib/*.sh before every .envrc).
+  # Must stay lazy: devenv's direnvrc and nix-direnv define the same _nix_*
+  # helper names, and hm-nix-direnv.sh loads after this file, so an eager
+  # eval gets its helpers clobbered (DEVENV_BIN never set -> empty command).
+  # The eval below redefines use_devenv, which the trailing call dispatches to.
+  xdg.configFile."direnv/lib/hm-devenv.sh".text = ''
+    use_devenv() {
+      eval "$(${lib.getExe pkgs.devenv} direnvrc)"
+      use_devenv "$@"
+    }
+  '';
 }

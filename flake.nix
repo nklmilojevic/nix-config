@@ -87,6 +87,11 @@
       url = "github:nklmilojevic/sofka";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    herdr-nix = {
+      url = "github:tburny/herdr-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -109,6 +114,7 @@
       mailerlite-cli,
       atuin-nix,
       sofka,
+      herdr-nix,
       nixpkgs-stable,
       ...
     }@inputs:
@@ -130,9 +136,9 @@
             mailersend = mailersend-cli.packages.${system}.default;
             mailerlite = mailerlite-cli.packages.${system}.default;
             atuin = atuin-nix.packages.${system}.default;
+            herdr = herdr-nix.packages.${system}.default;
             inherit (stable)
               direnv
-              kubernetes-helm
               pwgen
               rclone
               ;

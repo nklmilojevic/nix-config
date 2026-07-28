@@ -84,7 +84,7 @@
 
       kubernetes = {
         disabled = false;
-        detect_input = [ ''^(k|kubectl|helm|k9s|kustomize|stern|flux)\b'' ];
+        detect_input = [ ''^(k|kubectl|helm|k9s|kustomize|stern|flux|s|sofka)\b'' ];
         format = "[󱃾 $context( \\($namespace\\))]($style) ";
         style = "dimmed blue";
       };

@@ -9,11 +9,17 @@
     ../../modules/shared
     ../../modules/shared/cachix
     ../../modules/darwin/homebrew
+    ../../modules/darwin/linux-builder.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
   nix.settings = {
     experimental-features = "nix-command flakes";
+    # devenv (and other nix clients passing restricted settings) require this
+    trusted-users = [
+      "root"
+      "nkl"
+    ];
   };
   nixpkgs.hostPlatform = "aarch64-darwin";
   system.stateVersion = 5;

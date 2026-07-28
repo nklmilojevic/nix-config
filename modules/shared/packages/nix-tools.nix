@@ -6,4 +6,5 @@ with pkgs;
   nixd
   alejandra
   nixpkgs-fmt
+  devenv
 ]
