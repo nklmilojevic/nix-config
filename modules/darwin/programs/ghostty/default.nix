@@ -32,17 +32,21 @@
       keybind = [
         "shift+enter=text:\\x1b\\r"
 
-        "cmd+KeyT=text:\\x02t"
+        "cmd+KeyT=text:\\x1b[32;5ut"
         "cmd+t=unbind"
-        "cmd+KeyN=text:\\x02n"
+        "cmd+KeyN=text:\\x1b[32;5un"
         "cmd+n=unbind"
-        "cmd+KeyW=text:\\x02W"
+        "cmd+KeyW=text:\\x1b[32;5uW"
         "cmd+w=unbind"
-        "cmd+KeyK=text:\\x02N"
+        "cmd+KeyK=text:\\x1b[32;5uN"
         "cmd+k=unbind"
-        "cmd+KeyL=text:\\x02T"
+        "cmd+KeyL=text:\\x1b[32;5uT"
         "cmd+l=unbind"
-        "alt+t=text:\\x02t"
+        "alt+t=text:\\x1b[32;5ut"
+
+        # herdr prefix (ctrl+space): normalize the physical press to CSI-u so
+        # herdr never sees a bare NUL byte
+        "ctrl+space=text:\\x1b[32;5u"
 
         # ctrl+tab cycles herdr workspaces; ctrl+option+tab cycles herdr tabs
         "ctrl+tab=text:\\x1b[9;5u"
@@ -89,20 +93,20 @@
         "ctrl+9=text:\\x1b[57;6u"
 
         # cmd+up/down cycles herdr agents (replaces built-in jump_to_prompt)
-        "cmd+arrow_up=text:\\x02a"
-        "cmd+arrow_down=text:\\x02A"
+        "cmd+arrow_up=text:\\x1b[32;5ua"
+        "cmd+arrow_down=text:\\x1b[32;5uA"
 
         # cmd+d/cmd+shift+d split *herdr* panes (not ghostty's own panes) via
         # herdr's default split_vertical=prefix+v / split_horizontal=prefix+minus.
         # cmd+option+arrows moves focus between herdr panes via the default
         # focus_pane_left/down/up/right=prefix+h/j/k/l. No herdr [keys]
         # overrides needed here since these all target herdr's own defaults.
-        "cmd+d=text:\\x02v"
-        "cmd+shift+d=text:\\x02-"
-        "cmd+alt+arrow_left=text:\\x02h"
-        "cmd+alt+arrow_down=text:\\x02j"
-        "cmd+alt+arrow_up=text:\\x02k"
-        "cmd+alt+arrow_right=text:\\x02l"
+        "cmd+d=text:\\x1b[32;5uv"
+        "cmd+shift+d=text:\\x1b[32;5u-"
+        "cmd+alt+arrow_left=text:\\x1b[32;5uh"
+        "cmd+alt+arrow_down=text:\\x1b[32;5uj"
+        "cmd+alt+arrow_up=text:\\x1b[32;5uk"
+        "cmd+alt+arrow_right=text:\\x1b[32;5ul"
       ];
       shell-integration-features = "ssh-terminfo,ssh-env,sudo";
 

@@ -1,5 +1,7 @@
 { ... }:
 {
+  imports = [ ./plugins.nix ];
+
   xdg.configFile."herdr/config.toml".text = ''
     onboarding = false
 
@@ -14,8 +16,9 @@
     delivery = "terminal"
 
     [keys]
+    prefix = "ctrl+space"
     new_tab = "prefix+t"
-    rename_tab = "prefix+shift+t"
+    rename_tab = "prefix+shift+,"
     close_tab = "prefix+shift+w"
     new_workspace = "prefix+n"
     rename_workspace = "prefix+shift+n"
@@ -31,10 +34,10 @@
     workspaces = "ctrl+shift"
 
     [[keys.command]]
-    key = "prefix+f"
+    key = "ctrl+f"
     type = "plugin_action"
-    command = "herdr-floax.toggle"
-    description = "Toggle floating pane"
+    command = "herdr-float.toggle"
+    description = "Toggle floating shell"
 
     [[keys.command]]
     key = "prefix+g"
@@ -47,5 +50,17 @@
     type = "plugin_action"
     command = "herdr-lazygit.open-tab"
     description = "lazygit: open in its own tab"
+
+    [[keys.command]]
+    key = "prefix+shift+t"
+    type = "plugin_action"
+    command = "fullerzz.sesh.open-picker"
+    description = "open Sesh picker"
+
+    [[keys.command]]
+    key = "prefix+shift+b"
+    type = "plugin_action"
+    command = "fullerzz.sesh.last"
+    description = "switch to previous Sesh workspace"
   '';
 }

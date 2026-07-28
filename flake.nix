@@ -88,9 +88,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    herdr-nix = {
-      url = "github:tburny/herdr-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+    # Upstream flake, pinned to a release tag. Deliberately does NOT follow our
+    # nixpkgs so the build matches upstream's pin and herdr.cachix.org hits.
+    herdr = {
+      url = "github:ogulcancelik/herdr/v0.7.5";
     };
   };
 
@@ -114,7 +115,7 @@
       mailerlite-cli,
       atuin-nix,
       sofka,
-      herdr-nix,
+      herdr,
       nixpkgs-stable,
       ...
     }@inputs:
@@ -136,7 +137,7 @@
             mailersend = mailersend-cli.packages.${system}.default;
             mailerlite = mailerlite-cli.packages.${system}.default;
             atuin = atuin-nix.packages.${system}.default;
-            herdr = herdr-nix.packages.${system}.default;
+            herdr = herdr.packages.${system}.default;
             inherit (stable)
               direnv
               pwgen
