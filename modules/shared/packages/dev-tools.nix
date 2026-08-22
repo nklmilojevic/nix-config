@@ -5,7 +5,9 @@ with pkgs;
   # Media
   ffmpeg_7
   imagemagick
-  sane-backends
+  # Without the gphoto2 camera backend: libgphoto2 2.5.34 fails to link libintl
+  # on aarch64-darwin. Drop the override once nixpkgs fixes libgphoto2.
+  (sane-backends.override { libgphoto2 = null; })
   timg
   qrencode
 
@@ -38,6 +40,7 @@ with pkgs;
   gemini-cli
   codex
   opencode
+  omp
 
   # Terminal multiplexing
   herdr
@@ -46,6 +49,7 @@ with pkgs;
   android-tools
   home-assistant-cli
   mc
+  superfile
   pv
   pwgen
   restic

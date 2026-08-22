@@ -31,6 +31,7 @@
 
       keybind = [
         "shift+enter=text:\\x1b\\r"
+        "alt+backspace=text:\\x1b\\x7f"
 
         "cmd+KeyT=text:\\x1b[32;5ut"
         "cmd+t=unbind"

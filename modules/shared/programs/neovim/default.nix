@@ -24,7 +24,6 @@ let
     "nvim-treesitter-textobjects"
     "persistence.nvim"
     "plenary.nvim"
-    "tokyonight.nvim"
     "ts-comments.nvim"
     "vim-dadbod"
     "vim-dadbod-completion"
@@ -85,6 +84,7 @@ in
   programs.nixvim = {
     enable = true;
     nixpkgs.source = pkgs.path;
+    nixpkgs.config.allowUnfree = true;
     version.enableNixpkgsReleaseCheck = false;
     viAlias = true;
     vimAlias = true;
@@ -186,7 +186,13 @@ in
       php84Packages.php-codesniffer
       phpactor
       prettier
-      python314Packages.python-lsp-ruff
+      # python-lsp-ruff 2.3.1's test suite assumes pre-0.16 ruff behavior (default
+      # rule selection, code-action output); 6+ tests fail against nixpkgs' ruff
+      # 0.16.1. Test-only issue — the plugin shells out to the ruff binary at
+      # runtime. Drop the override once nixpkgs/upstream fix the tests.
+      (python314Packages.python-lsp-ruff.overridePythonAttrs (_: {
+        doCheck = false;
+      }))
       python314Packages.python-lsp-server
       python314Packages.ruff
       ripgrep

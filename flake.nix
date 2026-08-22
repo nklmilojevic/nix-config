@@ -88,10 +88,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Upstream flake, pinned to a release tag. Deliberately does NOT follow our
-    # nixpkgs so the build matches upstream's pin and herdr.cachix.org hits.
+    # Prebuilt release binaries, not a source build: upstream publishes no
+    # binary cache, so building from its flake costs a full Rust/Bun compile.
     herdr = {
-      url = "github:ogulcancelik/herdr/v0.7.5";
+      url = "github:nklmilojevic/herdr-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    omp = {
+      url = "github:nklmilojevic/omp-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -116,6 +122,7 @@
       atuin-nix,
       sofka,
       herdr,
+      omp,
       nixpkgs-stable,
       ...
     }@inputs:
@@ -124,6 +131,8 @@
         claude-code-overlay.overlays.default
         talosctl.overlays.default
         sofka.overlays.default
+        herdr.overlays.default
+        omp.overlays.default
         (
           final: prev:
           let
@@ -131,13 +140,37 @@
             stable = import nixpkgs-stable { inherit system; };
           in
           {
+            # nixpkgs lags behind bun releases; bump to the official prebuilt
+            # binary. Drop this once nixpkgs-unstable reaches the same version.
+            bun = prev.bun.overrideAttrs (
+              let
+                version = "1.4.0";
+                sources = {
+                  aarch64-darwin = {
+                    url = "https://github.com/oven-sh/bun/releases/download/bun-v${version}/bun-darwin-aarch64.zip";
+                    hash = "sha256-xmnpf2Fk4cluBwF0jbmN+ndJKQjL2DlMdVcTSnNd44E=";
+                  };
+                  aarch64-linux = {
+                    url = "https://github.com/oven-sh/bun/releases/download/bun-v${version}/bun-linux-aarch64.zip";
+                    hash = "sha256-SxozLuhhmD65O8/m93D/+U4+MbLDiL2uo8jtNeWO7Q4=";
+                  };
+                  x86_64-linux = {
+                    url = "https://github.com/oven-sh/bun/releases/download/bun-v${version}/bun-linux-x64-baseline.zip";
+                    hash = "sha256-GE+0WV8NQBohfPfHjBvEMLqDMU2reouUgFurv3+nCX8=";
+                  };
+                };
+              in
+              {
+                inherit version;
+                src = final.fetchurl sources.${system};
+              }
+            );
             codex = codex-cli-nix.packages.${system}.default;
             opencode = opencode-nix.packages.${system}.default;
             gemini-cli = gemini-cli-nix.packages.${system}.default;
             mailersend = mailersend-cli.packages.${system}.default;
             mailerlite = mailerlite-cli.packages.${system}.default;
             atuin = atuin-nix.packages.${system}.default;
-            herdr = herdr.packages.${system}.default;
             inherit (stable)
               direnv
               pwgen

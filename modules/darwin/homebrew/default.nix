@@ -26,7 +26,7 @@
       "firefox@developer-edition"
       "forklift"
       "ghostty"
-      # "gpg-suite"
+      "gpg-suite"
       "hammerspoon"
       "iina"
       "karabiner-elements"

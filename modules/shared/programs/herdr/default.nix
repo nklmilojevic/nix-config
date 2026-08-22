@@ -5,6 +5,10 @@
   xdg.configFile."herdr/config.toml".text = ''
     onboarding = false
 
+    # Required by the browser plugin's pane rendering (Ghostty supports it).
+    [experimental]
+    kitty_graphics = true
+
     [theme]
     name = "catppuccin"
     auto_switch = false
@@ -62,5 +66,17 @@
     type = "plugin_action"
     command = "fullerzz.sesh.last"
     description = "switch to previous Sesh workspace"
+
+    [[keys.command]]
+    key = "prefix+d"
+    type = "plugin_action"
+    command = "hunk.diff.worktree-split"
+    description = "hunk: worktree diff in a split"
+
+    [[keys.command]]
+    key = "prefix+shift+d"
+    type = "plugin_action"
+    command = "hunk.diff.branch-split"
+    description = "hunk: branch diff in a split"
   '';
 }

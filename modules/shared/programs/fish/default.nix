@@ -22,12 +22,20 @@
       set -gx LANG en_US.UTF-8
       set -gx LC_ALL en_US.UTF-8
       set -gx HOMEBREW_NO_ANALYTICS 1
+      set -gx HUNK_THEME catppuccin-mocha
+      # herdr-browser checks this before its hardcoded Chrome/Chromium paths;
+      # herdr inherits it when launched from a shell.
+      set -gx HERDR_BROWSER_CHROME "/Applications/Brave Origin.app/Contents/MacOS/Brave Origin"
       set -gx NPM_CONFIG_PREFIX $HOME/.npm-global
       set -gx SSH_AUTH_SOCK $HOME/.1password/agent.sock
 
       # home-assistant-cli secrets, resolved on demand by `op run` (see hass-cli alias)
       set -gx HASS_SERVER "op://Private/hass-cli/HASS_SERVER"
       set -gx HASS_TOKEN "op://Private/hass-cli/HASS_TOKEN"
+
+      # omp / Vertex AI (ADC via gcloud application-default login)
+      set -gx GOOGLE_CLOUD_PROJECT mailerlite-claude-code
+      set -gx GOOGLE_VERTEX_LOCATION global
 
       set -U __done_allow_nongraphical 1
       set -U --append __done_exclude '^htop'
