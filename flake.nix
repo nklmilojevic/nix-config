@@ -165,6 +165,12 @@
                 src = final.fetchurl sources.${system};
               }
             );
+            # tmux 3.7 configure aborts on darwin unless jemalloc is explicitly
+            # chosen; pinned nixpkgs passes neither flag. Drop once nixpkgs
+            # handles it upstream.
+            tmux = prev.tmux.overrideAttrs (old: {
+              configureFlags = (old.configureFlags or [ ]) ++ [ "--disable-jemalloc" ];
+            });
             codex = codex-cli-nix.packages.${system}.default;
             opencode = opencode-nix.packages.${system}.default;
             gemini-cli = gemini-cli-nix.packages.${system}.default;
