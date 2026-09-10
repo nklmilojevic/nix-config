@@ -1,6 +1,7 @@
 require("hs.ipc") -- makes the `hs` CLI work for post-hoc console inspection
 
 require("modules/reloader")
+require("modules/guarana")
 require("modules/windowmgmt")
 require("modules/layout")
 require("modules/skyrocket")

@@ -99,6 +99,16 @@
       url = "github:nklmilojevic/omp-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    pi = {
+      url = "github:nklmilojevic/pi-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    varlock = {
+      url = "github:nklmilojevic/varlock-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -123,6 +133,8 @@
       sofka,
       herdr,
       omp,
+      pi,
+      varlock,
       nixpkgs-stable,
       ...
     }@inputs:
@@ -133,6 +145,8 @@
         sofka.overlays.default
         herdr.overlays.default
         omp.overlays.default
+        pi.overlays.default
+        varlock.overlays.default
         (
           final: prev:
           let

@@ -44,8 +44,6 @@
       set -U --append __done_exclude '^nvim'
 
       nix-your-shell fish | source
-      atuin hex init fish | source
-      atuin pty-proxy init fish | source
       atuin init fish --disable-up-arrow | source
     '';
 
@@ -107,6 +105,20 @@
           set -lx CLAUDE_SESSION 1
           set -lx GH_TOKEN (op read --account my.1password.eu "op://Private/GitHub Personal Access Token/token")
           command claude $argv
+        '';
+      };
+      codex = {
+        description = "Start Codex with GH_TOKEN from 1Password";
+        body = ''
+          set -lx GH_TOKEN (op read --account my.1password.eu "op://Private/GitHub Personal Access Token/token")
+          command codex $argv
+        '';
+      };
+      pi = {
+        description = "Start Pi with GH_TOKEN from 1Password";
+        body = ''
+          set -lx GH_TOKEN (op read --account my.1password.eu "op://Private/GitHub Personal Access Token/token")
+          command pi $argv
         '';
       };
       psgrep = {

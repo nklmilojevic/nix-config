@@ -13,6 +13,7 @@ with pkgs;
   jq
   yq-go
   openssh
+  mosh
   openssl
   tree
   watch

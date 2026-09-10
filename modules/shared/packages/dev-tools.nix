@@ -34,6 +34,7 @@ with pkgs;
   minijinja
   mailersend
   mailerlite
+  pandoc
 
   # AI coding assistants
   claude-code
@@ -41,6 +42,7 @@ with pkgs;
   codex
   opencode
   omp
+  pi
 
   # Terminal multiplexing
   herdr

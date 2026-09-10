@@ -135,10 +135,27 @@ local function authHeaders()
 end
 
 local function apiToWebURL(apiURL)
-	if not apiURL then
+	if not apiURL or apiURL == "" then
 		return nil
 	end
 	return (apiURL:gsub("api%.github%.com/repos", "github.com"):gsub("/pulls/", "/pull/"))
+end
+
+local function notificationURL(notif)
+	local subj = notif.subject or {}
+	local repo = (notif.repository or {}).full_name or ""
+	if subj.type == "Issue" or subj.type == "PullRequest" or subj.type == "Discussion" then
+		local url = apiToWebURL(subj.url)
+		if url then
+			return url
+		end
+	end
+	-- GitHub sometimes omits discussion subject URLs. Keep the fallback in
+	-- discussions rather than dropping the user at the repository root.
+	if repo ~= "" then
+		return "https://github.com/" .. repo .. (subj.type == "Discussion" and "/discussions" or "")
+	end
+	return "https://github.com/notifications"
 end
 
 local function markThreadRead(id, callback)
@@ -182,7 +199,7 @@ local function notifyOne(notif)
 	local typeStr = subj.type or ""
 	local reasonStr = REASON_TEXT[notif.reason] or notif.reason or ""
 	local title = subj.title or "New notification"
-	local webURL = apiToWebURL(subj.url)
+	local webURL = apiToWebURL(subj.url) or notificationURL(notif)
 	local id = notif.id
 
 	hs.notify
@@ -258,18 +275,12 @@ local function buildMenu()
 	else
 		for _, notif in ipairs(notifications) do
 			local subj = notif.subject or {}
-			local typ = subj.type or ""
 			local title = subj.title or ""
 			local repo = (notif.repository or {}).full_name or ""
 			local reasonStr = REASON_TEXT[notif.reason] or notif.reason or ""
 			local short = Strings.truncate(title, 60)
 			local label = string.format("%s — %s (%s)", short, repo, reasonStr)
-			local webURL
-			if typ == "Issue" or typ == "PullRequest" then
-				webURL = apiToWebURL(subj.url)
-			elseif repo ~= "" then
-				webURL = "https://github.com/" .. repo
-			end
+			local webURL = notificationURL(notif)
 			local id = notif.id
 			table.insert(items, {
 				title = label,
