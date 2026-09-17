@@ -4,7 +4,18 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-25.05";
-    flake-utils.url = "github:numtide/flake-utils";
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+      inputs.systems.follows = "systems";
+    };
+
+    # Not used directly. Declared so every input below can `follows` them,
+    # which collapses the duplicate transitive copies in flake.lock.
+    systems.url = "github:nix-systems/default";
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
     catppuccin = {
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -12,6 +23,8 @@
     nixvim = {
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+      inputs.systems.follows = "systems";
     };
 
     home-manager = {
@@ -38,54 +51,69 @@
       flake = false;
     };
 
+    homebrew-logi = {
+      url = "github:nklmilojevic/homebrew-logi";
+      flake = false;
+    };
+
     krewfile = {
       url = "github:brumhard/krewfile";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
     };
 
     claude-code-overlay = {
       url = "github:nklmilojevic/claude-code-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
     };
 
     codex-cli-nix = {
       url = "github:nklmilojevic/codex-cli-nix";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
     };
 
     opencode-nix = {
       url = "github:nklmilojevic/opencode-nix";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
     };
 
     gemini-cli-nix = {
       url = "github:nklmilojevic/gemini-cli-nix";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
     };
 
     talosctl = {
       url = "github:nklmilojevic/talosctl-flake";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
     };
 
     mailersend-cli = {
       url = "github:mailersend/mailersend-cli";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
     };
 
     mailerlite-cli = {
       url = "github:mailerlite/mailerlite-cli";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
     };
 
     atuin-nix = {
       url = "github:nklmilojevic/atuin-nix";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
     };
 
     sofka = {
       url = "github:nklmilojevic/sofka";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
     };
 
     # Prebuilt release binaries, not a source build: upstream publishes no
@@ -93,34 +121,35 @@
     herdr = {
       url = "github:nklmilojevic/herdr-flake";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
     };
 
     omp = {
       url = "github:nklmilojevic/omp-flake";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
     };
 
     pi = {
       url = "github:nklmilojevic/pi-flake";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
     };
 
     varlock = {
       url = "github:nklmilojevic/varlock-flake";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
     };
   };
 
   outputs =
     {
-      self,
       nixpkgs,
       flake-utils,
       home-manager,
       darwin,
       nix-homebrew,
-      nixvim,
-      krewfile,
       catppuccin,
       claude-code-overlay,
       codex-cli-nix,
@@ -206,7 +235,7 @@
       ];
 
       # Import custom library functions
-      lib = import ./lib { lib = nixpkgs.lib; };
+      lib = import ./lib { inherit (nixpkgs) lib; };
     in
     flake-utils.lib.eachSystem supportedSystems (
       system:
@@ -217,23 +246,46 @@
         };
       in
       {
+        # Derivations this repo patches or pins itself, exposed so CI can build
+        # and push them to Cachix and so other machines can build them directly.
         packages = {
-          inherit (pkgs) k9s;
+          inherit (pkgs) bun k9s tmux;
+          starship = import ./modules/shared/programs/starship/package.nix { inherit pkgs; };
         };
+
+        formatter = pkgs.nixfmt-tree;
+
+        checks.lint =
+          pkgs.runCommand "nix-config-lint"
+            {
+              nativeBuildInputs = with pkgs; [
+                deadnix
+                nixfmt
+                statix
+              ];
+            }
+            ''
+              cd ${./.}
+              find . -name '*.nix' -exec nixfmt --check {} +
+              statix check .
+              deadnix --fail .
+              touch $out
+            '';
 
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
+            deadnix
             just
-            nixpkgs-fmt
             nil
+            nixfmt
+            statix
           ];
         };
-
       }
     )
     // {
       # Expose library functions for external use
-      lib = lib;
+      inherit lib;
 
       darwinConfigurations.daedalus = darwin.lib.darwinSystem {
         modules = [
@@ -248,6 +300,7 @@
               taps = {
                 "homebrew/homebrew-core" = inputs.homebrew-core;
                 "homebrew/homebrew-cask" = inputs.homebrew-cask;
+                "nklmilojevic/homebrew-logi" = inputs.homebrew-logi;
               };
               mutableTaps = true;
             };

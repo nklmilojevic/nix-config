@@ -1,0 +1,5 @@
+# `repeated_keys` wants `system.defaults` / `home.file` / nixvim's `plugins`
+# collapsed into one nested attrset per module. Splitting those keys across
+# grouped blocks is deliberate here, so the lint is off rather than annotated
+# at every site.
+disabled = ["repeated_keys"]

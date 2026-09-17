@@ -1,6 +1,6 @@
 { pkgs }:
 let
-  lib = import ../../lib { lib = pkgs.lib; };
+  lib = import ../../lib { inherit (pkgs) lib; };
 in
 lib.mkPackageList {
   inherit pkgs;

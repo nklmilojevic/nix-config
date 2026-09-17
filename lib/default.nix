@@ -8,7 +8,7 @@
     dir:
     let
       contents = builtins.readDir dir;
-      dirs = lib.filterAttrs (name: type: type == "directory") contents;
+      dirs = lib.filterAttrs (_: type: type == "directory") contents;
     in
     map (name: dir + "/${name}") (builtins.attrNames dirs);
 

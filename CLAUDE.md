@@ -2,7 +2,7 @@
 
 ## Starship `detect_input` patch
 
-`modules/shared/programs/starship/detect-input.patch` adds a custom `detect_input` feature to starship (modules appear while typing a matching command, e.g. `k `/`kubectl ` reveals the kubernetes module — upstream issues starship/starship#5509, #5999). It is applied on top of the nixpkgs `starship` package via `overrideAttrs` in `modules/shared/programs/starship/default.nix`. The patch adds no cargo dependencies, so `cargoHash` never needs to change.
+`modules/shared/programs/starship/detect-input.patch` adds a custom `detect_input` feature to starship (modules appear while typing a matching command, e.g. `k `/`kubectl ` reveals the kubernetes module — upstream issues starship/starship#5509, #5999). It is applied on top of the nixpkgs `starship` package via `overrideAttrs` in `modules/shared/programs/starship/package.nix`, which is imported both by the home-manager module (`modules/shared/programs/starship/default.nix`) and by the `starship` flake package output. The patch adds no cargo dependencies, so `cargoHash` never needs to change.
 
 ### When the starship build fails after a version bump
 

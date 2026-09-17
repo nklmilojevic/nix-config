@@ -1,13 +1,15 @@
-{ ... }:
-{
+_: {
+  # Nix picks a substituter by its advertised priority, not by list order, so
+  # every entry sets one explicitly: own caches first, then upstream. Lower
+  # number wins. Defaults are 40 for cache.nixos.org and 41 for cachix.
   nix.settings = {
     substituters = [
-      "https://nkl-nix-config.cachix.org"
-      "https://nkl-sofka.cachix.org"
-      "https://nix-community.cachix.org"
-      "https://devenv.cachix.org"
-      "https://opencode-nix-cache.cachix.org"
-      "https://cache.nixos.org/"
+      "https://nkl-nix-config.cachix.org?priority=30"
+      "https://nkl-sofka.cachix.org?priority=31"
+      "https://opencode-nix-cache.cachix.org?priority=32"
+      "https://cache.nixos.org/?priority=40"
+      "https://nix-community.cachix.org?priority=41"
+      "https://devenv.cachix.org?priority=42"
     ];
     trusted-public-keys = [
       "nkl-nix-config.cachix.org-1:BFC4/yovGI+0E8ZZE0K3H6Mu2uBaqSU/kTnSvFQs5uE="

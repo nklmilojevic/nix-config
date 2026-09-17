@@ -9,6 +9,10 @@ with pkgs;
   kubeconform
   k9s
   sofka
+  # CLIs required by sofka plugins (github.com/nklmilojevic/sofka-plugins)
+  cmctl
+  oha
+  popeye
   stern
   kubecolor
   kubecm

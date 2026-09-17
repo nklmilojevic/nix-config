@@ -18,9 +18,7 @@
     # based on the command being typed. Patch generated from a local checkout;
     # if it stops applying after a starship bump, regenerate it from
     # https://github.com/starship/starship against the new tag.
-    package = pkgs.starship.overrideAttrs (old: {
-      patches = (old.patches or [ ]) ++ [ ./detect-input.patch ];
-    });
+    package = import ./package.nix { inherit pkgs; };
 
     enableTransience = true;
     enableFishIntegration = true;

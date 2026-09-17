@@ -7,6 +7,15 @@ glob = ["*.nix"]
 run = "nixfmt {staged_files}"
 stage_fixed = true
 
+[pre-commit.commands.lint-statix]
+glob = ["*.nix"]
+# statix takes a single target, so it checks the tree rather than staged files.
+run = "statix check ."
+
+[pre-commit.commands.lint-deadnix]
+glob = ["*.nix"]
+run = "deadnix --fail {staged_files}"
+
 [pre-commit.commands.format-web]
 glob = [
   "*.json",

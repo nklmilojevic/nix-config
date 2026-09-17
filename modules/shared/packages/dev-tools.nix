@@ -46,6 +46,7 @@ with pkgs;
 
   # Terminal multiplexing
   herdr
+  zmx
 
   # Misc utilities
   android-tools

@@ -8,6 +8,8 @@ with pkgs;
   varlock
   nmap
   rustscan
+  # Required by the sofka trivy plugin
+  trivy
   tshark
   zizmor
 ]

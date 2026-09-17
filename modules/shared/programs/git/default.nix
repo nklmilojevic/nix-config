@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   programs.git = {
     enable = true;
     signing.key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrYywYsK/kocVOa48LjaOR2X10g7lwsB1PtkyBJX800";

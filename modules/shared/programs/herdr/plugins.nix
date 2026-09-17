@@ -166,27 +166,6 @@ let
     '';
   };
 
-  # Single python3 script; opens `hunk` (nixpkgs, added to home.packages below)
-  # in a split or tab for worktree/staged/branch diffs.
-  herdr-hunk = pkgs.stdenvNoCC.mkDerivation {
-    pname = "herdr-plugin-hunk";
-    version = "0.1.0";
-    src = pkgs.fetchFromGitHub {
-      owner = "edmundmiller";
-      repo = "herdr-plugin-hunk";
-      rev = "11ba5dcca4358203ca68f160becf6870cf016c18";
-      hash = "sha256-Ug5809kj7y4TJ2ViRG76jb5gLFbhdpyWNIL/vNbpgFo=";
-    };
-    dontConfigure = true;
-    dontBuild = true;
-    installPhase = ''
-      runHook preInstall
-      mkdir -p $out
-      cp -R ./. $out/
-      runHook postInstall
-    '';
-  };
-
   plugins = [
     {
       id = "herdr-float";
@@ -204,16 +183,9 @@ let
       id = "official.browser";
       package = herdr-browser;
     }
-    {
-      id = "hunk.diff";
-      package = herdr-hunk;
-    }
   ];
 in
 {
-  # Runtime dependency of the hunk plugin (resolved from PATH).
-  home.packages = [ pkgs.hunk ];
-
   # Registers each plugin's store path in herdr's registry. Idempotent: skips
   # plugins already linked at the right path, replaces stale links (or older
   # `herdr plugin install`-managed copies) on version bumps. Failures warn

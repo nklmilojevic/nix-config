@@ -9,7 +9,6 @@
     ../../modules/shared
     ../../modules/shared/cachix
     ../../modules/darwin/homebrew
-    ../../modules/darwin/linux-builder.nix
   ];
 
   nixpkgs.config.allowUnfree = true;

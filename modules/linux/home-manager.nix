@@ -9,7 +9,6 @@ let
       envUser = builtins.getEnv "USER";
     in
     if envUser != "" then envUser else "nkl";
-  xdg_configHome = "/home/${user}/.config";
 in
 {
   home = {

@@ -25,8 +25,9 @@
       "fantastical"
       "firefox@developer-edition"
       "forklift"
-      "ghostty"
+      # "ghostty" # locally patched build, not managed by brew
       "gpg-suite"
+      "nklmilojevic/logi/logi-options-offline"
       "hammerspoon"
       "iina"
       "karabiner-elements"

@@ -66,17 +66,5 @@
     type = "plugin_action"
     command = "fullerzz.sesh.last"
     description = "switch to previous Sesh workspace"
-
-    [[keys.command]]
-    key = "prefix+d"
-    type = "plugin_action"
-    command = "hunk.diff.worktree-split"
-    description = "hunk: worktree diff in a split"
-
-    [[keys.command]]
-    key = "prefix+shift+d"
-    type = "plugin_action"
-    command = "hunk.diff.branch-split"
-    description = "hunk: branch diff in a split"
   '';
 }
