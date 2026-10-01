@@ -1,8 +1,4 @@
-{
-  inputs,
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
 let
   user =
     let
@@ -12,15 +8,12 @@ let
 in
 {
   home = {
-    enableNixpkgsReleaseCheck = false;
     username = "${user}";
     homeDirectory = "/home/${user}";
     packages = pkgs.callPackage ./packages.nix { };
-    stateVersion = "26.05";
   };
 
   imports = [
-    inputs.nixvim.homeModules.nixvim
     ../shared/home-manager.nix
   ];
 }

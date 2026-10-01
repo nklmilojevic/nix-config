@@ -116,14 +116,6 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    # Prebuilt release binaries, not a source build: upstream publishes no
-    # binary cache, so building from its flake costs a full Rust/Bun compile.
-    herdr = {
-      url = "github:nklmilojevic/herdr-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-parts.follows = "flake-parts";
-    };
-
     omp = {
       url = "github:nklmilojevic/omp-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -150,7 +142,6 @@
       home-manager,
       darwin,
       nix-homebrew,
-      catppuccin,
       claude-code-overlay,
       codex-cli-nix,
       opencode-nix,
@@ -160,7 +151,6 @@
       mailerlite-cli,
       atuin-nix,
       sofka,
-      herdr,
       omp,
       pi,
       varlock,
@@ -172,7 +162,6 @@
         claude-code-overlay.overlays.default
         talosctl.overlays.default
         sofka.overlays.default
-        herdr.overlays.default
         omp.overlays.default
         pi.overlays.default
         varlock.overlays.default
@@ -250,7 +239,6 @@
         # and push them to Cachix and so other machines can build them directly.
         packages = {
           inherit (pkgs) bun k9s tmux;
-          starship = import ./modules/shared/programs/starship/package.nix { inherit pkgs; };
         };
 
         formatter = pkgs.nixfmt-tree;
@@ -269,6 +257,20 @@
               find . -name '*.nix' -exec nixfmt --check {} +
               statix check .
               deadnix --fail .
+              touch $out
+            '';
+
+        checks.fish-prompt =
+          pkgs.runCommand "fish-prompt-test"
+            {
+              nativeBuildInputs = with pkgs; [
+                fish
+                git
+                python3
+              ];
+            }
+            ''
+              fish ${./modules/shared/programs/fish-prompt}/test.fish
               touch $out
             '';
 
@@ -293,20 +295,26 @@
           home-manager.darwinModules.home-manager
           ./hosts/darwin
           nix-homebrew.darwinModules.nix-homebrew
-          {
-            nix-homebrew = {
-              enable = true;
-              user = "nkl";
-              taps = {
-                "homebrew/homebrew-core" = inputs.homebrew-core;
-                "homebrew/homebrew-cask" = inputs.homebrew-cask;
-                "nklmilojevic/homebrew-logi" = inputs.homebrew-logi;
+          (
+            { user, ... }:
+            {
+              nix-homebrew = {
+                enable = true;
+                inherit user;
+                taps = {
+                  "homebrew/homebrew-core" = inputs.homebrew-core;
+                  "homebrew/homebrew-cask" = inputs.homebrew-cask;
+                  "nklmilojevic/homebrew-logi" = inputs.homebrew-logi;
+                };
+                mutableTaps = true;
               };
-              mutableTaps = true;
-            };
-          }
+            }
+          )
         ];
-        specialArgs = { inherit inputs; };
+        specialArgs = {
+          inherit inputs;
+          user = "nkl";
+        };
       };
 
       homeConfigurations =
@@ -320,7 +328,6 @@
               };
               modules = [
                 ./hosts/linux
-                catppuccin.homeModules.catppuccin
               ];
               extraSpecialArgs = { inherit inputs; };
             };

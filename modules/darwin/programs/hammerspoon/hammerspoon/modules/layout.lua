@@ -11,6 +11,7 @@ local macbook = {
 	{ app = "Safari", unit = hs.layout.maximized },
 	{ app = "Brave Origin", unit = hs.layout.maximized },
 	{ app = "Ghostty", unit = hs.layout.maximized },
+	{ app = "Thurm", unit = hs.layout.maximized },
 	{ app = "WezTerm", unit = hs.layout.maximized },
 	{ app = "Slack", unit = hs.layout.maximized },
 	{ app = "Telegram", unit = hs.layout.right50 },
@@ -31,6 +32,7 @@ local dell = {
 	{ app = "Safari", unit = hs.layout.left50 },
 	{ app = "Brave Origin", unit = hs.layout.left50 },
 	{ app = "Ghostty", unit = hs.layout.right50 },
+	{ app = "Thurm", unit = hs.layout.right50 },
 	{ app = "WezTerm", unit = hs.layout.right50 },
 	{ app = "Slack", unit = hs.layout.left50 },
 	{ app = "Telegram", unit = hs.layout.right30 },
@@ -41,8 +43,6 @@ local dell = {
 	{ app = "Spotify", frame = rect(1518, 312, 1800, 986) },
 	{ app = "Discord", unit = hs.layout.right50 },
 	{ app = "Anybox", frame = rect(965, 313, 1430, 1079) },
-	{ app = "Visual Studio Code", unit = hs.layout.left50 },
-	{ app = "Cursor", unit = hs.layout.left50 },
 	{ app = "Zed", unit = hs.layout.left50 },
 }
 

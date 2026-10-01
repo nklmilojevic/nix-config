@@ -23,9 +23,6 @@
       set -gx LC_ALL en_US.UTF-8
       set -gx HOMEBREW_NO_ANALYTICS 1
       set -gx HUNK_THEME catppuccin-mocha
-      # herdr-browser checks this before its hardcoded Chrome/Chromium paths;
-      # herdr inherits it when launched from a shell.
-      set -gx HERDR_BROWSER_CHROME "/Applications/Brave Origin.app/Contents/MacOS/Brave Origin"
       set -gx NPM_CONFIG_PREFIX $HOME/.npm-global
       set -gx SSH_AUTH_SOCK $HOME/.1password/agent.sock
 
@@ -42,6 +39,14 @@
       set -U --append __done_exclude '^btop'
       set -U --append __done_exclude '^vim'
       set -U --append __done_exclude '^nvim'
+      set -U --append __done_exclude '^s'
+      set -U --append __done_exclude '^sofka'
+      set -U --append __done_exclude '^claude'
+      set -U --append __done_exclude '^ccc'
+      set -U --append __done_exclude '^pi'
+      set -U --append __done_exclude '^codex'
+
+
 
       nix-your-shell fish | source
       atuin init fish --disable-up-arrow | source

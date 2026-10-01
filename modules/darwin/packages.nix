@@ -8,5 +8,6 @@ lib.mkPackageList {
   extra = with pkgs; [
     duti
     stress
+    terminal-notifier
   ];
 }

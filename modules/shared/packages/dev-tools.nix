@@ -45,7 +45,6 @@ with pkgs;
   pi
 
   # Terminal multiplexing
-  herdr
   zmx
 
   # Misc utilities

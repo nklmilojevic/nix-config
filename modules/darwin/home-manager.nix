@@ -1,161 +1,25 @@
 {
   inputs,
-  pkgs,
+  lib,
+  user,
   ...
 }:
 let
-  user = "nkl";
+  myLib = import ../../lib { inherit lib; };
 in
 {
-  imports = [
-    ./homebrew
-  ];
-
-  documentation = {
-    enable = false;
-    doc.enable = false;
-    info.enable = false;
-  };
-
-  documentation.man = {
-    enable = false;
-  };
-
-  environment = {
-    etc."pam.d/sudo_local".text = ''
-      # Managed by Nix Darwin
-      auth       optional       ${pkgs.pam-reattach}/lib/pam/pam_reattach.so ignore_ssh
-      auth       sufficient     pam_tid.so
-    '';
-  };
-
-  launchd.user.agents."com.1password.SSH_AUTH_SOCK" = {
-    serviceConfig = {
-      Label = "com.1password.SSH_AUTH_SOCK";
-      ProgramArguments = [
-        "/bin/sh"
-        "-c"
-        ''/bin/ln -sf "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" "$SSH_AUTH_SOCK"''
-      ];
-      RunAtLoad = true;
-    };
-  };
-  system.primaryUser = "nkl";
-
-  system.defaults = {
-    dock = {
-      minimize-to-application = true;
-      show-process-indicators = true;
-      show-recents = false;
-      static-only = false;
-      showhidden = false;
-      tilesize = 48;
-      wvous-bl-corner = 1;
-      wvous-br-corner = 1;
-      wvous-tl-corner = 1;
-      wvous-tr-corner = 1;
-      persistent-apps = [
-        # "/System/Cryptexes/App/System/Applications/Safari.app"
-        "/Applications/Brave Origin.app"
-        "/System/Applications/Mail.app/"
-        "/System/Applications/Messages.app/"
-        "/Applications/Slack.app/"
-        "/Applications/Telegram.app"
-        "/Applications/Ghostty.app/"
-        "/Applications/Fantastical.app/"
-        "/Applications/Discord.app/"
-        "/Applications/Anybox.app/"
-        "/Applications/Things3.app/"
-        "/Applications/FSNotes.app/"
-        "/Applications/Spotify.app/"
-        "/Applications/RapidAPI.app/"
-        "/Applications/TablePro.app/"
-        "/Applications/Linear.app/"
-      ];
-    };
-
-    finder = {
-      ShowPathbar = true;
-      FXEnableExtensionChangeWarning = false;
-      ShowStatusBar = true;
-    };
-
-    NSGlobalDomain = {
-      AppleKeyboardUIMode = 3;
-      AppleMeasurementUnits = "Centimeters";
-      InitialKeyRepeat = 30;
-      KeyRepeat = 1;
-      "com.apple.keyboard.fnState" = true;
-      AppleShowScrollBars = "WhenScrolling";
-    };
-
-    loginwindow = {
-      GuestEnabled = false;
-    };
-
-    menuExtraClock = {
-      Show24Hour = true;
-    };
-
-    trackpad = {
-      Clicking = true;
-      Dragging = false;
-      TrackpadThreeFingerDrag = false;
-    };
-  };
-
-  system.defaults.CustomUserPreferences = {
-    # Avoid creating .DS_Store files on network or USB volumes
-    "com.apple.desktopservices" = {
-      DSDontWriteNetworkStores = true;
-      DSDontWriteUSBStores = true;
-    };
-    "com.apple.frameworks.diskimages" = {
-      skip-verify = true;
-      skip-verify-locked = true;
-      skip-verify-remote = true;
-    };
-  };
-
-  security.pam.services.sudo_local.touchIdAuth = true;
-
-  environment.shells = with pkgs; [
-    bashInteractive
-    fish
-    zsh
-  ];
-
-  environment.variables.SHELL = "${pkgs.fish}/bin/fish";
-
-  users.users.nkl = {
-    home = "/Users/nkl";
-    shell = pkgs.fish;
-  };
-
-  programs.fish = {
-    enable = true;
-    useBabelfish = true;
-  };
-
   home-manager = {
     useGlobalPkgs = true;
+    backupFileExtension = "backup";
+    extraSpecialArgs = { inherit inputs; };
     users.${user} =
       { pkgs, ... }:
       {
-        home = {
-          enableNixpkgsReleaseCheck = false;
-          packages = pkgs.callPackage ./packages.nix { };
-          stateVersion = "26.05";
-        };
+        imports = [ ../shared/home-manager.nix ] ++ myLib.mkProgramImports ./programs;
 
-        imports = [
-          inputs.nixvim.homeModules.nixvim
-          ../shared/home-manager.nix
-          ./programs/ghostty
-          ./programs/hammerspoon
-          ./programs/karabiner
-          ./programs/1password-agent
-        ];
+        home.packages = pkgs.callPackage ./packages.nix { };
+
+        programs.man.generateCaches = false;
 
         # Marked broken Oct 20, 2022 check later to remove this
         # https://github.com/nix-community/home-manager/issues/3344

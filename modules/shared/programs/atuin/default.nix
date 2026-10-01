@@ -1,4 +1,5 @@
-_: {
+{ config, ... }:
+{
   catppuccin = {
     fish = {
       enable = true;
@@ -18,12 +19,21 @@ _: {
       auto_sync = true;
       sync_frequency = "1m";
       search_mode = "daemon-fuzzy";
+      history_filter = [
+        "sk-(proj-|ant-)?[A-Za-z0-9_-]{20,}"
+        "(?i)authorization:\\s*bearer\\s+[A-Za-z0-9._~+/=-]{16,}"
+        "(?i)[A-Z_]*(TOKEN|API_KEY|SECRET|PASSWORD)[A-Z_]*=[^\\s$(]{8,}"
+        "(?i)--password[= ][^\\s$(]\\S*"
+      ];
       sync = {
         records = true;
       };
       daemon = {
         enabled = true;
         autostart = true;
+        # Default is $TMPDIR/atuin-$UID/atuin.sock, so shells with a different
+        # TMPDIR miss the running daemon and every preexec hook stalls ~4s.
+        socket_path = "${config.xdg.dataHome}/atuin/atuin.sock";
       };
       ai = {
         enabled = true;
