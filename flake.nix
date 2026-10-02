@@ -133,6 +133,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
     };
+
+    thurm = {
+      url = "github:nklmilojevic/thurm";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
