@@ -1,4 +1,7 @@
 { user, ... }:
+let
+  cachix = import ../../modules/shared/cachix/settings.nix;
+in
 {
   imports = [
     ../../modules/darwin
@@ -10,7 +13,11 @@
   # /etc/nix/nix.custom.conf. Flakes are enabled by default.
   determinateNix = {
     enable = true;
-    customSettings = import ../../modules/shared/cachix/settings.nix // {
+    customSettings = {
+      # extra-* appends to Determinate's defaults; plain `trusted-public-keys`
+      # would drop the built-in cache.nixos.org key.
+      extra-substituters = cachix.substituters;
+      extra-trusted-public-keys = cachix.trusted-public-keys;
       # devenv (and other nix clients passing restricted settings) require this
       trusted-users = [
         "root"
