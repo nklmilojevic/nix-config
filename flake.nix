@@ -41,16 +41,6 @@
       url = "github:zhaofengli/nix-homebrew";
     };
 
-    homebrew-core = {
-      url = "github:homebrew/homebrew-core";
-      flake = false;
-    };
-
-    homebrew-cask = {
-      url = "github:homebrew/homebrew-cask";
-      flake = false;
-    };
-
     homebrew-logi = {
       url = "github:nklmilojevic/homebrew-logi";
       flake = false;
@@ -311,8 +301,6 @@
                 enable = true;
                 inherit user;
                 taps = {
-                  "homebrew/homebrew-core" = inputs.homebrew-core;
-                  "homebrew/homebrew-cask" = inputs.homebrew-cask;
                   "nklmilojevic/homebrew-logi" = inputs.homebrew-logi;
                 };
                 mutableTaps = true;
