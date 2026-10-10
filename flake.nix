@@ -41,16 +41,6 @@
       url = "github:zhaofengli/nix-homebrew";
     };
 
-    homebrew-core = {
-      url = "github:homebrew/homebrew-core";
-      flake = false;
-    };
-
-    homebrew-cask = {
-      url = "github:homebrew/homebrew-cask";
-      flake = false;
-    };
-
     homebrew-logi = {
       url = "github:nklmilojevic/homebrew-logi";
       flake = false;
@@ -138,6 +128,8 @@
       url = "github:nklmilojevic/thurm";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/3";
   };
 
   outputs =
@@ -160,6 +152,7 @@
       pi,
       varlock,
       nixpkgs-stable,
+      determinate,
       ...
     }@inputs:
     let
@@ -298,6 +291,7 @@
         modules = [
           { nixpkgs.overlays = overlays; }
           home-manager.darwinModules.home-manager
+          determinate.darwinModules.default
           ./hosts/darwin
           nix-homebrew.darwinModules.nix-homebrew
           (
@@ -307,8 +301,6 @@
                 enable = true;
                 inherit user;
                 taps = {
-                  "homebrew/homebrew-core" = inputs.homebrew-core;
-                  "homebrew/homebrew-cask" = inputs.homebrew-cask;
                   "nklmilojevic/homebrew-logi" = inputs.homebrew-logi;
                 };
                 mutableTaps = true;

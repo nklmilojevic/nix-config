@@ -30,14 +30,19 @@ cd nix-config
 
 ### 2. Install Nix (if not already installed)
 
+This repo uses [Determinate Nix](https://docs.determinate.systems/). On macOS
+it owns the Nix daemon and `/etc/nix/nix.conf`; nix-darwin only writes
+`/etc/nix/nix.custom.conf` (see `determinateNix` in `hosts/darwin/default.nix`).
+
 This is the one bootstrap step that cannot use `just` (you need Nix before you
 have `just`). Run the installer directly:
 
 ```sh
-curl -sSf -L https://install.lix.systems/lix | sh -s -- install
+curl -fsSL https://install.determinate.systems/nix | sh -s -- install
 ```
 
-Open a new shell afterwards so `nix` is on your `PATH`.
+Open a new shell afterwards and check that `nix --version` reports
+`Determinate Nix`.
 
 > The same command is also exposed as `just bootstrap setup-nix` for convenience
 > once you already have `just` available.
@@ -58,6 +63,25 @@ below before the system configuration has ever been applied. (If you use
 op signin
 ```
 
+### 5. First activation (macOS)
+
+`darwin-rebuild` does not exist until nix-darwin has been applied once, so the
+first switch runs it straight from the nix-darwin flake:
+
+```sh
+just bootstrap setup-darwin
+```
+
+If it aborts with `Unexpected files in /etc`, the Nix installer has touched
+those files. Move each listed file aside and run it again:
+
+```sh
+sudo mv /etc/zshrc /etc/zshrc.before-nix-darwin
+sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin
+```
+
+After that, use `just darwin-refresh` for every later change.
+
 ---
 
 ## Available Recipes
@@ -75,7 +99,8 @@ op signin
 
 ### Bootstrap
 
-- **`just bootstrap setup-nix`**: Install the Nix package manager (Lix).
+- **`just bootstrap setup-nix`**: Install the Nix package manager (Determinate Nix).
+- **`just bootstrap setup-darwin`**: First nix-darwin activation on a fresh Mac.
 
 ### Secrets
 
