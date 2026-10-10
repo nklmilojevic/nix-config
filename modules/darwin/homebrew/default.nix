@@ -1,9 +1,19 @@
-{ config, ... }:
+{ config, lib, ... }:
 {
+  # Refresh Homebrew's API data before the bundle so `upgrade` sees new
+  # versions. onActivation.autoUpdate does this inside `brew bundle`, but
+  # after brew's auto-update the bundle no longer finds `mas` and every
+  # masApps entry fails with "mas installation failed".
+  system.activationScripts.homebrew.text = lib.mkBefore ''
+    if [ -f "${config.homebrew.prefix}/bin/brew" ]; then
+      echo >&2 "Homebrew update..."
+      sudo --user=${config.system.primaryUser} --set-home "${config.homebrew.prefix}/bin/brew" update --quiet || true
+    fi
+  '';
+
   homebrew = {
     enable = true;
     onActivation.cleanup = "uninstall";
-    onActivation.autoUpdate = true;
     onActivation.upgrade = true;
 
     taps = builtins.attrNames config.nix-homebrew.taps;
