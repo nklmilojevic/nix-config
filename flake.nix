@@ -70,9 +70,11 @@
       inputs.flake-utils.follows = "flake-utils";
     };
 
+    # gemini-cli, sofka and pi compile from source; their own nixpkgs keeps the
+    # store paths their CI pushes to Cachix. The other personal flakes only
+    # fetch prebuilt binaries, so they follow ours.
     gemini-cli-nix = {
       url = "github:nklmilojevic/gemini-cli-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
 
@@ -102,7 +104,6 @@
 
     sofka = {
       url = "github:nklmilojevic/sofka";
-      inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
 
@@ -114,7 +115,6 @@
 
     pi = {
       url = "github:nklmilojevic/pi-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-parts.follows = "flake-parts";
     };
 
@@ -157,12 +157,6 @@
     }@inputs:
     let
       overlays = [
-        claude-code-overlay.overlays.default
-        talosctl.overlays.default
-        sofka.overlays.default
-        omp.overlays.default
-        pi.overlays.default
-        varlock.overlays.default
         (
           final: prev:
           let
@@ -201,6 +195,12 @@
             tmux = prev.tmux.overrideAttrs (old: {
               configureFlags = (old.configureFlags or [ ]) ++ [ "--disable-jemalloc" ];
             });
+            claude-code = claude-code-overlay.packages.${system}.default;
+            talosctl = talosctl.packages.${system}.talosctl;
+            sofka = sofka.packages.${system}.sofka;
+            omp = omp.packages.${system}.omp;
+            pi = pi.packages.${system}.pi;
+            varlock = varlock.packages.${system}.varlock;
             codex = codex-cli-nix.packages.${system}.default;
             opencode = opencode-nix.packages.${system}.default;
             gemini-cli = gemini-cli-nix.packages.${system}.default;
