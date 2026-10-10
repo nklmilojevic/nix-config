@@ -3,6 +3,7 @@
   homebrew = {
     enable = true;
     onActivation.cleanup = "uninstall";
+    onActivation.autoUpdate = true;
     onActivation.upgrade = true;
 
     taps = builtins.attrNames config.nix-homebrew.taps;
@@ -30,12 +31,10 @@
       "nklmilojevic/logi/logi-options-offline"
       "hammerspoon"
       "iina"
-      "karabiner-elements"
       "little-snitch"
       "lunar"
       "maestral"
       "medis"
-      "middle"
       "orbstack"
       "plex"
       "plexamp"
@@ -50,6 +49,7 @@
       "thaw"
       "viber"
       "vlc"
+      "vorssaint"
       "whatsapp"
       "zed"
       "zoom"
@@ -63,7 +63,6 @@
       "Cascadea" = 1432182561;
       "Developer" = 640199958;
       "Home Assistant" = 1099568401;
-      "Hand Mirror" = 1502839586;
       "Hover for Safari" = 1540705431;
       "FSNotes" = 1277179284;
       "iMovie" = 408981434;

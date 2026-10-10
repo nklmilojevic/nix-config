@@ -20,8 +20,6 @@
 
       terminal.copy_on_select = true;
 
-      ai.enabled = true;
-
       quick_terminal = {
         hotkey = "ctrl+comma";
         size = 0.5;
