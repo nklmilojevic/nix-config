@@ -3,17 +3,22 @@
   imports = [
     ../../modules/darwin
     ../../modules/shared
-    ../../modules/shared/cachix
   ];
 
   nixpkgs.config.allowUnfree = true;
-  nix.settings = {
-    experimental-features = "nix-command flakes";
-    # devenv (and other nix clients passing restricted settings) require this
-    trusted-users = [
-      "root"
-      user
-    ];
+  # Determinate Nix owns the daemon and /etc/nix/nix.conf; these land in
+  # /etc/nix/nix.custom.conf. Flakes are enabled by default.
+  determinateNix = {
+    enable = true;
+    customSettings = import ../../modules/shared/cachix/settings.nix // {
+      # devenv (and other nix clients passing restricted settings) require this
+      trusted-users = [
+        "root"
+        user
+      ];
+      lazy-trees = true;
+    };
+    determinateNixd.garbageCollector.strategy = "automatic";
   };
   nixpkgs.hostPlatform = "aarch64-darwin";
   system.stateVersion = 5;

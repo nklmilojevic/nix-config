@@ -138,6 +138,8 @@
       url = "github:nklmilojevic/thurm";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/3";
   };
 
   outputs =
@@ -160,6 +162,7 @@
       pi,
       varlock,
       nixpkgs-stable,
+      determinate,
       ...
     }@inputs:
     let
@@ -298,6 +301,7 @@
         modules = [
           { nixpkgs.overlays = overlays; }
           home-manager.darwinModules.home-manager
+          determinate.darwinModules.default
           ./hosts/darwin
           nix-homebrew.darwinModules.nix-homebrew
           (
