@@ -683,11 +683,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1792524585,
-        "narHash": "sha256-+xTsVQgI24QZsABA1P77Y5x6rsnDDHtmV3/thRQl9PA=",
+        "lastModified": 1792528494,
+        "narHash": "sha256-CVxecDBBtnIR3iAvmrneaxddocQvNFUDoajiPwDCqeo=",
         "owner": "nklmilojevic",
         "repo": "omp-flake",
-        "rev": "35dbeca694d87aeb001e330e677ad550d3c8ac45",
+        "rev": "12fc4aae362e1ba712f42a170760b8a3f9aca2cd",
         "type": "github"
       },
       "original": {
@@ -862,11 +862,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1792525028,
-        "narHash": "sha256-LgVrCoLp2M8DTv/S1S/krR0nkf3j4kXynyB4Q1BPfbo=",
+        "lastModified": 1792527919,
+        "narHash": "sha256-UGHorUb9uFIZF1zdLsrXJomAfop9gw6OpZGdPYY6W3Y=",
         "owner": "nklmilojevic",
         "repo": "thurm",
-        "rev": "9cb6a8f8176df171a75c1331fb0aecd8f3383c44",
+        "rev": "9d90a57ab8dc756b01c1d235faeb4b901e2c2b6d",
         "type": "github"
       },
       "original": {
