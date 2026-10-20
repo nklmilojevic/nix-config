@@ -27,17 +27,6 @@
         animation_duration = 0.15;
       };
 
-      remote = [
-        {
-          name = "pi";
-          host = "10.50.0.24";
-        }
-        {
-          name = "orbtest";
-          host = "ssh://nkl@127.0.0.1:2222";
-        }
-      ];
-
       updates.channel = "tip";
     };
   };

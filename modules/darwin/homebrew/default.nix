@@ -76,11 +76,10 @@
       "Hover for Safari" = 1540705431;
       "FSNotes" = 1277179284;
       "iMovie" = 408981434;
-      "Invoice Ninja" = 1503970375;
       "Kagi for Safari" = 1622835804;
-      "Keka" = 470158793;
       "Keynote" = 361285480;
       "Logic Pro" = 634148309;
+      "MacPacker" = 6473273874;
       "MQTT Explorer" = 1455214828;
       "Numbers" = 361304891;
       "NZBVortex 3" = 914250185;

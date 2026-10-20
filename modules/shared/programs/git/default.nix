@@ -1,7 +1,9 @@
-_: {
+{ lib, ... }:
+{
   programs.git = {
     enable = true;
-    signing.key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrYywYsK/kocVOa48LjaOR2X10g7lwsB1PtkyBJX800";
+    # 1Password signing; mkDefault so programs.enklava can take over on a Mac.
+    signing.key = lib.mkDefault "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICrYywYsK/kocVOa48LjaOR2X10g7lwsB1PtkyBJX800";
 
     ignores = [
       ".claude/settings.local.json"
@@ -15,7 +17,7 @@ _: {
       commit.gpgSign = true;
       tag.gpgSign = true;
       gpg.format = "ssh";
-      gpg.ssh.program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+      gpg.ssh.program = lib.mkDefault "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
       diff."ansible-vault".textconv = "ansible-vault view";
     };
   };

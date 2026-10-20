@@ -70,11 +70,9 @@
       inputs.flake-utils.follows = "flake-utils";
     };
 
-    # gemini-cli, sofka and pi compile from source; their own nixpkgs keeps the
-    # store paths their CI pushes to Cachix. The other personal flakes only
-    # fetch prebuilt binaries, so they follow ours.
-    gemini-cli-nix = {
-      url = "github:nklmilojevic/gemini-cli-nix";
+    antigravity-cli-nix = {
+      url = "github:nklmilojevic/antigravity-cli-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
 
@@ -102,6 +100,9 @@
       inputs.flake-utils.follows = "flake-utils";
     };
 
+    # sofka and pi compile from source; their own nixpkgs keeps the store paths
+    # their CI pushes to Cachix. The other personal flakes only fetch prebuilt
+    # binaries, so they follow ours.
     sofka = {
       url = "github:nklmilojevic/sofka";
       inputs.home-manager.follows = "home-manager";
@@ -118,6 +119,14 @@
       inputs.flake-parts.follows = "flake-parts";
     };
 
+    # Secure Enclave-backed SSH keys and Git SSH signing (github.com only).
+    enklava = {
+      url = "github:nklmilojevic/enklava";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     varlock = {
       url = "github:nklmilojevic/varlock-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -127,6 +136,12 @@
     thurm = {
       url = "github:nklmilojevic/thurm";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    sefko = {
+      url = "github:nklmilojevic/sefko";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
     };
 
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/3";
@@ -142,7 +157,7 @@
       claude-code-overlay,
       codex-cli-nix,
       opencode-nix,
-      gemini-cli-nix,
+      antigravity-cli-nix,
       talosctl,
       mailersend-cli,
       mailerlite-cli,
@@ -203,7 +218,7 @@
             varlock = varlock.packages.${system}.varlock;
             codex = codex-cli-nix.packages.${system}.default;
             opencode = opencode-nix.packages.${system}.default;
-            gemini-cli = gemini-cli-nix.packages.${system}.default;
+            antigravity-cli = antigravity-cli-nix.packages.${system}.default;
             mailersend = mailersend-cli.packages.${system}.default;
             mailerlite = mailerlite-cli.packages.${system}.default;
             atuin = atuin-nix.packages.${system}.default;

@@ -11,4 +11,4 @@ require("modules/github-notifications")
 require("modules/incident-io")
 require("modules/github-prs")
 require("modules/linear-notifications")
-require("modules/emoji-picker")
+-- require("modules/emoji-picker") -- temporarily disabled

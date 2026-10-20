@@ -18,7 +18,6 @@
         "/System/Applications/Messages.app/"
         "/Applications/Slack.app/"
         "/Applications/Telegram.app"
-        # "/Applications/Ghostty.app/"
         "/Applications/Thurm.app/"
         "/Applications/Fantastical.app/"
         "/Applications/Discord.app/"
@@ -26,7 +25,6 @@
         "/Applications/Things3.app/"
         "/Applications/FSNotes.app/"
         "/Applications/Spotify.app/"
-        "/Applications/RapidAPI.app/"
         "/Applications/TablePro.app/"
         "/Applications/Linear.app/"
       ];

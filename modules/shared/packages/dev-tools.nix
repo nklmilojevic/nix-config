@@ -38,7 +38,7 @@ with pkgs;
 
   # AI coding assistants
   claude-code
-  gemini-cli
+  antigravity-cli
   codex
   opencode
   omp
