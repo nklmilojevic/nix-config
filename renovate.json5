@@ -1,31 +1,41 @@
 {
-  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
-  extends: [
-    'config:recommended',
-  ],
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["config:recommended"],
   nix: {
     enabled: true,
   },
   lockFileMaintenance: {
     enabled: true,
-    schedule: [
-      'at any time',
-    ],
+    schedule: ["at any time"],
     automerge: true,
-    automergeType: 'pr',
+    automergeType: "pr",
     platformAutomerge: true,
-    addLabels: [
-      'nix',
-      'dependencies',
-    ],
+    addLabels: ["nix", "dependencies"],
   },
   packageRules: [
     {
-      matchManagers: ['github-actions'],
+      matchManagers: ["github-actions"],
       automerge: true,
-      automergeType: 'pr',
+      automergeType: "pr",
       platformAutomerge: true,
-      matchUpdateTypes: ['minor', 'patch', 'digest'],
+      matchUpdateTypes: ["minor", "patch", "digest"],
+    },
+    {
+      // The nix manager picks up transitive flake.lock nodes that share a name
+      // with a root input (renovatebot/renovate#40867), and git-refs can't
+      // look up FlakeHub tarballs anyway. Lock file maintenance covers them.
+      matchManagers: ["nix"],
+      matchPackageNames: ["https://flakehub.com/**"],
+      enabled: false,
+    },
+    {
+      // Channel bumps (nixos-25.05 -> nixos-26.05) fail with "update failure":
+      // the nix manager reads the ref from flake.lock, so the edited flake.nix
+      // never re-extracts as updated (renovatebot/renovate#45258). Bump the
+      // channel by hand until that lands.
+      matchManagers: ["nix"],
+      matchUpdateTypes: ["major", "minor"],
+      enabled: false,
     },
   ],
 }
