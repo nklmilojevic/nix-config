@@ -34,6 +34,7 @@ with pkgs;
   minijinja
   mailersend
   mailerlite
+  vesnik
   pandoc
 
   # AI coding assistants

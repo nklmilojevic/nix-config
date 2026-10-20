@@ -108,6 +108,11 @@
       inputs.home-manager.follows = "home-manager";
     };
 
+    vesnik = {
+      url = "github:nklmilojevic/vesnik";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     omp = {
       url = "github:nklmilojevic/omp-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -163,6 +168,7 @@
       mailerlite-cli,
       atuin-nix,
       sofka,
+      vesnik,
       omp,
       pi,
       varlock,
@@ -213,6 +219,7 @@
             claude-code = claude-code-overlay.packages.${system}.default;
             talosctl = talosctl.packages.${system}.talosctl;
             sofka = sofka.packages.${system}.sofka;
+            vesnik = vesnik.packages.${system}.vesnik;
             omp = omp.packages.${system}.omp;
             pi = pi.packages.${system}.pi;
             varlock = varlock.packages.${system}.varlock;
