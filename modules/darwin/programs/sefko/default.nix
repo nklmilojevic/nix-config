@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, pkgs, ... }:
 {
   imports = [ inputs.sefko.homeManagerModules.default ];
 
@@ -11,6 +11,13 @@
       account = "my.1password.eu";
       env = "GH_TOKEN";
       validate.url = "https://api.github.com/user";
+    };
+    # gh with GH_TOKEN from the agent, refreshed and retried once after a 401.
+    # GH_TOKEN or GITHUB_TOKEN set by the caller (CI, `sefko exec`) wins.
+    wrappers.gh = {
+      package = pkgs.gh;
+      secret = "github";
+      bypassEnv = [ "GITHUB_TOKEN" ];
     };
   };
 }
