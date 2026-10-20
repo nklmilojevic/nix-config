@@ -769,7 +769,8 @@
         "systems": "systems",
         "talosctl": "talosctl",
         "thurm": "thurm",
-        "varlock": "varlock"
+        "varlock": "varlock",
+        "vesnik": "vesnik"
       }
     },
     "rust-overlay": {
@@ -918,6 +919,26 @@
       "original": {
         "owner": "nklmilojevic",
         "repo": "varlock-flake",
+        "type": "github"
+      }
+    },
+    "vesnik": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792501163,
+        "narHash": "sha256-NL9FUQSh2m8WD67KBuWi0Y5jy+qkGE/0dT+BC3MJD60=",
+        "owner": "nklmilojevic",
+        "repo": "vesnik",
+        "rev": "ee5d22cdabf097da4fbcd975da9473a8be78ea28",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nklmilojevic",
+        "repo": "vesnik",
         "type": "github"
       }
     }
