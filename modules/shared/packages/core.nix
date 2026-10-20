@@ -2,7 +2,7 @@
 { pkgs }:
 let
   # Policy: no stored gh login. gh reads GH_TOKEN when the caller already set
-  # it (claude/codex/pi functions, CI); otherwise it fetches the token from
+  # it (CI, `sefko exec`); otherwise it fetches the token from sefko or
   # 1Password for this one call. A real executable, unlike a shell alias, is
   # also used by just recipes, vesnik and other tools that run gh themselves.
   gh-1password = pkgs.symlinkJoin {

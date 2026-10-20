@@ -104,25 +104,10 @@
 
     functions = {
       claude = {
-        description = "launch Claude Code with GH_TOKEN pre-resolved from sefko or 1Password (no biometric popups in-session)";
+        description = "launch Claude Code with CLAUDE_SESSION set";
         body = ''
           set -lx CLAUDE_SESSION 1
-          set -lx GH_TOKEN (if command -q sefko; sefko get github; else; op read --account my.1password.eu "op://Private/GitHub Personal Access Token/token"; end)
           command claude $argv
-        '';
-      };
-      codex = {
-        description = "Start Codex with GH_TOKEN from 1Password";
-        body = ''
-          set -lx GH_TOKEN (if command -q sefko; sefko get github; else; op read --account my.1password.eu "op://Private/GitHub Personal Access Token/token"; end)
-          command codex $argv
-        '';
-      };
-      pi = {
-        description = "Start Pi with GH_TOKEN from 1Password";
-        body = ''
-          set -lx GH_TOKEN (if command -q sefko; sefko get github; else; op read --account my.1password.eu "op://Private/GitHub Personal Access Token/token"; end)
-          command pi $argv
         '';
       };
       psgrep = {
