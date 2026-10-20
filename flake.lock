@@ -266,11 +266,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1792524407,
-        "narHash": "sha256-pkNOEp/hWXbyornsNcYVM6Sd10YOtW3KvqM4coAwKms=",
+        "lastModified": 1792524969,
+        "narHash": "sha256-4BDAA3fnDuQlftZcNyhf6V7yWYRikqlR6lM/OX5hdXk=",
         "owner": "nklmilojevic",
         "repo": "enklava",
-        "rev": "74d759b184217beae7d12a2e78ed92f3748fe02b",
+        "rev": "29b7c3c1621d3143c04e6bbfef419954f3da5300",
         "type": "github"
       },
       "original": {
@@ -696,29 +696,6 @@
         "type": "github"
       }
     },
-    "opencode-nix": {
-      "inputs": {
-        "flake-utils": [
-          "flake-utils"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1792519730,
-        "narHash": "sha256-MnPQiZeku/hJky0oOX/ihGhpoj9kCqja9vx10G3+34s=",
-        "owner": "nklmilojevic",
-        "repo": "opencode-nix",
-        "rev": "0911565f0e0b441c1aa14465a19d320d7b3d92f3",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nklmilojevic",
-        "repo": "opencode-nix",
-        "type": "github"
-      }
-    },
     "pi": {
       "inputs": {
         "flake-parts": [
@@ -762,7 +739,6 @@
         "nixpkgs-stable": "nixpkgs-stable",
         "nixvim": "nixvim",
         "omp": "omp",
-        "opencode-nix": "opencode-nix",
         "pi": "pi",
         "sefko": "sefko",
         "sofka": "sofka",
@@ -804,11 +780,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1792524431,
-        "narHash": "sha256-jhDin4Z9/ybAFiNGV9+CvDFrf5Fqkt6K9awN1QcMe9I=",
+        "lastModified": 1792524974,
+        "narHash": "sha256-Y951bBP9WD08rAOSry/QLiQmOuqRuwqTxSSxYQVBTL8=",
         "owner": "nklmilojevic",
         "repo": "sefko",
-        "rev": "6f369b95d3e9c4540bf6e2235ac1e3d516beb518",
+        "rev": "2660745f5e8b47be4580d7673b25a3064494e9df",
         "type": "github"
       },
       "original": {
@@ -886,11 +862,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1792520393,
-        "narHash": "sha256-ThdYFiocXUmlgjSwwGQSHbEghgC91AO+yUWcHMJAywY=",
+        "lastModified": 1792525028,
+        "narHash": "sha256-LgVrCoLp2M8DTv/S1S/krR0nkf3j4kXynyB4Q1BPfbo=",
         "owner": "nklmilojevic",
         "repo": "thurm",
-        "rev": "150ed0da5b121d1bc8308815e99a1f9b78d0409e",
+        "rev": "9cb6a8f8176df171a75c1331fb0aecd8f3383c44",
         "type": "github"
       },
       "original": {

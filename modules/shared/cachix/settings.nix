@@ -5,7 +5,6 @@
   substituters = [
     "https://nkl-nix-config.cachix.org?priority=30"
     "https://nkl-sofka.cachix.org?priority=31"
-    "https://opencode-nix-cache.cachix.org?priority=32"
     "https://vesnik.cachix.org?priority=33"
     "https://cache.nixos.org/?priority=40"
     "https://nix-community.cachix.org?priority=41"
@@ -16,7 +15,6 @@
     "nkl-sofka.cachix.org-1:hLg9frFNJynrxe7SSBb/p6pbawlpZmG10bw+wLsTufw="
     "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
-    "opencode-nix-cache.cachix.org-1:Wq9yk7XD0pg457w4D5HV2OJVj++tl70tfzde1SrfYX8="
     "vesnik.cachix.org-1:ZyKRTirZkXT2SCzbX4Jb8wMqti2pb7qx370S/YkqF9k="
   ];
 }

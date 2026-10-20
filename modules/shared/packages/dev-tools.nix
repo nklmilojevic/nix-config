@@ -41,7 +41,6 @@ with pkgs;
   claude-code
   antigravity-cli
   codex
-  opencode
   omp
   pi
 

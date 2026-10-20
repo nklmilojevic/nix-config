@@ -64,12 +64,6 @@
       inputs.flake-utils.follows = "flake-utils";
     };
 
-    opencode-nix = {
-      url = "github:nklmilojevic/opencode-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
-    };
-
     antigravity-cli-nix = {
       url = "github:nklmilojevic/antigravity-cli-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -161,7 +155,6 @@
       nix-homebrew,
       claude-code-overlay,
       codex-cli-nix,
-      opencode-nix,
       antigravity-cli-nix,
       talosctl,
       mailersend-cli,
@@ -224,7 +217,6 @@
             pi = pi.packages.${system}.pi;
             varlock = varlock.packages.${system}.varlock;
             codex = codex-cli-nix.packages.${system}.default;
-            opencode = opencode-nix.packages.${system}.default;
             antigravity-cli = antigravity-cli-nix.packages.${system}.default;
             mailersend = mailersend-cli.packages.${system}.default;
             mailerlite = mailerlite-cli.packages.${system}.default;
