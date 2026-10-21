@@ -704,11 +704,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1792524605,
-        "narHash": "sha256-IaBSn4F1WbYrQ2tmLQgPAMuG724PMNp5MZ+EJ2rzGUs=",
+        "lastModified": 1792598495,
+        "narHash": "sha256-uSmrISO5skJ2gBU6MmQyryua3YizUQoxJ61c517RfUc=",
         "owner": "nklmilojevic",
         "repo": "pi-flake",
-        "rev": "8fc335630fc165c8525ddf2f1c21264bc25e83ad",
+        "rev": "604da0eadebfdf97a4668eac5b07bbf154ef2a3a",
         "type": "github"
       },
       "original": {
