@@ -19,7 +19,7 @@
         "/Applications/Slack.app/"
         "/Applications/Telegram.app"
         "/Applications/Thurm.app/"
-        "/Applications/Fantastical.app/"
+        "/Applications/BusyCal.app/"
         "/Applications/Discord.app/"
         "/Applications/Anybox.app/"
         "/Applications/Things3.app/"

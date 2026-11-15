@@ -35,6 +35,7 @@ with pkgs;
   mailersend
   mailerlite
   vesnik
+  veans
   pandoc
 
   # AI coding assistants

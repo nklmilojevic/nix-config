@@ -4,6 +4,7 @@ with pkgs;
 [
   _1password-cli
   age
+  gitleaks
   sops
   varlock
   nmap

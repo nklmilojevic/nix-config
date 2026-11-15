@@ -49,7 +49,7 @@
 
 
       nix-your-shell fish | source
-      atuin init fish --disable-up-arrow | source
+      atuin init fish --disable-up-arrow --bind-ai-resume | source
     '';
 
     plugins = [

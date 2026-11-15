@@ -35,6 +35,15 @@
         # TMPDIR miss the running daemon and every preexec hook stalls ~4s.
         socket_path = "${config.xdg.dataHome}/atuin/atuin.sock";
       };
+      threads = {
+        capture = true;
+      };
+      pty_proxy = {
+        enabled = true;
+      };
+      output = {
+        enabled = true;
+      };
       ai = {
         enabled = true;
         endpoint = "https://atuin-ai.nikola.wtf";

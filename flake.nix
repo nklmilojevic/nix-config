@@ -41,8 +41,8 @@
       url = "github:zhaofengli/nix-homebrew";
     };
 
-    homebrew-logi = {
-      url = "github:nklmilojevic/homebrew-logi";
+    homebrew-freespin = {
+      url = "github:nklmilojevic/homebrew-freespin";
       flake = false;
     };
 
@@ -132,6 +132,13 @@
       inputs.flake-parts.follows = "flake-parts";
     };
 
+    # App Store Connect CLI (asccli.sh) from its release binaries.
+    asc = {
+      url = "github:nklmilojevic/asc-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-parts.follows = "flake-parts";
+    };
+
     thurm = {
       url = "github:nklmilojevic/thurm";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -139,6 +146,13 @@
 
     sefko = {
       url = "github:nklmilojevic/sefko";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
+    # Finds finished git worktrees across ~/dev and removes them.
+    metla = {
+      url = "github:nklmilojevic/metla";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
@@ -221,10 +235,16 @@
             mailersend = mailersend-cli.packages.${system}.default;
             mailerlite = mailerlite-cli.packages.${system}.default;
             atuin = atuin-nix.packages.${system}.default;
+            # Vikunja's agent CLI; keep the version in step with the Vikunja server.
+            veans = final.callPackage ./pkgs/veans.nix { };
+            # redis 8.10.3 dropped the hardcoded CLT SDK path from its module
+            # Makefiles, so nixpkgs' darwin postPatch --replace-fail aborts.
+            # Drop once nixpkgs-unstable fixes the redis derivation.
             inherit (stable)
               direnv
               pwgen
               rclone
+              redis
               ;
           }
         )
@@ -315,7 +335,7 @@
                 enable = true;
                 inherit user;
                 taps = {
-                  "nklmilojevic/homebrew-logi" = inputs.homebrew-logi;
+                  "nklmilojevic/homebrew-freespin" = inputs.homebrew-freespin;
                 };
                 mutableTaps = true;
               };
