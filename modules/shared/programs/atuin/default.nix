@@ -1,10 +1,21 @@
-{ config, ... }:
+{ config, lib, ... }:
+let
+  socketDir = "${config.xdg.dataHome}/atuin";
+in
 {
   catppuccin = {
     fish = {
       enable = true;
     };
   };
+
+  # `atuin daemon start` does not create the parent directory of a custom
+  # `socket_path` (fresh installs store data under `~/.atuin`), causing the
+  # daemon to exit 1 and every fish preexec hook to stall ~2s.
+  home.activation.atuinSocketDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    run mkdir -p -m 700 ${lib.escapeShellArg socketDir}
+  '';
+
   programs.atuin = {
     enable = true;
     enableFishIntegration = false;
@@ -33,7 +44,7 @@
         autostart = true;
         # Default is $TMPDIR/atuin-$UID/atuin.sock, so shells with a different
         # TMPDIR miss the running daemon and every preexec hook stalls ~4s.
-        socket_path = "${config.xdg.dataHome}/atuin/atuin.sock";
+        socket_path = "${socketDir}/atuin.sock";
       };
       threads = {
         capture = true;
