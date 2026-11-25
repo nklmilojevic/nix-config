@@ -99,7 +99,7 @@ setup-remote-mac host="knossos": (setup-darwin host) setup-remote
 link-remote host="knossos":
     echo "Installing matching Thurm binaries on {{ host }}..."
     thurm remote install "{{ host }}"
-    echo "Running Thurm remote doctor on {{ host }}..."
-    thurm remote doctor "{{ host }}"
+    echo "Running Thurm remote doctor (--fix) on {{ host }}..."
+    thurm remote doctor "{{ host }}" --fix --yes
     echo "Enabling thurmd LaunchAgent and Tailscale on {{ host }}..."
     ssh "{{ host }}" 'export PATH="$HOME/.local/bin:$HOME/.local/share/thurm/bin:$PATH"; thurm daemon install-launchd && thurm tailscale on'

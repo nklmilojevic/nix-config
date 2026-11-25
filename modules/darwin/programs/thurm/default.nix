@@ -67,8 +67,7 @@
         {
           name = "knossos";
           host = "knossos";
-          # Once `thurm tailscale on` is signed in on knossos, you can also set:
-          # tailnet = "wss://thurm-knossos.<your-tailnet>.ts.net/v1/connect";
+          tailnet = "wss://thurm-knossos.tail2177a1.ts.net/v1/connect";
         }
       ];
     };
