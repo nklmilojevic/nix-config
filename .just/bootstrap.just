@@ -19,9 +19,9 @@ setup-nix:
 [doc('First nix-darwin activation, before darwin-rebuild is on PATH (macOS only)')]
 [script]
 setup-darwin host="":
-    # Back up stock /etc shell init files that Determinate Nix touches so
-    # nix-darwin does not abort with "Unexpected files in /etc".
-    for f in /etc/bashrc /etc/zshrc; do
+    # Back up stock /etc files that Determinate Nix touches so nix-darwin
+    # does not abort with "Unexpected files in /etc".
+    for f in /etc/bashrc /etc/zshrc /etc/zshenv /etc/nix/nix.custom.conf; do
         if [ -f "$f" ] && [ ! -L "$f" ] && [ ! -e "${f}.before-nix-darwin" ]; then
             echo "Backing up $f -> ${f}.before-nix-darwin..."
             sudo mv "$f" "${f}.before-nix-darwin"
