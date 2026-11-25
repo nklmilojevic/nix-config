@@ -50,7 +50,6 @@ with pkgs;
 
   # Misc utilities
   android-tools
-  home-assistant-cli
   mc
   superfile
   pv

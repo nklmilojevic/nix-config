@@ -46,6 +46,11 @@
       flake = false;
     };
 
+    homebrew-katamaran = {
+      url = "github:nklmilojevic/homebrew-katamaran";
+      flake = false;
+    };
+
     krewfile = {
       url = "github:brumhard/krewfile";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -321,32 +326,48 @@
       # Expose library functions for external use
       inherit lib;
 
-      darwinConfigurations.daedalus = darwin.lib.darwinSystem {
-        modules = [
-          { nixpkgs.overlays = overlays; }
-          home-manager.darwinModules.home-manager
-          determinate.darwinModules.default
-          ./hosts/darwin
-          nix-homebrew.darwinModules.nix-homebrew
-          (
-            { user, ... }:
+      darwinConfigurations =
+        let
+          mkDarwin =
             {
-              nix-homebrew = {
-                enable = true;
-                inherit user;
-                taps = {
-                  "nklmilojevic/homebrew-freespin" = inputs.homebrew-freespin;
-                };
-                mutableTaps = true;
+              hostName,
+              isRemote ? false,
+            }:
+            darwin.lib.darwinSystem {
+              modules = [
+                { nixpkgs.overlays = overlays; }
+                home-manager.darwinModules.home-manager
+                determinate.darwinModules.default
+                ./hosts/darwin
+                nix-homebrew.darwinModules.nix-homebrew
+                (
+                  { user, ... }:
+                  {
+                    nix-homebrew = {
+                      enable = true;
+                      inherit user;
+                      taps = {
+                        "nklmilojevic/homebrew-freespin" = inputs.homebrew-freespin;
+                        "nklmilojevic/homebrew-katamaran" = inputs.homebrew-katamaran;
+                      };
+                      mutableTaps = true;
+                    };
+                  }
+                )
+              ];
+              specialArgs = {
+                inherit inputs hostName isRemote;
+                user = "nkl";
               };
-            }
-          )
-        ];
-        specialArgs = {
-          inherit inputs;
-          user = "nkl";
+            };
+        in
+        {
+          daedalus = mkDarwin { hostName = "daedalus"; };
+          knossos = mkDarwin {
+            hostName = "knossos";
+            isRemote = true;
+          };
         };
-      };
 
       homeConfigurations =
         let

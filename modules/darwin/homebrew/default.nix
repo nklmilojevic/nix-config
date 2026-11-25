@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  isRemote,
+  lib,
+  ...
+}:
 {
   # Refresh Homebrew's API data before the bundle so `upgrade` sees new
   # versions. onActivation.autoUpdate does this inside `brew bundle`, but
@@ -39,13 +44,13 @@
       # "ghostty" # locally patched build, not managed by brew
       "gpg-suite"
       "nklmilojevic/freespin/freespin"
+      "nklmilojevic/katamaran/katamaran"
       "hammerspoon"
       "iina"
       "little-snitch"
       "lunar"
       "maestral"
       "medis"
-      "orbstack"
       "plex"
       "plexamp"
       "protonvpn"
@@ -91,7 +96,6 @@
       "Soulver 4" = 1508732804;
       "SponsorBlock" = 1573461917;
       "StopTheMadness Pro" = 6471380298;
-      "Tailscale" = 1475387142;
       "TestFlight" = 899247664;
       "Things" = 904280696;
       "uBlock Origin Lite" = 6745342698;
@@ -99,6 +103,10 @@
       "WireGuard" = 1451685025;
       "Xcode" = 497799835;
       "Yubico Authenticator" = 1497506650;
+    }
+    # Remote hosts run nix-darwin's boot-time `services.tailscale` daemon instead of the MAS app.
+    // lib.optionalAttrs (!isRemote) {
+      "Tailscale" = 1475387142;
     };
   };
 }

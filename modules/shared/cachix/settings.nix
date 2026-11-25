@@ -5,6 +5,7 @@
   substituters = [
     "https://nkl-nix-config.cachix.org?priority=30"
     "https://nkl-sofka.cachix.org?priority=31"
+    "https://thurm.cachix.org?priority=32"
     "https://vesnik.cachix.org?priority=33"
     "https://metla.cachix.org?priority=34"
     "https://cache.nixos.org/?priority=40"
@@ -14,6 +15,7 @@
   trusted-public-keys = [
     "nkl-nix-config.cachix.org-1:BFC4/yovGI+0E8ZZE0K3H6Mu2uBaqSU/kTnSvFQs5uE="
     "nkl-sofka.cachix.org-1:hLg9frFNJynrxe7SSBb/p6pbawlpZmG10bw+wLsTufw="
+    "thurm.cachix.org-1:WuDyAyzpnw27eEYA6LWBTKxRK7/uVuzzJk5RB6+ooKw="
     "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
     "vesnik.cachix.org-1:ZyKRTirZkXT2SCzbX4Jb8wMqti2pb7qx370S/YkqF9k="

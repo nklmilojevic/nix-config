@@ -1,8 +1,17 @@
-{ config, inputs, ... }:
+{
+  config,
+  hostName,
+  inputs,
+  isRemote,
+  lib,
+  ...
+}:
 {
   imports = [ inputs.thurm.homeManagerModules.default ];
 
   # Only settings that differ from Thurm's defaults (config.example.toml upstream).
+  # Binaries stay unmanaged (package = null): daedalus gets them from Thurm.app
+  # (tip channel) and pushes matching builds to knossos via `thurm remote install`.
   programs.thurm = {
     enable = true;
 
@@ -33,6 +42,10 @@
       tailscale = {
         enabled = true;
         web = true;
+      }
+      # Avoid colliding with daedalus's default `thurm` tailnet hostname.
+      // lib.optionalAttrs isRemote {
+        hostname = "thurm-${hostName}";
       };
 
       # The relay's registration code is a secret: it stays in ~/.config/thurm/settings.toml.
@@ -48,6 +61,16 @@
       };
 
       updates.channel = "tip";
+    }
+    // lib.optionalAttrs (!isRemote) {
+      remote = [
+        {
+          name = "knossos";
+          host = "knossos";
+          # Once `thurm tailscale on` is signed in on knossos, you can also set:
+          # tailnet = "wss://thurm-knossos.<your-tailnet>.ts.net/v1/connect";
+        }
+      ];
     };
   };
 

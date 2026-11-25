@@ -1,5 +1,10 @@
-{ pkgs, ... }:
 {
+  isRemote,
+  lib,
+  pkgs,
+  ...
+}:
+lib.mkIf (!isRemote) {
   # Point the launchd-provided SSH_AUTH_SOCK at the 1Password agent socket
   launchd.agents."com.1password.SSH_AUTH_SOCK" = {
     enable = true;
@@ -11,6 +16,19 @@
         ''/bin/ln -sf "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock" "$SSH_AUTH_SOCK"''
       ];
       RunAtLoad = true;
+    };
+  };
+
+  programs.fish = {
+    interactiveShellInit = ''
+      set -gx SSH_AUTH_SOCK $HOME/.1password/agent.sock
+    '';
+
+    shellAliases = {
+      # 1Password plugin wrappers (require desktop app integration)
+      restic = "op plugin run -- restic";
+      openai = "op plugin run -- openai";
+      llm = "op plugin run -- llm";
     };
   };
 

@@ -41,6 +41,7 @@
       AppleMeasurementUnits = "Centimeters";
       InitialKeyRepeat = 30;
       KeyRepeat = 1;
+      ApplePressAndHoldEnabled = false;
       "com.apple.keyboard.fnState" = true;
       AppleShowScrollBars = "WhenScrolling";
     };

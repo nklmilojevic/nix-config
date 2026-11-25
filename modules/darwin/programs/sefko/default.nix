@@ -1,4 +1,11 @@
-{ inputs, pkgs, ... }:
+{
+  config,
+  inputs,
+  isRemote,
+  lib,
+  pkgs,
+  ...
+}:
 {
   imports = [ inputs.sefko.homeManagerModules.default ];
 
@@ -6,9 +13,18 @@
   # scripts ask it instead of prompting 1Password on every call.
   programs.sefko = {
     enable = true;
+    # On remote hosts, authenticate headlessly with a scoped 1Password Service
+    # Account instead of the 1Password desktop app approval dialog.
+    serviceAccountTokenFile = lib.mkIf isRemote "${config.home.homeDirectory}/.config/sefko/op-service-account-token";
     secrets.github = {
-      ref = "op://Private/GitHub Personal Access Token/token";
-      account = "my.1password.eu";
+      # 1Password Service Accounts cannot access the built-in Private vault;
+      # remote hosts read from a dedicated read-only Knossos vault instead.
+      ref =
+        if isRemote then
+          "op://Knossos/GitHub Personal Access Token/token"
+        else
+          "op://Private/GitHub Personal Access Token/token";
+      account = lib.mkIf (!isRemote) "my.1password.eu";
       env = "GH_TOKEN";
       validate.url = "https://api.github.com/user";
     };

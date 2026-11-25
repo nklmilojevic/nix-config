@@ -17,6 +17,11 @@ setup-nix:
 
 # First nix-darwin activation, before darwin-rebuild is on PATH (macOS only)
 [doc('First nix-darwin activation, before darwin-rebuild is on PATH (macOS only)')]
-setup-darwin:
+[script]
+setup-darwin host="":
     echo "Activating nix-darwin for the first time..."
-    sudo nix run github:nix-darwin/nix-darwin#darwin-rebuild -- switch --flake "{{ repo_dir }}"
+    flake="{{ repo_dir }}"
+    if [ -n "{{ host }}" ]; then
+        flake="${flake}#{{ host }}"
+    fi
+    sudo nix run github:nix-darwin/nix-darwin#darwin-rebuild -- switch --flake "$flake"
