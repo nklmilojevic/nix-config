@@ -1,5 +1,5 @@
-set unstable := true
-set quiet := true
+set unstable
+set quiet
 set script-interpreter := ['bash', '-euo', 'pipefail']
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
@@ -58,3 +58,34 @@ install-fonts:
     cp "$temp_dir"/fonts/*.{ttf,otf,TTF,OTF} "$fonts_dir/" 2>/dev/null || true
     rm -rf "$temp_dir"
     echo "Fonts installed in $fonts_dir"
+
+# Save the 1Password Service Account token for sefko on a remote Mac (0600)
+[doc('Save the 1Password Service Account token for sefko (remote Mac)')]
+[script]
+op-service-token:
+    token_file="{{ home_dir }}/.config/sefko/op-service-account-token"
+    mkdir -p "$(dirname "$token_file")"
+    chmod 700 "$(dirname "$token_file")"
+    read -r -s -p "1Password Service Account token: " token
+    echo ""
+    if [ -z "$token" ]; then
+        echo "Aborted: empty token." >&2
+        exit 1
+    fi
+    umask 077
+    printf '%s\n' "$token" > "$token_file"
+    chmod 600 "$token_file"
+    echo "Saved token to $token_file (0600)."
+    if command -v sefko >/dev/null 2>&1; then
+        if sefko status >/dev/null 2>&1; then
+            sefko refresh github >/dev/null
+        else
+            sefko get github >/dev/null
+        fi
+        echo "Verified: sefko fetched github token via Service Account."
+    fi
+    if command -v enklava >/dev/null 2>&1 && [ -f "{{ home_dir }}/.ssh/id_enclave_github" ]; then
+        host_title="$(scutil --get ComputerName 2>/dev/null || hostname -s)"
+        echo "Registering Secure Enclave key on GitHub as '$host_title'..."
+        enklava github add --key-file "{{ home_dir }}/.ssh/id_enclave_github" --title "$host_title" || true
+    fi
