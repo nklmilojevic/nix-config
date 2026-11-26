@@ -21,7 +21,23 @@
     onActivation.cleanup = "uninstall";
     onActivation.upgrade = true;
 
-    taps = builtins.attrNames config.nix-homebrew.taps;
+    taps =
+      builtins.attrNames config.nix-homebrew.taps
+      ++ lib.optionals isRemote [
+        {
+          name = "jundot/omlx";
+          clone_target = "https://github.com/jundot/omlx";
+          force_auto_update = true;
+        }
+      ];
+
+    brews = lib.optionals isRemote [
+      {
+        name = "jundot/omlx/omlx";
+        args = [ "with-custom-kernel" ];
+        restart_service = "changed";
+      }
+    ];
 
     casks = [
       "1password"
