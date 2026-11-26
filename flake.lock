@@ -453,6 +453,22 @@
         "type": "github"
       }
     },
+    "homebrew-omlx": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1795700240,
+        "narHash": "sha256-R8QhdCVwIQPFTsy5IMzO4Lurdn2zJNw4/aBN1a60i9Y=",
+        "owner": "jundot",
+        "repo": "omlx",
+        "rev": "633d6cf62971262149c2b2477361487958da3915",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jundot",
+        "repo": "omlx",
+        "type": "github"
+      }
+    },
     "krewfile": {
       "inputs": {
         "flake-utils": [
@@ -795,6 +811,7 @@
         "home-manager": "home-manager",
         "homebrew-freespin": "homebrew-freespin",
         "homebrew-katamaran": "homebrew-katamaran",
+        "homebrew-omlx": "homebrew-omlx",
         "krewfile": "krewfile",
         "mailerlite-cli": "mailerlite-cli",
         "mailersend-cli": "mailersend-cli",

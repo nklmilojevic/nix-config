@@ -51,6 +51,11 @@
       flake = false;
     };
 
+    homebrew-omlx = {
+      url = "github:jundot/omlx";
+      flake = false;
+    };
+
     krewfile = {
       url = "github:brumhard/krewfile";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -341,7 +346,7 @@
                 ./hosts/darwin
                 nix-homebrew.darwinModules.nix-homebrew
                 (
-                  { user, ... }:
+                  { lib, user, ... }:
                   {
                     nix-homebrew = {
                       enable = true;
@@ -349,6 +354,9 @@
                       taps = {
                         "nklmilojevic/homebrew-freespin" = inputs.homebrew-freespin;
                         "nklmilojevic/homebrew-katamaran" = inputs.homebrew-katamaran;
+                      }
+                      // lib.optionalAttrs isRemote {
+                        "jundot/homebrew-omlx" = inputs.homebrew-omlx;
                       };
                       mutableTaps = true;
                     };
