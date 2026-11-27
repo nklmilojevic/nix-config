@@ -112,7 +112,7 @@
       "Xcode" = 497799835;
       "Yubico Authenticator" = 1497506650;
     }
-    # Remote hosts run nix-darwin's boot-time `services.tailscale` daemon instead of the MAS app.
+    # Remote hosts don't run Tailscale; Thurm joins the tailnet itself.
     // lib.optionalAttrs (!isRemote) {
       "Tailscale" = 1475387142;
     };
