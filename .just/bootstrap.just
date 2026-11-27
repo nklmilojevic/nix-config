@@ -35,8 +35,8 @@ setup-darwin host="":
     fi
     sudo nix run github:nix-darwin/nix-darwin#darwin-rebuild -- switch --flake "$flake"
 
-# One-time post-activation setup for a remote Mac (keychain, SSH include, Katamaran, enklava)
-[doc('Post-activation setup for a remote Mac (keychain, SSH, Katamaran, enklava)')]
+# One-time post-activation setup for a remote Mac (Tailscale, keychain, SSH include, Katamaran, enklava)
+[doc('Post-activation setup for a remote Mac (Tailscale, keychain, SSH, Katamaran, enklava)')]
 [script]
 setup-remote:
     export PATH="$HOME/.nix-profile/bin:/etc/profiles/per-user/$USER/bin:/run/current-system/sw/bin:/opt/homebrew/bin:$HOME/.local/bin:$PATH"
@@ -56,6 +56,15 @@ setup-remote:
         { printf 'Include ~/.ssh/enclave.conf\n\n'; cat "$ssh_cfg"; } > "$tmp"
         mv "$tmp" "$ssh_cfg"
         chmod 600 "$ssh_cfg"
+    fi
+
+    if command -v tailscale >/dev/null 2>&1; then
+        if ! tailscale status >/dev/null 2>&1; then
+            echo "Connecting to Tailscale..."
+            sudo tailscale up
+        else
+            echo "Tailscale already connected."
+        fi
     fi
 
     if command -v kat >/dev/null 2>&1; then

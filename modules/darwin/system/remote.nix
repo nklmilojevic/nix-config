@@ -35,11 +35,15 @@ lib.mkIf isRemote {
   ];
 
   # Native macOS Screen Sharing (supports Apple Silicon High Performance mode
-  # with virtual displays from daedalus via Screen Sharing.app over LAN/Thurm's tailnet).
+  # with virtual displays from daedalus via Screen Sharing.app over LAN/Tailscale).
   system.activationScripts.launchd.text = lib.mkAfter ''
     launchctl enable system/com.apple.screensharing
     launchctl bootstrap system /System/Library/LaunchDaemons/com.apple.screensharing.plist 2>/dev/null || true
   '';
+
+  # System-wide tailscaled LaunchDaemon so the host rejoins the tailnet at
+  # boot (e.g. after `fdesetup authrestart`), before any GUI login.
+  services.tailscale.enable = true;
 
   # Keep a remote workstation awake and recover cleanly from power loss.
   # Preventing sleep also keeps Thurm tunnels open and sefko's cache warm.
@@ -53,7 +57,7 @@ lib.mkIf isRemote {
   '';
 
   # Touch ID does not work over SSH, and Thurm disables SSH agent forwarding.
-  # SSH pubkey auth is the perimeter for this host.
+  # SSH pubkey auth + Tailscale ACLs are the perimeter for this host.
   security.sudo.extraConfig = ''
     ${user} ALL=(ALL) NOPASSWD: ALL
   '';
